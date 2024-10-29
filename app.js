@@ -62,4 +62,4 @@ app.use('/members', memberInformationRoutes); // Add member information route
 //app.use('/admin', adminRoutes); // Admin route under '/admin'
 
 // Start the server
-app.listen(3002, () => console.log('Server running on http://localhost:3002'));
+app.listen(8000, () => console.log('Server running on http://localhost:8000'));

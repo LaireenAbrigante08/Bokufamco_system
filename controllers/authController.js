@@ -2,14 +2,16 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password, role = "user" } = req.body; // Set role as 'user' by default
     try {
-        await User.createUser(username, password);
+        await User.createUser(username, email, password, role); // Pass role to createUser
         res.redirect('/login');
     } catch (err) {
+        console.error("Error during registration:", err); // Log error details
         res.status(500).send('Error during registration');
     }
 };
+
 
 // controllers/authController.js
 exports.login = async (req, res) => {

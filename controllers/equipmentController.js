@@ -8,7 +8,7 @@ exports.getEquipment = async (req, res) => {
         } else {
             equipment = await Equipment.getAllEquipment(); // Get all equipment for guests
         }
-        res.render('equipmentRentals', { equipment }); // Render the equipmentRentals.ejs view with equipment data
+        res.render('equipment-rentals', { equipment }); // Render the equipmentRentals.ejs view with equipment data
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');

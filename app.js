@@ -47,12 +47,7 @@ app.get('/register', (req, res) => {
     res.render('register'); // Render the register page
 });
 
-// Handle registration form submission
-app.post('/register', (req, res) => {
-    const { username, password } = req.body;
-    // Add logic here to handle registration (e.g., save user to the database)
-    res.send('User registered'); // Temporary response for testing
-});
+
 
 // Use the authentication, contact, and about routes
 app.use('/', authRoutes);

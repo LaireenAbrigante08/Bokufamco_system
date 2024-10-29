@@ -7,6 +7,15 @@ const contactRoutes = require('./routes/contactRoutes'); // Import contact route
 const aboutRoutes = require('./routes/aboutRoutes'); // Import about routes
 const app = express();
 
+//import routes
+const loansRoutes = require('./routes/loansRoutes');
+const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
+const equipmentRentalsRoutes = require('./routes/equipmentRentalsRoutes');
+const memberInformationRoutes = require('./routes/memberInformationRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes'); // New purchase route
+const adminRoutes = require('./routes/adminRoutes'); // Admin routes
+
+
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -21,7 +30,7 @@ app.set('view engine', 'ejs');
 
 // Root route redirecting to login
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.redirect('/landing');
 });
 
 // Homepage route
@@ -49,6 +58,13 @@ app.post('/register', (req, res) => {
 app.use('/', authRoutes);
 app.use('/', contactRoutes); // Use contact routes
 app.use('/', aboutRoutes); // Use about routes
+app.use('/loans', loansRoutes);
+app.use('/farm-supplies', farmSuppliesRoutes);
+app.use('/equipment-rentals', equipmentRentalsRoutes);
+app.use('/member-information', memberInformationRoutes);
+app.use('/purchase', purchaseRoutes); // Use the purchase route
+app.use('/members', memberInformationRoutes); // Add member information route
+app.use('/admin', adminRoutes); // Admin route under '/admin'
 
 // Start the server
-app.listen(5000, () => console.log('Server running on http://localhost:5000'));
+app.listen(3002, () => console.log('Server running on http://localhost:3002'));

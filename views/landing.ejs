@@ -1,0 +1,144 @@
+<!-- views/landing.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BOKOFAMCOoperatives</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            font-size: 1.2em;
+            margin: 10px 0 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            color: white;
+            background-color: #007BFF; /* Bootstrap Primary */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary {
+            background-color: #6c757d; /* Bootstrap Secondary */
+        }
+        .btn:hover {
+            background-color: #0056b3; /* Darker Blue */
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Darker Gray */
+        }
+        .features {
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .features h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .services-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .service {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin: 10px;
+            text-align: center;
+            width: calc(25% - 20px); /* Four columns */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .service:hover {
+            transform: scale(1.05);
+        }
+        .service img {
+            width: 100%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .service h3 {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+        .service p {
+            padding: 0 10px 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to BOKOFAMCOoperatives</h1>
+        <p>Your trusted cooperative for farm supplies, equipment rentals, member information, and loans.</p>
+        <a href="/login" class="btn">Login</a>
+        <a href="/register" class="btn btn-secondary">Register</a>
+    </header>
+
+    <section class="features">
+        <h2>Our Services</h2>
+        <div class="services-container">
+            <div class="service">
+                <a href="/farm-supplies">
+                    <img src="/images/farmsupplies.jpg" alt="Farm Supplies"> <!-- Update image path -->
+                    <h3>Farm Supplies</h3>
+                    <p>Get the best supplies for your farming needs.</p>
+                </a>
+            </div>
+            <div class="service">
+                <a href="/equipment-rentals">
+                    <img src="/images/equipmentrentals.jpg" alt="Equipment Rentals"> <!-- Update image path -->
+                    <h3>Equipment Rentals</h3>
+                    <p>Rent equipment easily with us.</p>
+                </a>
+            </div>
+            <div class="service">
+                <a href="/loans">
+                    <img src="/images/loans.png" alt="Loans"> <!-- Update image path -->
+                    <h3>Loans</h3>
+                    <p>Access our cooperative loan services.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 BOKOFAMCOoperatives. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

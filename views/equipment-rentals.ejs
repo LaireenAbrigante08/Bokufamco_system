@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Rentals</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Equipment Rentals</h1>
+        <a href="/auth/logout">Logout</a> <!-- Change the link to logout -->
+    </header>
+
+    <section class="equipment">
+        <h2>Available Equipment</h2>
+        <div class="equipment-list">
+            <% equipment.forEach(item => { %>
+                <div class="equipment-item">
+                    <img src="/public/<%= item.picture %>" alt="<%= item.name %>"> <!-- Adjust path as necessary -->
+                    <h3><%= item.name %></h3>
+                    <p>Description: <%= item.description %></p>
+                    <p>Rental Price: $<%= item.rental_price %></p>
+                    <p>Available: <%= item.available %></p>
+                    <% if (req.isAuthenticated()) { %> <!-- Check if user is authenticated -->
+                        <p><a href="/equipment/<%= item.id %>">Rent Now</a></p>
+                    <% } else { %>
+                        <p><a href="/login">Login to rent</a></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 BOKOFAMCOoperatives. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

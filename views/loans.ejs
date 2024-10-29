@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loans</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Loans</h1>
+        <a href="/auth/logout">Logout</a> <!-- Change the link to logout -->
+    </header>
+
+    <section class="loans">
+        <h2>Available Loans</h2>
+        <div class="loan-list">
+            <% loans.forEach(loan => { %>
+                <div class="loan">
+                    <h3>Loan Amount: $<%= loan.amount %></h3>
+                    <p>Interest Rate: <%= loan.interest_rate %>%</p>
+                    <p>Loan Term: <%= loan.loan_term %></p>
+                    <p>Status: <%= loan.status %></p>
+                    <p>Requested On: <%= loan.created_at.toISOString().slice(0, 10) %></p>
+                    <% if (req.isAuthenticated()) { %> <!-- Check if user is authenticated -->
+                        <p><a href="/loans/<%= loan.id %>">View Details</a></p>
+                    <% } else { %>
+                        <p><a href="/login">Login to view details</a></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 BOKOFAMCOoperatives. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

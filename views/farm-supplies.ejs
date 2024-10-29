@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Supplies</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Farm Supplies</h1>
+        <a href="/auth/logout">Logout</a> <!-- Change the link to logout -->
+    </header>
+
+    <section class="products">
+        <h2>Available Products</h2>
+        <div class="product-list">
+            <% products.forEach(product => { %>
+                <div class="product">
+                    <img src="/public/<%= product.picture %>" alt="<%= product.name %>">
+                    <h3><%= product.name %></h3>
+                    <p><%= product.description %></p>
+                    <p>Price: $<%= product.price %></p>
+                    <p>Stock: <%= product.stock %></p>
+                    <% if (req.isAuthenticated()) { %> <!-- Check if user is authenticated -->
+                        <form action="/purchase/<%= product.id %>" method="POST">
+                            <button type="submit">Purchase</button>
+                        </form>
+                    <% } else { %>
+                        <p><a href="/login">Login to purchase</a></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 BOKOFAMCOoperatives. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

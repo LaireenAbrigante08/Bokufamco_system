@@ -13,7 +13,7 @@ const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
 const equipmentRentalsRoutes = require('./routes/equipmentRentalsRoutes');
 const memberInformationRoutes = require('./routes/memberInformationRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes'); // New purchase route
-const adminRoutes = require('./routes/adminRoutes'); // Admin routes
+//const adminRoutes = require('./routes/adminRoutes'); // Admin routes
 
 
 // Middleware
@@ -64,7 +64,7 @@ app.use('/equipment-rentals', equipmentRentalsRoutes);
 app.use('/member-information', memberInformationRoutes);
 app.use('/purchase', purchaseRoutes); // Use the purchase route
 app.use('/members', memberInformationRoutes); // Add member information route
-app.use('/admin', adminRoutes); // Admin route under '/admin'
+//app.use('/admin', adminRoutes); // Admin route under '/admin'
 
 // Start the server
 app.listen(3002, () => console.log('Server running on http://localhost:3002'));

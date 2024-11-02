@@ -1,31 +1,35 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
+
 exports.register = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password, role = "user" } = req.body; // Set role as 'user' by default
     try {
-        await User.createUser(username, password);
+        await User.createUser(username, email, password, role); // Pass role to createUser
         res.redirect('/login');
     } catch (err) {
+        console.error("Error during registration:", err); // Log error details
         res.status(500).send('Error during registration');
     }
 };
 
-// controllers/authController.js
+
 exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
-        const user = await User.findUserByUsername(username);
+        const user = await User.findUserByUsername(username); // Retrieve user from database
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.user = user;
-            res.redirect('/home'); // Redirect to the homepage
+            res.redirect('/home'); // Redirect to the homepage if login is successful
         } else {
-            res.send('Invalid credentials');
+            res.send('Invalid credentials'); // Show error if username or password is incorrect
         }
     } catch (err) {
+        console.error("Error during login:", err); // Log detailed error
         res.status(500).send('Error during login');
     }
 };
+
 
 
 

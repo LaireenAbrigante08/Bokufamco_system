@@ -3,7 +3,7 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 class User {
-    static async createUser(username, email, password, role = 'user') {
+    static async createUser(fullname, username, email, password) {
         const hashedPassword = await bcrypt.hash(password, 8);
 
         return new Promise((resolve, reject) => {
@@ -35,10 +35,7 @@ class User {
                 (err, results) => {
                     if (err) {
                         console.error("User Model - Error finding user:", err);
-                        return reject(err);
-                    }
-                    if (results.length === 0) {
-                        return resolve(null); // Return null if no user found
+                        reject(err);
                     }
                     console.log("User Model - Retrieved user:", results[0]);
                     resolve(results[0]);

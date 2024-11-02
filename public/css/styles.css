@@ -64,3 +64,12 @@ body {
     color: #e67e22;
     text-decoration: none;
 }
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 150px; /* Adjust this size as needed */
+    height: auto;
+}

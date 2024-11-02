@@ -1,19 +1,17 @@
-// models/User.js
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 class User {
-    static async createUser(fullname, username, email, password) {
+    static async createUser(username, email, password, role) { // Ensure the role is included
         const hashedPassword = await bcrypt.hash(password, 8);
 
         return new Promise((resolve, reject) => {
             db.query(
                 'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)', 
-                [username, email, hashedPassword, role],
+                [username, email, hashedPassword, role], // Include role in the query
                 (err, result) => {
                     if (err) {
                         if (err.code === 'ER_DUP_ENTRY') {
-                            // Handle duplicate entry error
                             console.error("User Model - Duplicate entry:", err);
                             return reject(new Error('Username or email already exists.'));
                         }

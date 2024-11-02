@@ -7,14 +7,13 @@ const contactRoutes = require('./routes/contactRoutes'); // Import contact route
 const aboutRoutes = require('./routes/aboutRoutes'); // Import about routes
 const app = express();
 
-//import routes
+// Import other routes
 const loansRoutes = require('./routes/loansRoutes');
 const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
 const equipmentRentalsRoutes = require('./routes/equipmentRentalsRoutes');
 const memberInformationRoutes = require('./routes/memberInformationRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes'); // New purchase route
-//const adminRoutes = require('./routes/adminRoutes'); // Admin routes
-
+// Removed adminRoutes as it is now included in authRoutes
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +27,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-// Root route redirecting to login
+// Root route redirecting to landing
 app.get('/', (req, res) => {
     res.redirect('/landing');
 });
@@ -42,12 +41,25 @@ app.get('/home', (req, res) => {
     }
 });
 
+// Middleware to check for admin privileges
+function isAdmin(req, res, next) {
+    // Check if the user is logged in and has admin privileges
+    if (req.session.user && req.session.user.role === 'admin') { // Change from isAdmin to role check
+        return next();
+    }
+    // If not admin, redirect to the user home page
+    res.redirect('/home');
+}
+
+// Admin Dashboard route
+app.get('/adminDashboard', isAdmin, (req, res) => {
+    res.render('adminDashboard');
+});
+
 // Registration route
 app.get('/register', (req, res) => {
     res.render('register'); // Render the register page
 });
-
-
 
 // Use the authentication, contact, and about routes
 app.use('/', authRoutes);
@@ -58,8 +70,8 @@ app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment-rentals', equipmentRentalsRoutes);
 app.use('/member-information', memberInformationRoutes);
 app.use('/purchase', purchaseRoutes); // Use the purchase route
-app.use('/members', memberInformationRoutes); // Add member information route
-//app.use('/admin', adminRoutes); // Admin route under '/admin'
+// Ensure member information route is used correctly
+app.use('/members', memberInformationRoutes);
 
 // Start the server
-app.listen(4000, () => console.log('Server running on http://localhost:4000'));
+app.listen(4300, () => console.log('Server running on http://localhost:4300'));

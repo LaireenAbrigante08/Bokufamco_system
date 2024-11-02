@@ -1,38 +1,47 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-
 exports.register = async (req, res) => {
     const { username, email, password, role = "user" } = req.body; // Set role as 'user' by default
     try {
         await User.createUser(username, email, password, role); // Pass role to createUser
         res.redirect('/login');
     } catch (err) {
-        console.error("Error during registration:", err); // Log error details
+        console.error("Error during registration:", err);
         res.status(500).send('Error during registration');
     }
 };
-
-
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findUserByUsername(username); // Retrieve user from database
-        if (user && await bcrypt.compare(password, user.password)) {
-            req.session.user = user;
-            res.redirect('/home'); // Redirect to the homepage if login is successful
+
+        if (user) {
+            const isMatch = await bcrypt.compare(password, user.password); // Compare entered password with hashed password
+            
+            if (isMatch) {
+                req.session.user = user; // Store user info in session
+                
+                // Check user role and redirect accordingly
+                if (user.role === 'admin') {
+                    return res.redirect('/adminDashboard'); // Redirect admin to admin dashboard
+                } else {
+                    return res.redirect('/home'); // Redirect regular user to homepage
+                }
+            } else {
+                console.log("Invalid credentials - Password mismatch");
+                return res.send('Invalid credentials'); // Password does not match
+            }
         } else {
-            res.send('Invalid credentials'); // Show error if username or password is incorrect
+            console.log("Invalid credentials - User not found");
+            return res.send('Invalid credentials'); // User not found
         }
     } catch (err) {
-        console.error("Error during login:", err); // Log detailed error
+        console.error("Error during login:", err);
         res.status(500).send('Error during login');
     }
 };
-
-
-
 
 exports.logout = (req, res) => {
     req.session.destroy((err) => {

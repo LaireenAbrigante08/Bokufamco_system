@@ -3,41 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOCOFAMCOoperatives</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <title>Document</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-4">
-        <h1>Welcome to BOCOFAMCOoperatives</h1>
-        <nav class="my-3">
-            <button onclick="location.href='/'" class="btn btn-light">Home</button>
-            <button onclick="location.href='/about'" class="btn btn-light">About Us</button>
-            <button onclick="location.href='/contact'" class="btn btn-light">Contact Us</button>
-            <a href="/logout" class="btn btn-danger">Logout</a>
-        </nav>
-    </header>
-
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-md-3">
-                <button onclick="location.href='/farm-supplies'" class="btn btn-success btn-block mb-3">Farm Supplies</button>
-            </div>
-            <div class="col-md-3">
-                <button onclick="location.href='/equipment-equipment-rentals'" class="btn btn-warning btn-block mb-3">Equipment Rentals</button>
-            </div>
-            <div class="col-md-3">
-                <button onclick="location.href='/memberDetail'" class="btn btn-info btn-block mb-3">Member Information</button>
-            </div>
-            <div class="col-md-3">
-                <button onclick="location.href='/loans'" class="btn btn-danger btn-block mb-3">Loans</button>
-            </div>
+    <div class="sidebar">
+        <div class="user-profile">
+            <a href="">
+                <img src="user-avatar.jpg" alt="" class="avatar">
+            </a>
         </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showContainer('profilecontainer')"><i class="fa-solid fa-users"></i> <span>Member Information</span></a></li>
+            <li><a href="#" onclick="showContainer('salarycontainer')"><i class="fa-solid fa-truck-ramp-box"></i> <span>Equipment Rentals</span></a></li>
+            <li><a href="#" onclick="showContainer('employmentcontainer')"><i class="fa-solid fa-wheat-awn"></i> <span>Farm Supplies</span></a></li>
+            <li><a href="#" onclick="showContainer('leavecontainer')"><i class="fa-solid fa-landmark"></i> <span>Loans</span></a></li>
+            <li class="logout"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
     </div>
 
-    <%- include('partials/footer') %>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function showContainer(containerId) {
+            // Hide all containers
+            document.querySelectorAll('.profilecontainer, .salarycontainer, .employmentcontainer, .leavecontainer')
+                .forEach(container => container.classList.add('hidden'));
+            
+            // Show the selected container
+            document.getElementById(containerId).classList.remove('hidden');
+        }
+
+        // Show default container
+        document.getElementById('profilecontainer').classList.remove('hidden');
+
+        function logout() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                // Redirect to signin page or handle logout process
+                window.location.href = "/landing";
+            }
+        }
+    </script>
 </body>
 </html>

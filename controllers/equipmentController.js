@@ -1,16 +1,14 @@
-const Equipment = require('../models/Equipment');
+const Equipment = require('../models/Equipment'); // Ensure this path matches your folder structure
 
 exports.getEquipment = async (req, res) => {
     try {
-        let equipment;
-        if (req.isAuthenticated()) { // Check if the user is authenticated
-            equipment = await Equipment.getUserEquipment(); // Get equipment for logged-in user
-        } else {
-            equipment = await Equipment.getAllEquipment(); // Get all equipment for guests
-        }
-        res.render('equipment-rentals', { equipment }); // Render the equipmentRentals.ejs view with equipment data
+        const equipment = await Equipment.getAllEquipment(); // Get all equipment for both logged in and guest users
+        const isAuthenticated = req.session && req.session.userId; // Check if user is logged in
+
+        // Render the equipment view with equipment data and authentication status
+        res.render('equipment', { equipment, isAuthenticated });
     } catch (error) {
-        console.error(error);
+        console.error('Error in getEquipment:', error);
         res.status(500).send('Server Error');
     }
 };

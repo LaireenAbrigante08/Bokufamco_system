@@ -10,7 +10,7 @@ const app = express();
 // Import other routes
 const loansRoutes = require('./routes/loansRoutes');
 const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
-const equipmentRentalsRoutes = require('./routes/equipmentRentalsRoutes');
+const equipmentRoutes = require('./routes/equipmentRoutes');
 const memberInformationRoutes = require('./routes/memberInformationRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes'); // New purchase route
 // Removed adminRoutes as it is now included in authRoutes
@@ -63,11 +63,11 @@ app.get('/register', (req, res) => {
 
 // Use the authentication, contact, and about routes
 app.use('/', authRoutes);
-app.use('/', contactRoutes); // Use contact routes
-app.use('/', aboutRoutes); // Use about routes
+//app.use('/', contactRoutes); // Use contact routes
+//app.use('/', aboutRoutes); // Use about routes
 app.use('/loans', loansRoutes);
 app.use('/farm-supplies', farmSuppliesRoutes);
-app.use('/equipment-rentals', equipmentRentalsRoutes);
+app.use('/equipment', equipmentRoutes);
 app.use('/member-information', memberInformationRoutes);
 app.use('/purchase', purchaseRoutes); // Use the purchase route
 // Ensure member information route is used correctly

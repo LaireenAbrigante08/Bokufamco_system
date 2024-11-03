@@ -1,4 +1,4 @@
-const db = require('../config/db'); // Adjust the path to your database connection
+const db = require('../config/db'); // Ensure this path matches your folder structure
 
 class Equipment {
     static getAllEquipment() {

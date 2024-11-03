@@ -41,6 +41,21 @@ class User {
             );
         });
     }
+
+    // User model
+    static async getAllMembers() {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM users WHERE role = "User/Member"', (err, results) => {
+                if (err) {
+                    console.error("User Model - Error fetching members:", err);
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+    }
+
 }
+
 
 module.exports = User;

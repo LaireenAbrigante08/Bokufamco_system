@@ -1,37 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Information</title>
-    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Link to your CSS file -->
-</head>
-<body>
-    <header>
-        <h1>Member Information</h1>
-        <a href="/auth/logout">Logout</a> <!-- Change the link to logout -->
-    </header>
+<%- include('partials/header') %>
 
-    <section class="members">
-        <h2>Our Members</h2>
-        <div class="member-list">
-            <% if (members.length === 0) { %>
-                <p>No member information available.</p>
-            <% } else { %>
-                <% members.forEach(member => { %>
-                    <div class="member-item">
-                        <h3><%= member.name %></h3>
-                        <p>Email: <%= member.email %></p>
-                        <p>Loan Credit: $<%= member.loan_credit %></p>
-                        <p><a href="/members/<%= member.id %>">View Details</a></p>
-                    </div>
-                <% }); %>
-            <% } %>
-        </div>
-    </section>
+<div class="main-container">
+    <h2>Member Information</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% members.forEach(member => { %>
+                <tr>
+                    <td><%= member.username %></td>
+                    <td><%= member.email %></td>
+                    <td><%= member.role %></td>
+                    <td>
+                        <a href="/members/edit/<%= member.id %>">Edit</a>
+                        <a href="/members/delete/<%= member.id %>">Delete</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
 
-    <footer>
-        <p>&copy; 2024 BOCOFAMCOoperatives. All Rights Reserved.</p>
-    </footer>
-</body>
-</html>
+<%- include('partials/footer') %>

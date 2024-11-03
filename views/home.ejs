@@ -5,46 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/css/home.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-    <title>Document</title>
+    <title>BOCOFAMCO Dashboard</title>
+    <script src="/scripts.js"></script>
 </head>
 <body>
     <div class="sidebar">
         <div class="user-profile">
-            <a href="">
-                <img src="user-avatar.jpg" alt="" class="avatar">
+            <a href="#">
+                <img src="images/UserPic.jpg" alt="User Avatar" class="avatar">
             </a>
+            <h2>User</h2> <!-- Admin title -->
         </div>
         <ul class="menu">
-            <li><a href="/memberDetails" onclick="showContainer('profilecontainer')"><i class="fa-solid fa-users"></i> <span>Member Information</span></a></li>
-            <li><a href="/equipment-rentals" onclick="showContainer('salarycontainer')"><i class="fa-solid fa-truck-ramp-box"></i> <span>Equipment Rentals</span></a></li>
-            <li><a href="/farm-supplies" onclick="showContainer('employmentcontainer')"><i class="fa-solid fa-wheat-awn"></i> <span>Farm Supplies</span></a></li>
-            <li><a href="/loans" onclick="showContainer('leavecontainer')"><i class="fa-solid fa-landmark"></i> <span>Loans</span></a></li>
+            <li><a href="#" onclick="showContainer('profileContainer')"><i class="fa-solid fa-users"></i> <span>Member Information</span></a></li>
+            <li><a href="#" onclick="showContainer('equipmentContainer')"><i class="fa-solid fa-truck-ramp-box"></i> <span>Equipment Rentals</span></a></li>
+            <li><a href="#" onclick="showContainer('farmSuppliesContainer')"><i class="fa-solid fa-wheat-awn"></i> <span>Farm Supplies</span></a></li>
+            <li><a href="#" onclick="showContainer('loansContainer')"><i class="fa-solid fa-landmark"></i> <span>Loans</span></a></li>
+            <li><a href="#" onclick="showContainer('aboutContainer')"><i class="fa-solid fa-info-circle"></i> <span>About Us</span></a></li>
+            <li><a href="#" onclick="showContainer('contactContainer')"><i class="fa-solid fa-envelope"></i> <span>Contact Us</span></a></li>
             <li class="logout"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
         </ul>
     </div>
 
+    <div class="main-content">
+        <div id="profileContainer" class="container hidden">
+            <h2>Member Information</h2>
+            <p>Details about members...</p>
+        </div>
+        
+        <div id="equipmentContainer" class="container hidden">
+            <h2>Equipment Rentals</h2>
+            <p>Details about equipment rentals...</p>
+        </div>
+
+        <div id="farmSuppliesContainer" class="container hidden">
+            <h2>Farm Supplies</h2>
+            <p>Details about farm supplies...</p>
+        </div>
+
+        <div id="loansContainer" class="container hidden">
+            <h2>Loans</h2>
+            <p>Details about loans...</p>
+        </div>
+
+        <div id="aboutContainer" class="container hidden">
+            <h2>About BOCOFAMCO</h2>
+            <p>Welcome to BOCOFAMCO! We are a cooperative dedicated to supporting farmers through various services...</p>
+        </div>
+
+        <div id="contactContainer" class="container hidden">
+            <h2>Contact BOCOFAMCO</h2>
+            <p>Email: contact@bocofamco.com</p>
+            <p>Phone: (123) 456-7890</p>
+        </div>
+    </div>
+
+    <!-- JavaScript to control visibility of containers -->
     <script>
         function showContainer(containerId) {
             // Hide all containers
-            document.querySelectorAll('.profilecontainer, .salarycontainer, .employmentcontainer, .leavecontainer')
-                .forEach(container => container.classList.add('hidden'));
-            
+            document.querySelectorAll('.container').forEach(container => {
+                container.classList.add('hidden');
+            });
+
             // Show the selected container
             document.getElementById(containerId).classList.remove('hidden');
         }
 
-        // Show default container
-        document.getElementById('profilecontainer').classList.remove('hidden');
-
         function logout() {
             const confirmation = confirm("Are you sure you want to log out?");
             if (confirmation) {
-                // Redirect to signin page or handle logout process
-                window.location.href = "/landing";
+                window.location.href = "/landing"; // Replace with your actual logout path
             }
         }
     </script>

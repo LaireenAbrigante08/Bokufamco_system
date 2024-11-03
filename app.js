@@ -74,4 +74,4 @@ app.use('/purchase', purchaseRoutes); // Use the purchase route
 app.use('/members', memberInformationRoutes);
 
 // Start the server
-app.listen(4300, () => console.log('Server running on http://localhost:4300'));
+app.listen(5600, () => console.log('Server running on http://localhost:5600'));

@@ -8,7 +8,9 @@ exports.getEquipment = async (req, res) => {
         } else {
             equipment = await Equipment.getAllEquipment(); // Get all equipment for guests
         }
-        res.render('equipment-rentals', { equipment }); // Render the equipmentRentals.ejs view with equipment data
+        
+        // Render the equipment-rentals view with equipment data and authentication status
+        res.render('equipment-rentals', { equipment, isAuthenticated: req.isAuthenticated() });
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');

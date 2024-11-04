@@ -1,29 +1,30 @@
 const Member = require('../models/Member');
 
-exports.getMembers = async (req, res) => {
-    try {
-        let members;
-        if (req.isAuthenticated()) { // Check if the user is authenticated
-            members = await Member.getAllMembers(); // Get member information for logged-in user
-        } else {
-            members = []; // No member data for unauthenticated users
+const memberController = {
+    getMemberDetails: async (req, res) => {
+        const memberId = req.session.user.id; // Assuming user ID is stored in session
+        try {
+            const member = await Member.findById(memberId);
+            res.render('memberDetails', {
+                member,
+            });
+        } catch (error) {
+            console.error('Error fetching member details:', error);
+            res.status(500).send('Internal Server Error');
         }
-        res.render('memberInformation', { members }); // Render the memberInformation.ejs view with member data
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server Error');
-    }
+    },
+
+    saveMemberDetails: async (req, res) => {
+        const memberId = req.session.user.id; // Get the user ID from session
+        const { name, email, phone, address, picture } = req.body;
+        try {
+            await Member.updateMember(memberId, { name, email, phone, address, picture });
+            res.redirect('/members/details'); // Redirect to view updated details
+        } catch (error) {
+            console.error('Error saving member details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    },
 };
 
-exports.getMemberDetail = async (req, res) => {
-    try {
-        const member = await Member.getMemberById(req.params.id);
-        if (!member) {
-            return res.status(404).send('Member not found');
-        }
-        res.render('memberDetail', { member }); // Render the memberDetail.ejs view with member data
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server Error');
-    }
-};
+module.exports = memberController;

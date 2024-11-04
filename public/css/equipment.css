@@ -18,36 +18,36 @@ header {
     text-align: center;
 }
 
-.member-info {
+.equipment {
     margin: 20px;
 }
 
-.member-details {
+.equipment-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.member-card {
+.equipment-item {
     background: white;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: calc(50% - 20px);
-    text-align: left;
+    width: calc(33.33% - 20px);
+    text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.member-card:hover {
+.equipment-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.member-card img {
-    max-width: 100px;
+.equipment-item img {
+    max-width: 100%;
     height: auto;
-    border-radius: 50%;
+    border-radius: 5px;
 }
 
 button {

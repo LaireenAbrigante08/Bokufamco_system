@@ -92,29 +92,27 @@ INSERT INTO `loans` (`id`, `member_id`, `amount`, `interest_rate`, `loan_term`, 
 --
 
 DROP TABLE IF EXISTS `members`;
-CREATE TABLE IF NOT EXISTS `members` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `loan_credit` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    join_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    picture VARCHAR(255)  -- Path to the member's picture
+);
+
 
 --
 -- Dumping data for table `members`
 --
 
-INSERT INTO `members` (`id`, `name`, `email`, `loan_credit`) VALUES
-(1, 'John Doe', 'john@example.com', 15000.00),
-(2, 'Jane Smith', 'jane@example.com', 20000.00),
-(3, 'Alice Johnson', 'alice@example.com', 10000.00),
-(4, 'Bob Brown', 'bob@example.com', 5000.00),
-(5, 'Charlie Davis', 'charlie@example.com', 30000.00),
-(6, 'Diana Prince', 'diana@example.com', 25000.00),
-(7, 'Edward Elric', 'edward@example.com', 12000.00),
-(8, 'Fiona Gallagher', 'fiona@example.com', 18000.00),
-(9, 'George Costanza', 'george@example.com', 7000.00),
-(10, 'Hannah Baker', 'hannah@example.com', 9000.00);
+INSERT INTO members (name, email, phone, address, join_date, status, picture) VALUES 
+('Alice Smith', 'alice@example.com', '555-1234', '456 Elm St, Othertown', NOW(), 'active', 'alice_smith.jpg'),
+('Bob Johnson', 'bob@example.com', '555-5678', '789 Maple St, Sometown', NOW(), 'active', 'bob_johnson.jpg'),
+('Carol White', 'carol@example.com', '555-8765', '321 Oak St, Yourtown', NOW(), 'active', 'carol_white.jpg');
+
 
 -- --------------------------------------------------------
 

@@ -56,4 +56,4 @@ app.get('/admin', isAdmin, (req, res) => {
 });
 
 // Start the server
-app.listen(2100, () => console.log('Server running on http://localhost:2100'));
+app.listen(2300, () => console.log('Server running on http://localhost:2300'));

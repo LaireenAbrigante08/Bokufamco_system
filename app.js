@@ -8,6 +8,7 @@ const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
 const equipmentRoutes = require('./routes/equipmentRoutes');
 const memberInformationRoutes = require('./routes/memberInformationRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment', equipmentRoutes);
 app.use('/members', memberInformationRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/adminDashboard', adminRoutes);
 
 // Example of using isAdmin middleware on a route (Admin-specific routes)
 app.get('/admin', isAdmin, (req, res) => {

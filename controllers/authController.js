@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
                 
                 // Check user role and redirect accordingly
                 if (user.role === 'Admin') {
-                    return res.redirect('/adminDashboard'); // Redirect admin to admin dashboard
+                    return res.redirect('/admin'); // Redirect admin to admin dashboard
                 } else {
                     return res.redirect('/home'); // Redirect regular user to homepage
                 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <style>
+        /* Basic Styles for the Form */
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #006400;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-container label {
+            margin-bottom: 8px;
+            display: block;
+            font-weight: bold;
+        }
+        .form-container input, .form-container textarea, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-container textarea {
+            resize: vertical;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #006400;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Product</h1>
+    <div class="form-container">
+        <form action="/admin/farm-supplies/edit/<%= product.id %>" method="POST" enctype="multipart/form-data"> 
+
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" value="<%= product.name %>" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required><%= product.description %></textarea>
+
+            <label for="picture">Picture:</label>
+            <input type="file" id="picture" name="picture" accept="image/*">
+            <!-- Show existing image as a preview -->
+            <div style="margin-top: 10px;">
+                <p>Current Picture:</p>
+                <img src="/images/product/<%= product.picture %>" alt="<%= product.name %>" style="width: 100px;">
+            </div>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" value="<%= product.price %>" required>
+
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" value="<%= product.stock %>" required>
+
+            <button type="submit">Update Product</button>
+        </form>
+    
+    </div>
+</body>
+</html>

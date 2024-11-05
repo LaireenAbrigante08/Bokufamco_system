@@ -9,7 +9,7 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const memberInformationRoutes = require('./routes/memberInformationRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
+const bodyParser = require('body-parser'); 
 const app = express();
 
 // Middleware
@@ -23,6 +23,8 @@ app.use(session({
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true })); // for parsing form data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Root route redirecting to landing
 app.get('/', (req, res) => {
@@ -33,14 +35,6 @@ app.get('/home', (req, res) => {
     res.render('home'); // Assuming you have a home.ejs file
 });
 
-// Middleware to check for admin privileges
-function isAdmin(req, res, next) {
-    if (req.session.user && req.session.user.role === 'Admin') {
-        return next();
-    }
-    res.redirect('/home');
-}
-
 // Routes
 app.use('/', authRoutes);
 app.use('/loans', loansRoutes);
@@ -48,12 +42,8 @@ app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment', equipmentRoutes);
 app.use('/members', memberInformationRoutes);
 app.use('/purchase', purchaseRoutes);
-app.use('/adminDashboard', adminRoutes);
+app.use('/admin', adminRoutes); // Admin routes without isAdmin here
 
-// Example of using isAdmin middleware on a route (Admin-specific routes)
-app.get('/admin', isAdmin, (req, res) => {
-    res.render('adminDashboard'); // Replace with your actual admin dashboard view
-});
 
 // Start the server
-app.listen(2300, () => console.log('Server running on http://localhost:2300'));
+app.listen(4003, () => console.log('Server running on http://localhost:4003'));

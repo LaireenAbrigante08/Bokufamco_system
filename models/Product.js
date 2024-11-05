@@ -6,6 +6,7 @@ class Product {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM products', (err, results) => {
                 if (err) {
+                    console.error('Database error on fetching products:', err);
                     reject(err);
                 } else {
                     resolve(results);
@@ -19,6 +20,7 @@ class Product {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM products WHERE id = ?', [id], (err, results) => {
                 if (err) {
+                    console.error('Database error on fetching product by ID:', err);
                     reject(err);
                 } else {
                     resolve(results[0]);
@@ -35,40 +37,50 @@ class Product {
                 [name, description, picture, price, stock],
                 (err, result) => {
                     if (err) {
+                        console.error('Database error on adding product:', err);
                         reject(err);
                     } else {
-                        resolve(result.insertId); // Return the ID of the new product
+                        resolve(result.insertId);
                     }
                 }
             );
         });
     }
 
-    // Update an existing product
     static updateProduct(id, { name, description, picture, price, stock }) {
+        const fields = [name, description, price, stock];
+        let query = 'UPDATE products SET name = ?, description = ?, price = ?, stock = ?';
+    
+        if (picture) {
+            query += ', picture = ?';
+            fields.push(picture);
+        }
+        query += ' WHERE id = ?';
+        fields.push(id);
+    
         return new Promise((resolve, reject) => {
-            db.query(
-                'UPDATE products SET name = ?, description = ?, picture = ?, price = ?, stock = ? WHERE id = ?',
-                [name, description, picture, price, stock, id],
-                (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result.affectedRows); // Return the number of affected rows
-                    }
+            db.query(query, fields, (err, result) => {
+                if (err) {
+                    console.error('Database error on updating product:', err);
+                    reject(err);
+                } else {
+                    resolve(result.affectedRows);
                 }
-            );
+            });
         });
     }
+    
+    
 
     // Delete a product by ID
     static deleteProduct(id) {
         return new Promise((resolve, reject) => {
             db.query('DELETE FROM products WHERE id = ?', [id], (err, result) => {
                 if (err) {
+                    console.error('Database error on deleting product:', err);
                     reject(err);
                 } else {
-                    resolve(result.affectedRows); // Return the number of affected rows
+                    resolve(result.affectedRows);
                 }
             });
         });

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .dashboard {
+            margin-bottom: 40px;
+        }
+
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 200px;
+            margin: 10px;
+        }
+
+        .rental-chart {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2>Dashboard Overview</h2>
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Total Members</h3>
+                <p><strong><span id="total-members">150</span></strong></p>
+            </div>
+            <div class="card">
+                <h3>Equipment Rentals (Last Month)</h3>
+                <p><strong><span id="total-equipment-rented">75</span></strong></p>
+            </div>
+            <div class="card">
+                <h3>Loan Requests</h3>
+                <p><strong>Received: <span id="total-loan-received">50</span></strong></p>
+                <p><strong>Approved: <span id="total-loan-approved">30</span></strong></p>
+            </div>
+            <div class="card">
+                <h3>Sales Revenue (Last Month)</h3>
+                <p><strong><span id="sales-revenue">5000</span> Currency</strong></p>
+            </div>
+        </div>
+
+        <div class="rental-chart">
+            <canvas id="rentalChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for the rental chart
+        const ctx = document.getElementById('rentalChart').getContext('2d');
+        const rentalChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Rentals',
+                    data: [12, 19, 3, 5],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

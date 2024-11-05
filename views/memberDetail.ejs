@@ -3,24 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Details</title>
-    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Link to your CSS file -->
+    <title>Member Information</title>
+    <link rel="stylesheet" href="/css/memberDetails.css">
 </head>
 <body>
-    <header>
-        <h1>Member Details</h1>
-        <a href="/auth/logout">Logout</a>
-    </header>
+    <div class="container">
+        <%- include('partials/header') %>
+        <header>
+            <h1>Member Information</h1>
+        </header>
 
-    <section class="member-detail">
-        <h2><%= member.name %></h2>
-        <p>Email: <%= member.email %></p>
-        <p>Loan Credit: $<%= member.loan_credit %></p>
-        <a href="/members">Back to Members</a>
-    </section>
+        <section class="member-info">
+            <h2>Your Details</h2>
+            <form action="/members/details" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="<%= member ? member.name : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<%= member ? member.email : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" name="phone" value="<%= member ? member.phone : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" value="<%= member ? member.address : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="picture">Profile Picture URL:</label>
+                    <input type="text" id="picture" name="picture" value="<%= member ? member.picture : '' %>">
+                </div>
+                <button type="submit">Save Details</button>
+            </form>
+        </section>
 
-    <footer>
-        <p>&copy; 2024 BOCOFAMCOoperatives. All Rights Reserved.</p>
-    </footer>
+        <%- include('partials/footer') %>
+    </div>
 </body>
 </html>

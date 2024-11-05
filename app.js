@@ -1,7 +1,9 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const db = require('./config/db');
+const db = require('./config/db'); // Ensure your database connection is correctly set up in db.js
+
+// Importing Routes
 const authRoutes = require('./routes/authRoutes');
 const loansRoutes = require('./routes/loansRoutes');
 const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
@@ -15,18 +17,18 @@ const app = express();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'Laireen',
+    secret: 'Laireen', // Replace 'Laireen' with a secure, random secret key
     resave: false,
     saveUninitialized: false,
 }));
 
-// Serve static files
+// Serve static files and set up view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); // for parsing form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Root route redirecting to landing
+// Root route redirecting to landing page
 app.get('/', (req, res) => {
     res.redirect('/landing');
 });

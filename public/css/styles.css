@@ -2,77 +2,72 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
+    background-color: #f0f0f5; /* Match with other pages */
 }
 
 .main-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 120px); /* Full height minus header and footer */
+    height: 100vh;
 }
 
 .login-container {
-    background-color: #fafafa;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* Clean background */
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     padding: 30px;
     width: 90%;
     max-width: 400px;
+    text-align: center;
 }
 
 .login-container h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 1.8em;
+    width: 100%; /* Ensures the heading spans the full width */
+    font-size: 2em;
+    color: #333333;
+    margin: 0 0 1em;
+    font-weight: 600;
 }
+
 
 .login-container input[type="text"],
 .login-container input[type="email"],
 .login-container input[type="password"] {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0;
+    padding: 12px;
+    margin: 8px 0;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1em;
-    box-sizing: border-box;
 }
 
 .login-container button {
     width: 100%;
-    padding: 10px;
-    background-color: #e67e22;
+    padding: 12px;
+    background-color: #4CAF50; /* Green from landing header */
     color: white;
     border: none;
     font-size: 1.1em;
     cursor: pointer;
     margin-top: 20px;
-    border-radius: 4px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
 }
 
 .login-container button:hover {
-    background-color: #d35400;
+    background-color: #45a049; /* Slightly darker green */
 }
 
 .login-container p {
-    text-align: center;
+    color: #2c3e50;
+    font-size: 0.9em;
 }
 
 .login-container a {
-    color: #e67e22;
+    color: #4CAF50;
     text-decoration: none;
-}
-
-.login-container {
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background-color: #fff;
 }
 
 .logo-container {
@@ -80,6 +75,7 @@ body {
 }
 
 .logo {
-    width: 150px; /* Adjust this size as needed */
+    width: 100px;
     height: auto;
+    border-radius: 8px;
 }

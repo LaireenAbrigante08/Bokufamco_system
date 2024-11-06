@@ -24,20 +24,19 @@ body {
     bottom: 0;
     background: url('/images/BOKOFAMCO BACKGROUND.jpg') no-repeat center center/cover;
     filter: blur(8px);
-    z-index: -1; /* Places it behind the form */
+    z-index: -1; 
 }
 
-/* Login Container Styles */
 .login-container {
     position: relative;
-    background-color: rgba(255, 255, 255, 0.986); /* Slight transparency */
+    background-color: rgba(255, 255, 255, 0.986); 
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     padding: 30px;
     max-width: 400px;
     width: 90%;
     text-align: center;
-    z-index: 1; /* Ensures the form is on top of the blurred background */
+    z-index: 1; 
 }
 
 .login-container h2 {

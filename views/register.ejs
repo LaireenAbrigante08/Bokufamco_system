@@ -1,16 +1,16 @@
 <%- include('partials/header') %>
 
-<div class="main-container">
+<div class="form-background">
     <div class="login-container">
         <div class="logo-container">
-            <img src="images/logo.jpg" alt="Logo" class="logo">
+            <img src="/images/logo.jpg" alt="Logo" class="logo">
         </div>
         <h2>Create New Account</h2>
         <form action="/register" method="POST">
             <input type="text" name="username" placeholder="Choose a username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Enter your password" required>
-            <input type="hidden" name="role" value="User/Member"> <!-- Default role as 'user' -->
+            <input type="hidden" name="role" value="User/Member">
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="/login">Log in here</a>.</p>

@@ -94,14 +94,17 @@ INSERT INTO `loans` (`id`, `member_id`, `amount`, `interest_rate`, `loan_term`, 
 DROP TABLE IF EXISTS `members`;
 CREATE TABLE members (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,  -- Assuming there's a users table, this links each member to a user account
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(15),
     address VARCHAR(255),
     join_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('active', 'inactive') DEFAULT 'active',
-    picture VARCHAR(255)  -- Path to the member's picture
+    picture VARCHAR(255),  -- Path or URL to the member's picture
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
 
 
 --

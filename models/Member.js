@@ -11,10 +11,10 @@ const Member = {
     },
 
     updateMember: async (id, details) => {
-        const { name, email, phone, address, picture } = details;
+        const { lastname, firstname, middlename, dob, address, gender, contact_information, picture } = details;
         try {
-            await db.query('UPDATE members SET name = ?, email = ?, phone = ?, address = ?, picture = ? WHERE id = ?', 
-            [name, email, phone, address, picture, id]);
+            await db.query('UPDATE members SET lastname = ?, firstname = ?, middlename = ?, dob = ?, address = ?, gender = ?, contact_information = ?, picture = ? WHERE id = ?', 
+            [lastname, firstname, middlename, dob, address, gender, contact_information, picture, id]);
         } catch (error) {
             throw error;
         }

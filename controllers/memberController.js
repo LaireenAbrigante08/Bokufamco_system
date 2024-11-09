@@ -1,30 +1,52 @@
-const Member = require('../models/Member');
+// controllers/memberController.js
+module.exports = (db) => {
+    return {
+        // Fetch member data and render the form
+        getMemberForm: (req, res) => {
+            const memberModel = require('../models/member')(db); // Import the member model with db connection
 
-const memberController = {
-    getMemberDetails: async (req, res) => {
-        const memberId = req.session.user.id; // Assuming user ID is stored in session
-        try {
-            const member = await Member.findById(memberId);
-            res.render('memberDetails', {
-                member,
+            memberModel.getMember((err, results) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("Error fetching member data");
+                }
+
+                const user = results.length > 0 ? results[0] : null;
+                res.render('memberInformation', { user, successMessage: req.session.successMessage }); // Pass success message to the view
+                delete req.session.successMessage; // Remove message after it's displayed
             });
-        } catch (error) {
-            console.error('Error fetching member details:', error);
-            res.status(500).send('Internal Server Error');
-        }
-    },
+        },
 
-    saveMemberDetails: async (req, res) => {
-        const memberId = req.session.user.id; // Get the user ID from session
-        const { lastname, firstname, middlename, dob, address, gender, contact_information, picture } = req.body;
-        try {
-            await Member.updateMember(memberId, { lastname, firstname, middlename, dob, address, gender, contact_information, picture });
-            res.redirect('/members/details'); // Redirect to view updated details
-        } catch (error) {
-            console.error('Error saving member details:', error);
-            res.status(500).send('Internal Server Error');
+        // Handle form submission and update the member's data
+        updateMember: (req, res) => {
+            const { first, middle, last, address, dob, email, gender, idnum, number } = req.body;
+
+            const memberData = {
+                first_name: first,
+                middle_name: middle,
+                last_name: last,
+                address: address,
+                dob: dob,
+                email: email,
+                gender: gender,
+                id_number: idnum,
+                contact_number: number
+            };
+
+            const memberModel = require('../models/member')(db);
+
+            memberModel.updateMember(memberData, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("Error updating member data");
+                }
+
+                // Set a success message in the session
+                req.session.successMessage = "Member information updated successfully!";
+                
+                // Redirect to the form page after saving
+                res.redirect('/members');
+            });
         }
-    },
+    };
 };
-
-module.exports = memberController;

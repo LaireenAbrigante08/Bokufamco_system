@@ -16,9 +16,9 @@ const memberController = {
 
     saveMemberDetails: async (req, res) => {
         const memberId = req.session.user.id; // Get the user ID from session
-        const { name, email, phone, address, picture } = req.body;
+        const { lastname, firstname, middlename, dob, address, gender, contact_information, picture } = req.body;
         try {
-            await Member.updateMember(memberId, { name, email, phone, address, picture });
+            await Member.updateMember(memberId, { lastname, firstname, middlename, dob, address, gender, contact_information, picture });
             res.redirect('/members/details'); // Redirect to view updated details
         } catch (error) {
             console.error('Error saving member details:', error);

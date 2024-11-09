@@ -1,11 +1,21 @@
+// routes/memberRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const memberController = require('../controllers/memberController');
 
-// Route to display member details
-router.get('/details', memberController.getMemberDetails);
+// Importing the controller with db connection
+module.exports = (db) => {
+    const memberController = require('../controllers/memberController')(db); 
 
-// Route to save member details
-router.post('/details', memberController.saveMemberDetails);
+    // Route to render the member form (for creating a new member)
+    router.get('/', (req, res) => {
+        memberController.getMemberForm(req, res);
+    });
 
-module.exports = router;
+    // Route to handle form submission and save member data
+    router.post('/save', (req, res) => {
+        memberController.saveMember(req, res);
+    });
+
+    return router;
+};

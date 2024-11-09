@@ -21,6 +21,6 @@ module.exports = (db) => {
     router.post('/update', (req, res) => {
         memberController.updateMember(req, res);
     });
-
+    
     return router;
 };

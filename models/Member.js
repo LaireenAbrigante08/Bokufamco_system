@@ -1,8 +1,8 @@
 module.exports = (db) => {
     return {
-        // Fetch the first member data
-        getMember: (callback) => {
-            const query = 'SELECT * FROM members LIMIT 1'; // For simplicity, fetching the first member in the database
+        // Fetch all members data
+        getAllMembers: (callback) => {
+            const query = 'SELECT * FROM members'; // Get all members
             db.query(query, callback);  // Execute the query and pass the result to the callback function
         },
 

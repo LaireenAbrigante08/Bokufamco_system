@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 07, 2024 at 01:16 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Nov 09, 2024 at 01:38 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,12 +28,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `equipment` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `picture` varchar(255) DEFAULT NULL,
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `rental_price` decimal(10,2) DEFAULT NULL,
-  `available` enum('Yes','No') DEFAULT NULL
+  `available` enum('Yes','No') COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -54,14 +54,14 @@ INSERT INTO `equipment` (`id`, `name`, `description`, `picture`, `rental_price`,
 --
 
 CREATE TABLE `loans` (
-  `id` int(11) NOT NULL,
-  `member_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `member_id` int NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `interest_rate` decimal(5,2) NOT NULL,
-  `loan_term` int(11) NOT NULL,
-  `status` enum('pending','approved','rejected') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `loan_term` int NOT NULL,
+  `status` enum('pending','approved','rejected') COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -87,27 +87,29 @@ INSERT INTO `loans` (`id`, `member_id`, `amount`, `interest_rate`, `loan_term`, 
 --
 
 CREATE TABLE `members` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(15) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `join_date` datetime DEFAULT current_timestamp(),
-  `status` enum('active','inactive') DEFAULT 'active',
-  `picture` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id` int NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `middle_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `address` text,
+  `dob` date DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `gender` enum('Male','Female') DEFAULT NULL,
+  `id_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `contact_number` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `members`
 --
 
-INSERT INTO `members` (`id`, `user_id`, `name`, `email`, `phone`, `address`, `join_date`, `status`, `picture`, `created_at`) VALUES
-(6, 1, 'John Doe', 'john.doe@example.com', '123-456-7890', '123 Main St, Anytown, USA', '2024-11-06 20:28:30', 'active', 'path/to/johndoe.jpg', '2024-11-06 15:35:34'),
-(7, 2, 'Jane Smith', 'jane.smith@example.com', '987-654-3210', '456 Elm St, Othertown, USA', '2024-11-06 20:28:30', 'active', 'path/to/janesmith.jpg', '2024-11-06 15:35:34'),
-(8, 3, 'Michael Johnson', 'michael.j@example.com', '555-666-7777', '789 Oak St, Smalltown, USA', '2024-11-06 20:28:30', 'inactive', 'path/to/michaeljohnson.jpg', '2024-11-06 15:35:34'),
-(9, 4, 'Emily Davis', 'emily.d@example.com', '444-333-2222', '101 Maple Ave, New City, USA', '2024-11-06 20:28:30', 'active', 'path/to/emilydavis.jpg', '2024-11-06 15:35:34');
+INSERT INTO `members` (`id`, `first_name`, `middle_name`, `last_name`, `address`, `dob`, `email`, `gender`, `id_number`, `contact_number`) VALUES
+(1, 'Allen', 'Magmanlac', 'Dinglasan', 'Baco', '2000-12-02', 'allen@gmail.com', 'Male', '321', '09876543212'),
+(4, 'Nathan', 'Ramirez', 'Dela Cruz', 'Calapan City', '2000-01-02', 'nathan@gmail.com', 'Male', '6', '09293934207'),
+(5, 'Alvin', 'Manalo', 'Villaverde', 'ilaya Calapan', '2001-09-28', 'alvinn@gmail.com', 'Male', '1214', '09293934207'),
+(6, 'Laireen', 'Alias', 'Abrigante', 'Calapan City', '2001-02-09', 'abrigante@gmail.com', 'Female', '1213', '09456382013'),
+(10, 'Laireen', 'Ramirez', 'Dinglasan', 'Calapan City', '2000-11-12', 'abrigante@gmail.com', 'Female', '124314', '09876543212'),
+(15, 'Laireen', 'Ramirez', 'Abrigante', 'a', '2001-02-08', 'abrigante@gmail.com', 'Female', '12122', '09876543212');
 
 -- --------------------------------------------------------
 
@@ -116,11 +118,11 @@ INSERT INTO `members` (`id`, `user_id`, `name`, `email`, `phone`, `address`, `jo
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `member_id` int DEFAULT NULL,
   `total` decimal(10,2) DEFAULT NULL,
-  `payment_method` enum('online','loan_credit') DEFAULT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `payment_method` enum('online','loan_credit') COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,12 +132,12 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `picture` varchar(255) NOT NULL,
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `picture` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `stock` int(11) DEFAULT NULL
+  `stock` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -154,10 +156,10 @@ INSERT INTO `products` (`id`, `name`, `description`, `picture`, `price`, `stock`
 --
 
 CREATE TABLE `transactions` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
   `transaction_amount` decimal(10,2) DEFAULT NULL,
-  `transaction_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `transaction_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -167,27 +169,30 @@ CREATE TABLE `transactions` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('Admin','User/Member') NOT NULL DEFAULT 'User/Member',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `role` varchar(50) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
-(1, 'johndoe', 'john.doe@example.com', 'hashed_password_1', 'User/Member', '2024-11-06 15:35:16'),
-(2, 'janesmith', 'jane.smith@example.com', 'hashed_password_2', 'User/Member', '2024-11-06 15:35:16'),
-(3, 'michaelj', 'michael.j@example.com', 'hashed_password_3', 'User/Member', '2024-11-06 15:35:16'),
-(4, 'emilyd', 'emily.d@example.com', 'hashed_password_4', 'User/Member', '2024-11-06 15:35:16'),
-(5, 'chrisb', 'chris.b@example.com', 'hashed_password_5', 'Admin', '2024-11-06 15:35:16'),
-(14, 'Laireen', 'laireenabrigante@gmail.com', '$2a$08$Y4zdKmg0rEXmJEycv71TLOTGMyTMAoYz2mHtFsyO9IyDOSQuSRD2i', 'User/Member', '2024-11-06 15:35:16'),
-(15, 'LaireenM', 'lai@gmail.com', '$2a$08$eVftOWylr415QUHMDRlCkuCoXUJJVcjXm7..kSzVuf5dLX2pCFJPC', 'Admin', '2024-11-06 15:35:16'),
-(16, 'Sunshyne', 'abrigante@gmail.com', '$2a$08$RJPhyQCkUNS9ZhramgcY7ex.PbgcHNrprJeTBDBE3kXXCDA3rtDRe', 'User/Member', '2024-11-07 08:59:59');
+(1, 'Alvin', 'alvin@gmail.com', '$2a$08$2dEoxqOp4TQuD9CfsXJDx.ZpRwwejQvplnrxAZrXd9uwktucWWJpi', 'Admin', '2024-11-08 09:14:40'),
+(2, 'Laireen', 'lai@gmail.com', '$2a$08$cGqfRnyKwE7ifaL0u2Acl.xH4lKtkL0HfZG07ZGytX/g7dMMn.rsS', 'Members', '2024-11-08 10:25:49'),
+(3, 'Jam', 'jam@gmail.com', '$2a$08$THrnQGwYki4KbL.FhZTpE.gN5vb4tmE07TYk4CupBKZNmtnMxldXm', 'Members', '2024-11-08 10:26:38'),
+(4, 'jam', 'jamaica@gmail.com', '$2a$08$fKIic9zQkq3qamkDNoBFw.DRXZvaUtpURHVkpseLHSYaP9xrFm1zy', 'User/Member', '2024-11-09 02:21:58'),
+(5, 'roy', 'roy@gmail.com', '$2a$08$6FA/3Tf/4xv3lktyGgHEwufSsogwhedmkkRmcl3/iDrwI1z2F2Gfe', 'User/Member', '2024-11-09 02:24:29'),
+(6, 'nathan', 'nathan@gmail.com', '$2a$08$8WY1V70wAlbcMJSR6KKNteUhuf9ywDIA3sOaYqA/LB5UO.arYmcL.', 'User/Member', '2024-11-09 02:25:03'),
+(7, 'rex', 'rex@gmail.com', '$2a$08$f0IA3YOD2YVL2VZapSsRJuOtCtaSduUXhYwvl4qAgDVdpHAekhoPW', 'User/Member', '2024-11-09 02:26:18'),
+(9, 'moonlight', 'alvinn@gmail.com', '$2a$08$x9qXQJkeYX6bAYCPuhR.kOBlOIom8YcyHP08ucCGOf6YhhrNSlz76', 'User/Member', '2024-11-09 02:34:50'),
+(10, 'Abrigante', 'abrigante@gmail.com', '$2a$08$xxi6igzTuMeXESiBMdhT/.Oa5h5fh7pWImdmIEiOmn5TxEIVoEr6W', 'User/Member', '2024-11-09 02:44:56'),
+(11, 'Allen', 'allen@gmail.com', '$2a$08$DhSevL/owwDHiCUppuHmQeQux5I3NC4kiPfD/08DLEvPPihxl3aXu', 'User/Member', '2024-11-09 06:31:10'),
+(12, 'Bebe', 'bebe@gmail.com', '$2a$08$rfhhp.NzDI7L/cjwV2wHJ.ZP8B3o3cWZNRn7phBkuDT8wUR6pipxa', 'User/Member', '2024-11-09 08:36:01');
 
 --
 -- Indexes for dumped tables
@@ -211,8 +216,7 @@ ALTER TABLE `loans`
 --
 ALTER TABLE `members`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `user_id` (`user_id`);
+  ADD UNIQUE KEY `id_number` (`id_number`);
 
 --
 -- Indexes for table `orders`
@@ -249,53 +253,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `equipment`
 --
 ALTER TABLE `equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `loans`
 --
 ALTER TABLE `loans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `members`
---
-ALTER TABLE `members`
-  ADD CONSTRAINT `members_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

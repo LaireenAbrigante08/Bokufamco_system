@@ -1,32 +1,200 @@
-<!-- views/memberInformation.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Information</title>
-    <link rel="stylesheet" href="/css/memberInformation.css">
+    <style>
+        /* Success Message Style */
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        /* Reset and Basic Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff; /* Light blue background for a clean look */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container for the whole page */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff; /* White background for the whole container */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #006400; /* Dark green for a fresh feel */
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* Form container */
+        #membercontainer {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Form input container */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Labels */
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        /* Button styles */
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            #membercontainer {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+    </style>
 </head>
 <body>
-    <div id="membercontainer" class="membercontainer">
-        <form action="/members" method="post">
-            <h1>Personal Information</h1>
-            <div class="input-container">
-                <input type="text" name="last" placeholder="Last Name" value="<%= user.last_name %>" required>
-                <input type="text" name="number" placeholder="Contact Number" value="" required>
-                <input type="text" name="first" placeholder="First Name" value="<%= user.first_name %>" required>
-                <input type="text" name="middle" placeholder="Middle Name" value="<%= user.middle_name %>" required>
-                <input type="text" name="address" placeholder="Address" value="<%= user.address %>" required>
-                <input type="date" name="dob" placeholder="Date of Birth" value="<%= user.dob %>" required>
-                <input type="email" name="email" placeholder="Email" value="<%= user.email %>" required>
-                <select id="gender" name="gender" class="styled-select" required>
-                    <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
-                    <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
-                </select>
-                <input type="text" name="idnum" placeholder="ID Number" value="<%= user.id_number %>" required>
-            </div>
-            <button type="submit" name="update" id="update-button">Update</button> 
-        </form>
+
+<h1>Update Member Information</h1>
+
+<!-- Display Success Message -->
+<% if (successMessage) { %>
+    <div class="success-message">
+        <%= successMessage %>
     </div>
+<% } %>
+
+<div id="membercontainer" class="membercontainer">
+    <form action="/members/update" method="post">
+        <div class="input-container">
+            <label for="first">First Name</label>
+            <input type="text" name="first" id="first" placeholder="First Name" value="<%= user?.first_name || '' %>" required>
+
+            <label for="middle">Middle Name</label>
+            <input type="text" name="middle" id="middle" placeholder="Middle Name" value="<%= user?.middle_name || '' %>" required>
+
+            <label for="last">Last Name</label>
+            <input type="text" name="last" id="last" placeholder="Last Name" value="<%= user?.last_name || '' %>" required>
+
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" placeholder="Address" value="<%= user?.address || '' %>" required>
+
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="dob" id="dob" placeholder="Date of Birth" value="<%= user?.dob || '' %>" required>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" value="<%= user?.email || '' %>" required>
+
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" class="styled-select" required>
+                <option value="Male" <%= user?.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= user?.gender === 'Female' ? 'selected' : '' %>>Female</option>
+            </select>
+
+            <label for="idnum">ID Number</label>
+            <input type="text" name="idnum" id="idnum" placeholder="ID Number" value="<%= user?.id_number || '' %>" required>
+
+            <label for="number">Contact Number</label>
+            <input type="text" name="number" id="number" placeholder="Contact Number" value="<%= user?.contact_number || '' %>" required>
+        </div>
+
+        <!-- Updated button to indicate saving -->
+        <button type="submit" name="save" id="save-button">Save</button>
+    </form>
+
+    <!-- Display Success Message -->
+        <% if (successMessage) { %>
+            <div class="success-message">
+                <%= successMessage %>
+            </div>
+        <% } %>
+
+</div>
+
 </body>
 </html>

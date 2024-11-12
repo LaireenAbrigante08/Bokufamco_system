@@ -3,49 +3,73 @@ module.exports = (db) => {
     return {
         // Fetch member data and render the form
         getMemberForm: (req, res) => {
-            const memberModel = require('../models/member')(db); // Import the member model with db connection
+            const memberModel = require('../models/member')(db);
 
-            memberModel.getMember((err, results) => {
+            const userId = req.session.user?.id;
+            if (!userId) {
+                return res.status(401).send("User not authenticated.");
+            }
+
+            memberModel.getMemberByUserId(userId, (err, user) => {
                 if (err) {
                     console.log(err);
                     return res.status(500).send("Error fetching member data");
                 }
-
-                const user = results.length > 0 ? results[0] : null;
-                res.render('memberInformation', { user, successMessage: req.session.successMessage }); // Pass success message to the view
-                delete req.session.successMessage; // Remove message after it's displayed
+                res.render('memberInformation', { user, successMessage: req.session.successMessage });
+                delete req.session.successMessage;
             });
         },
 
-        // Handle form submission and update the member's data
-        updateMember: (req, res) => {
-            const { first, middle, last, address, dob, email, gender, idnum, number } = req.body;
+        // Handle form submission: insert or update member data
+        saveMemberData: (req, res) => {
+            const { first_name, middle_name, last_name, address, dob, email, gender, contact_number } = req.body;
+            const userId = req.session.user?.id;
+
+            if (!userId) {
+                return res.status(401).send("User not authenticated.");
+            }
 
             const memberData = {
-                first_name: first,
-                middle_name: middle,
-                last_name: last,
-                address: address,
-                dob: dob,
-                email: email,
-                gender: gender,
-                id_number: idnum,
-                contact_number: number
+                first_name,
+                middle_name,
+                last_name,
+                address,
+                dob,
+                email,
+                gender,
+                contact_number,
+                user_id: userId
             };
 
             const memberModel = require('../models/member')(db);
 
-            memberModel.updateMember(memberData, (err, results) => {
+            memberModel.getMemberByUserId(userId, (err, user) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send("Error updating member data");
+                    return res.status(500).send("Error checking member data");
                 }
 
-                // Set a success message in the session
-                req.session.successMessage = "Member information updated successfully!";
-                
-                // Redirect to the form page after saving
-                res.redirect('/members');
+                if (user) {
+                    // If user data exists, update it
+                    memberModel.updateMember(userId, memberData, (err) => {
+                        if (err) {
+                            console.log("Error updating member data:", err);
+                            return res.status(500).send("Error updating member data");
+                        }
+                        req.session.successMessage = "Member information updated successfully!";
+                        res.redirect('/members');
+                    });
+                } else {
+                    // If no user data, create a new record
+                    memberModel.createMember(memberData, (err) => {
+                        if (err) {
+                            console.log("Error creating member data:", err);
+                            return res.status(500).send("Error creating member data");
+                        }
+                        req.session.successMessage = "Member information saved successfully!";
+                        res.redirect('/members');
+                    });
+                }
             });
         }
     };

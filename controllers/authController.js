@@ -1,52 +1,105 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+const db = require('../config/db'); // Make sure your database connection is set up in db.js
 
-exports.register = async (req, res) => {
-    const { username, email, password, role = "User" } = req.body; // Set role as 'user' by default
-    try {
-        await User.createUser(username, email, password, role); // Pass role to createUser
-        res.redirect('/login');
-    } catch (err) {
-        console.error("Error during registration:", err);
-        res.status(500).send('Error during registration');
-    }
-};
+// Register a new user
+exports.register = (req, res) => {
+    const { username, password, email } = req.body;
 
-exports.login = async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const user = await User.findUserByUsername(username); // Retrieve user from database
-
-        if (user) {
-            const isMatch = await bcrypt.compare(password, user.password); // Compare entered password with hashed password
-            
-            if (isMatch) {
-                req.session.user = user; // Store user info in session
-                req.session.userId = user.id; // Optionally store userId for further use
-                
-                // Check user role and redirect accordingly
-                if (user.role === 'Admin') {
-                    return res.redirect('/admin'); // Redirect admin to admin dashboard
-                } else {
-                    return res.redirect('/home'); // Redirect regular user to homepage
-                }
-            } else {
-                console.log("Invalid credentials - Password mismatch");
-                return res.render('login', { error: 'Invalid credentials' }); // Use render to show error
-            }
-        } else {
-            console.log("Invalid credentials - User not found");
-            return res.render('login', { error: 'Invalid credentials' }); // Use render to show error
+    // Check if the username or email already exists
+    db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], (err, results) => {
+        if (err) {
+            return res.status(500).send('Database error');
         }
-    } catch (err) {
-        console.error("Error during login:", err);
-        res.status(500).send('Error during login');
-    }
+
+        if (results.length > 0) {
+            req.session.error = 'Username or email already exists';
+            return res.redirect('/register');
+        }
+
+        // Hash the password before saving
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
+                return res.status(500).send('Error hashing password');
+            }
+
+            // Insert new user into the database
+            db.query('INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)', 
+                     [username, hashedPassword, email, 'User'], (err, result) => {
+                if (err) {
+                    return res.status(500).send('Error registering user');
+                }
+
+                req.session.successMessage = 'Registration successful! Please log in.';
+                return res.redirect('/login');
+            });
+        });
+    });
 };
 
+// Login an existing user
+exports.login = (req, res) => {
+    const { username, password } = req.body;
+
+    // Check if the user exists
+    db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+        if (err) {
+            return res.status(500).send('Database error');
+        }
+
+        if (results.length === 0) {
+            req.session.error = 'Invalid username or password';
+            return res.redirect('/login');
+        }
+
+        const user = results[0];
+
+        // Compare the password with the hashed password in the database
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                return res.status(500).send('Error comparing passwords');
+            }
+
+            if (isMatch) {
+                // Set user session and redirect to the appropriate home page based on role
+                req.session.user = user;
+                return user.role === 'Admin' ? res.redirect('/admin') : res.redirect('/home');
+            } else {
+                req.session.error = 'Invalid username or password';
+                return res.redirect('/login');
+            }
+        });
+    });
+};
+
+exports.getMemberInformation = (req, res) => {
+    const user = req.session.user;
+
+    if (!user) {
+        return res.redirect('/login');
+    }
+
+    db.query('SELECT user_id FROM members WHERE user_id = ?', [user.id], (err, result) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).send('Database error');
+        }
+
+        if (result.length === 0) {
+            return res.status(404).send('Member information not found');
+        }
+
+        // Include user_id in the user object for rendering in EJS
+        res.render('memberInformation', { user: { ...user, user_id: result[0].user_id } });
+    });
+};
+
+
+// Logout the user
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
-        if (err) return res.status(500).send('Error during logout');
+        if (err) {
+            return res.status(500).send('Failed to log out');
+        }
         res.redirect('/login');
     });
 };

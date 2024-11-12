@@ -1,34 +1,37 @@
+// models/member.js
 module.exports = (db) => {
     return {
-        // Fetch all members data
-        getAllMembers: (callback) => {
-            const query = 'SELECT * FROM members'; // Get all members
-            db.query(query, callback);  // Execute the query and pass the result to the callback function
+        getMemberByUserId: (userId, callback) => {
+            const query = 'SELECT * FROM members WHERE user_id = ?';
+            db.query(query, [userId], (err, results) => {
+                if (err) return callback(err);
+                callback(null, results[0]); // Return the first result if found
+            });
         },
 
-        // Insert or update a member's data
-        updateMember: (data, callback) => {
+        createMember: (data, callback) => {
             const query = `
-                INSERT INTO members (first_name, middle_name, last_name, address, dob, email, gender, id_number, contact_number)
+                INSERT INTO members (user_id, first_name, middle_name, last_name, address, dob, email, gender, contact_number)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE
-                    first_name = VALUES(first_name),
-                    middle_name = VALUES(middle_name),
-                    last_name = VALUES(last_name),
-                    address = VALUES(address),
-                    dob = VALUES(dob),
-                    email = VALUES(email),
-                    gender = VALUES(gender),
-                    id_number = VALUES(id_number),
-                    contact_number = VALUES(contact_number);
             `;
-            
             const values = [
-                data.first_name, data.middle_name, data.last_name, data.address, data.dob, data.email,
-                data.gender, data.id_number, data.contact_number
+                data.user_id, data.first_name, data.middle_name, data.last_name,
+                data.address, data.dob, data.email, data.gender, data.contact_number
             ];
-            
-            db.query(query, values, callback);  // Execute the query with the provided values
+            db.query(query, values, callback);
+        },
+
+        updateMember: (userId, data, callback) => {
+            const query = `
+                UPDATE members
+                SET first_name = ?, middle_name = ?, last_name = ?, address = ?, dob = ?, email = ?, gender = ?, contact_number = ?
+                WHERE user_id = ?
+            `;
+            const values = [
+                data.first_name, data.middle_name, data.last_name, data.address,
+                data.dob, data.email, data.gender, data.contact_number, userId
+            ];
+            db.query(query, values, callback);
         }
     };
 };

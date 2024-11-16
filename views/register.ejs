@@ -6,13 +6,26 @@
             <img src="/images/logo.jpg" alt="Logo" class="logo">
         </div>
         <h2>Create New Account</h2>
+
+
         <form action="/register" method="POST">
             <input type="text" name="username" placeholder="Choose a username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Enter your password" required>
-            <input type="hidden" name="role" value="User/Member">
+            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="middleName" placeholder="Middle Name">
+            <input type="text" name="lastName" placeholder="Last Name" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <input type="date" name="dob" placeholder="Date of Birth" required>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <input type="text" name="contactNumber" placeholder="Contact Number" required>
             <button type="submit">Register</button>
         </form>
+
         <p>Already have an account? <a href="/login">Log in here</a>.</p>
     </div>
 </div>

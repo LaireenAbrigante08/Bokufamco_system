@@ -1,0 +1,48 @@
+<%- include('partials/basic-header') %>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="w-full max-w-2xl bg-white p-8 rounded shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">Member Profile</h2>
+
+        <div class="space-y-4">
+            <div class="flex justify-between">
+                <span class="font-semibold">Username:</span>
+                <span><%= member.username %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Email:</span>
+                <span><%= member.email %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">First Name:</span>
+                <span><%= member.first_name %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Middle Name:</span>
+                <span><%= member.middle_name %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Last Name:</span>
+                <span><%= member.last_name %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Address:</span>
+                <span><%= member.address %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Date of Birth:</span>
+                <span><%= member.dob %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Gender:</span>
+                <span><%= member.gender %></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Contact Number:</span>
+                <span><%= member.contact_number %></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/basic-footer') %>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members</title>
+</head>
+<body>
+    <h1>Members List</h1>
+    <a href="/members/add">Add New Member</a>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% members.forEach(member => { %>
+                <tr>
+                    <td><%= member.firstName %></td>
+                    <td><%= member.lastName %></td>
+                    <td><%= member.email %></td>
+                    <td>
+                        <a href="/members/<%= member.id %>">Edit</a>
+                        <form action="/members/<%= member.id %>/delete" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

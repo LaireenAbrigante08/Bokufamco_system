@@ -57,5 +57,21 @@ class User {
 
 }
 
+// Find a user by ID
+User.findById = async (userId) => {
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+    return rows[0]; // Return user if found, otherwise null
+};
+
+// Update user info by ID
+User.update = async (userId, updatedUser) => {
+    const { username, email, firstName, lastName, address, contactNumber, dob, gender } = updatedUser;
+    const [result] = await db.query(`
+        UPDATE users 
+        SET username = ?, email = ?, firstName = ?, lastName = ?, address = ?, contactNumber = ?, dob = ?, gender = ?
+        WHERE id = ?`, [username, email, firstName, lastName, address, contactNumber, dob, gender, userId]);
+    return result;
+};
+
 
 module.exports = User;

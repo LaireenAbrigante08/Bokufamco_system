@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const mysql = require('mysql2');
+//const mysql = require('mysql2');
 const db = require('./config/db'); // Ensure your database connection is correctly set up in db.js
 
 // Importing Routes
@@ -18,7 +18,7 @@ const app = express();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'Laireen', // Replace 'Laireen' with a secure, random secret key
+    secret: 'Laireenkdjnsvjwehukfhwl', // Replace 'Laireen' with a secure, random secret key
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false }, // Set true for HTTPS connections
@@ -42,20 +42,6 @@ app.get('/home', (req, res) => {
     res.render('home'); // Assuming you have a home.ejs file
 });
 
-// Members route (render user information)
-app.get('/members', (req, res) => {
-    // Fetch user data from session
-    const user = req.session.user; 
-    const successMessage = req.session.successMessage || null; // Get success message from session
-    delete req.session.successMessage; // Clear the success message after displaying it
-
-    if (user) {
-        res.render('memberInformation', { user, successMessage });
-    } else {
-        // Redirect to login page if no session is found
-        res.redirect('/memberInformation');
-    }
-});
 
 
 // Logout route
@@ -74,8 +60,8 @@ app.use('/loans', loansRoutes);
 app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment', equipmentRoutes);
 app.use('/purchase', purchaseRoutes);
-app.use('/members', memberRoutes(db));
+app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
 
 // Start the server
-app.listen(9000, () => console.log('Server running on http://localhost:9000'));
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));

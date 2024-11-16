@@ -1,10 +1,14 @@
 const User = require('../models/User');
+const Member = require('../models/Member');
 const bcrypt = require('bcryptjs');
 
+// Define the register function
 exports.register = async (req, res) => {
-    const { username, email, password, role = "User" } = req.body; // Set role as 'user' by default
+    const { username, email, password, role = "User", firstName, middleName, lastName, address, dob, gender, contactNumber } = req.body;
     try {
-        await User.createUser(username, email, password, role); // Pass role to createUser
+        const userResult = await User.createUser(username, email, password, role);
+        const userId = userResult.insertId;
+        await Member.createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber);
         res.redirect('/login');
     } catch (err) {
         console.error("Error during registration:", err);
@@ -12,41 +16,39 @@ exports.register = async (req, res) => {
     }
 };
 
+// Define the login function
 exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
-        const user = await User.findUserByUsername(username); // Retrieve user from database
-
+        const user = await User.findUserByUsername(username);
         if (user) {
-            const isMatch = await bcrypt.compare(password, user.password); // Compare entered password with hashed password
-            
+            const isMatch = await bcrypt.compare(password, user.password);
             if (isMatch) {
-                req.session.user = user; // Store user info in session
-                req.session.userId = user.id; // Optionally store userId for further use
-                
-                // Check user role and redirect accordingly
-                if (user.role === 'Admin') {
-                    return res.redirect('/admin'); // Redirect admin to admin dashboard
+                req.session.user = user;
+                req.session.userId = user.id;
+
+                // Fetch the member details using the user ID
+                const member = await Member.findMemberByUserId(user.id);
+                if (member) {
+                    console.log("User is a member");
                 } else {
-                    return res.redirect('/home'); // Redirect regular user to homepage
+                    console.log("User is not a member");
+                }
+
+                // Redirect based on the user's role
+                if (user.role === 'Admin') {
+                    return res.redirect('/admin');
+                } else {
+                    return res.redirect('/home');
                 }
             } else {
-                console.log("Invalid credentials - Password mismatch");
-                return res.render('login', { error: 'Invalid credentials' }); // Use render to show error
+                return res.render('login', { error: 'Invalid credentials' });
             }
         } else {
-            console.log("Invalid credentials - User not found");
-            return res.render('login', { error: 'Invalid credentials' }); // Use render to show error
+            return res.render('login', { error: 'Invalid credentials' });
         }
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).send('Error during login');
     }
-};
-
-exports.logout = (req, res) => {
-    req.session.destroy((err) => {
-        if (err) return res.status(500).send('Error during logout');
-        res.redirect('/login');
-    });
 };

@@ -2,13 +2,16 @@ const User = require('../models/User');
 const Member = require('../models/Member');
 const bcrypt = require('bcryptjs');
 
-// Define the register function
 exports.register = async (req, res) => {
     const { username, email, password, role = "User", firstName, middleName, lastName, address, dob, gender, contactNumber } = req.body;
     try {
+        // Create the user entry
         const userResult = await User.createUser(username, email, password, role);
-        const userId = userResult.insertId;
+        const userId = userResult.insertId; // Assuming 'insertId' returns the ID of the inserted user
+
+        // Create the member entry with the newly created user ID
         await Member.createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber);
+
         res.redirect('/login');
     } catch (err) {
         console.error("Error during registration:", err);
@@ -16,7 +19,6 @@ exports.register = async (req, res) => {
     }
 };
 
-// Define the login function
 exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -27,15 +29,12 @@ exports.login = async (req, res) => {
                 req.session.user = user;
                 req.session.userId = user.id;
 
-                // Fetch the member details using the user ID
+                // Check if the user is a member
                 const member = await Member.findMemberByUserId(user.id);
                 if (member) {
                     console.log("User is a member");
-                } else {
-                    console.log("User is not a member");
                 }
 
-                // Redirect based on the user's role
                 if (user.role === 'Admin') {
                     return res.redirect('/admin');
                 } else {

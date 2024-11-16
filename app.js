@@ -17,7 +17,7 @@ const app = express();
 
 // Middleware setup
 app.use(express.urlencoded({ extended: true })); // Parses incoming requests with URL-encoded payloads
-app.use(bodyParser.json()); // Parses incoming JSON payloads
+//app.use(bodyParser.json()); // Parses incoming JSON payloads
 
 // Session management
 app.use(session({

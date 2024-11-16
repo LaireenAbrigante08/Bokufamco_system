@@ -6,8 +6,9 @@ const getMemberForm = (req, res) => {
 
     Member.getMember(memberId)
         .then(member => {
+            // If the member exists, render the form and pass the member data
             if (member) {
-                res.render('member-profile', { member });
+                res.render('member-form', { member });
             } else {
                 res.status(404).send('Member not found');
             }
@@ -17,7 +18,6 @@ const getMemberForm = (req, res) => {
             res.status(500).send('Internal Server Error');
         });
 };
-
 
 // Handle form submission and update the member's data
 const updateMember = (req, res) => {

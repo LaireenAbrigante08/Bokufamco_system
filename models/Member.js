@@ -1,39 +1,35 @@
-const db = require('../config/db'); // Adjust if your DB configuration is different
+const db = require('../config/db');
 
 class Member {
-    // Find member by user ID
-    static findMemberByUserId(userId) {
+    static async createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber) {
+        return new Promise((resolve, reject) => {
+            db.query(
+                'INSERT INTO members (user_id, first_name, middle_name, last_name, address, dob, email, gender, contact_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber],
+                (err, result) => {
+                    if (err) {
+                        console.error("Member Model - Error during member creation:", err);
+                        return reject(err);
+                    }
+                    console.log("Member Model - Member created successfully:", result);
+                    resolve(result);
+                }
+            );
+        });
+    }
+
+    static async findMemberByUserId(userId) {
         return new Promise((resolve, reject) => {
             db.query(
                 'SELECT * FROM members WHERE user_id = ?',
                 [userId],
                 (err, results) => {
                     if (err) {
-                        console.error("Error finding member:", err);
+                        console.error("Member Model - Error finding member:", err);
                         return reject(err);
                     }
-                    if (results.length > 0) {
-                        resolve(results[0]); // Return the first matching member
-                    } else {
-                        resolve(null); // No member found
-                    }
-                }
-            );
-        });
-    }
-
-    static async updateMember(memberId, memberData) {
-        return new Promise((resolve, reject) => {
-            const { first_name, middle_name, last_name, address, dob, email, gender, id_number, contact_number } = memberData;
-            db.query(
-                'UPDATE members SET first_name = ?, middle_name = ?, last_name = ?, address = ?, dob = ?, email = ?, gender = ?, id_number = ?, contact_number = ? WHERE id = ?',
-                [first_name, middle_name, last_name, address, dob, email, gender, id_number, contact_number, memberId],
-                (err, result) => {
-                    if (err) {
-                        console.error("Error updating member:", err);
-                        return reject(err);
-                    }
-                    resolve(result);
+                    console.log("Member Model - Retrieved member:", results[0]);
+                    resolve(results[0]);
                 }
             );
         });

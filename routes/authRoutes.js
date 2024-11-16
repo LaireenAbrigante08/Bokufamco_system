@@ -6,8 +6,18 @@ const router = express.Router();
 
 // Routes setup
 router.get('/landing', (req, res) => res.render('landing'));
-router.get('/login', (req, res) => res.render('login'));
+
+// Render the login page with an error message if it exists
+router.get('/login', (req, res) => {
+    const error = req.session.error || null; // Get any error message from the session
+    req.session.error = null; // Clear the error message after rendering
+    res.render('login', { error });
+});
+
+// Render the registration page
 router.get('/register', (req, res) => res.render('register'));
+
+// Handle registration and login
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 

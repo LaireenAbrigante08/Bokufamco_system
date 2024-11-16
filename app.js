@@ -12,34 +12,34 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const memberRoutes = require('./routes/memberRoutes');
-const bodyParser = require('body-parser'); 
+
 const app = express();
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
+// Middleware setup
+app.use(express.urlencoded({ extended: true })); // Parses incoming requests with URL-encoded payloads
+app.use(bodyParser.json()); // Parses incoming JSON payloads
+
+// Session management
 app.use(session({
     secret: 'Laireenkdjnsvjwehukfhwl', // Replace 'Laireen' with a secure, random secret key
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // Set true for HTTPS connections
+    cookie: { secure: false }, // Set to true if using HTTPS
 }));
 
-// Serve static files and set up view engine
+// Serve static files (CSS, images, etc.) and set up the view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.urlencoded({ extended: true })); // for parsing form data
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
-// Root route redirecting to landing page
+// Root route redirects to the landing page
 app.get('/', (req, res) => {
     res.redirect('/landing');
 });
 
-// Home route
+// Home route for the logged-in user
 app.get('/home', (req, res) => {
-    res.render('home'); // Assuming you have a home.ejs file
+    res.render('home'); // Render the home.ejs file
 });
 
 
@@ -48,7 +48,7 @@ app.get('/home', (req, res) => {
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send('Failed to logout');
+            return res.status(500).send('Failed to log out');
         }
         res.redirect('/login'); // Redirect to login page after logout
     });

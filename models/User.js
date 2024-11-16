@@ -2,13 +2,13 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 class User {
-    static async createUser(username, email, password, role) { // Ensure the role is included
+    static async createUser(username, email, password, role) {
         const hashedPassword = await bcrypt.hash(password, 8);
 
         return new Promise((resolve, reject) => {
             db.query(
                 'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)', 
-                [username, email, hashedPassword, role], // Include role in the query
+                [username, email, hashedPassword, role],
                 (err, result) => {
                     if (err) {
                         if (err.code === 'ER_DUP_ENTRY') {
@@ -42,7 +42,7 @@ class User {
         });
     }
 
-    // User model
+    // User model to fetch all users with the role of 'User/Member'
     static async getAllMembers() {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM users WHERE role = "User/Member"', (err, results) => {
@@ -54,7 +54,6 @@ class User {
             });
         });
     }
-
 }
 
 // Find a user by ID

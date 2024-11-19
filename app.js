@@ -42,6 +42,16 @@ app.get('/home', (req, res) => {
     const userName = req.session.user?.username || 'User'; // Fetch username from session or default to 'User'
     res.render('home', { userName });
 });
+
+// Example route in authRoutes.js
+app.get('/admin', (req, res) => {
+    // Assuming you have the user data stored in the session or can retrieve it from the database
+    const userName = req.session.user ? req.session.user.username : 'Guest'; // Example: get username from session
+
+    // Render the admin page and pass userName to the template
+    res.render('admin', { userName });
+});
+
 app.get('/member-profile', (req, res) => {
     const userId = req.session.user?.id; // Get the logged-in user's ID from the session
 

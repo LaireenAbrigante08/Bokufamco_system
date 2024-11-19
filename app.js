@@ -1,7 +1,6 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-//const mysql = require('mysql2');
 const db = require('./config/db'); // Ensure your database connection is correctly set up in db.js
 
 // Importing Routes
@@ -45,11 +44,37 @@ app.get('/home', (req, res) => {
 
 // Example route in authRoutes.js
 app.get('/admin', (req, res) => {
-    // Assuming you have the user data stored in the session or can retrieve it from the database
     const userName = req.session.user ? req.session.user.username : 'Guest'; // Example: get username from session
-
-    // Render the admin page and pass userName to the template
     res.render('admin', { userName });
+});
+
+// Admin route to approve a member
+app.post('/admin/approve-member/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const query = 'UPDATE members SET status = ? WHERE user_id = ?';
+    
+    // Use db.query instead of connection.query
+    db.query(query, ['approved', userId], (err, result) => {
+        if (err) {
+            return res.status(500).send('Error updating member status');
+        }
+        res.send({ success: true });
+    });
+});
+
+// Admin route to display members for approval
+app.get('/admin/member', (req, res) => {
+    const query = 'SELECT * FROM members';
+    
+    // Use db.query instead of connection.query
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).send('Error fetching members');
+        }
+        
+        // Pass members data to the view
+        res.render('admin/member', { members: results });
+    });
 });
 
 app.get('/member-profile', (req, res) => {
@@ -105,8 +130,6 @@ app.post('/update-member', async (req, res) => {
         res.status(500).send("An error occurred while updating the member profile. Please try again.");
     }
 });
-
-
 
 // Logout route
 app.get('/logout', (req, res) => {

@@ -33,7 +33,26 @@ class Member {
                 }
             );
         });
+        
     }
+    
 }
+// Function to update the member's status
+exports.updateStatus = async (userId, status) => {
+    try {
+        const query = 'UPDATE members SET status = ? WHERE user_id = ?';
+        const [rows] = await db.execute(query, [status, userId]);
+
+        // Check if any rows were affected
+        if (rows.affectedRows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 
 module.exports = Member;

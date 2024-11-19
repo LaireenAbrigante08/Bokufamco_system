@@ -3,6 +3,7 @@ const router = express.Router();
 const { isAdmin } = require('../Middleware/isAdmin');
 const productController = require('../controllers/productController');
 const equipmentController = require('../controllers/equipmentController');
+const adminController = require('../controllers/adminController');
 const multer = require('multer');
 const path = require('path');
 
@@ -43,6 +44,9 @@ router.post('/equipment/add', upload.single('picture'), equipmentController.addE
 router.get('/equipment/edit/:id', equipmentController.getEditEquipmentForm);
 router.post('/equipment/edit/:id', upload.single('picture'), equipmentController.updateEquipment);
 router.post('/equipment/delete/:id', equipmentController.deleteEquipment);
+
+// Route for approving a member
+router.post('/approve-member/:userId', adminController.approveMember);
 
 // Admin Member Information Route
 router.get('/member', (req, res) => {

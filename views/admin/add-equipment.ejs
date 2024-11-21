@@ -67,21 +67,28 @@
         <form action="/admin/equipment/add" method="POST" enctype="multipart/form-data">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
-
+        
             <label for="description">Description:</label>
             <textarea id="description" name="description" rows="4" required></textarea>
-
-            <label for="rentalPrice">Rental Price:</label>
-            <input type="number" id="rentalPrice" name="rentalPrice" required>
-
-            <label class="checkbox-label" for="available">Available:</label>
-            <input type="checkbox" id="available" name="available">
-
+        
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required>
+        
+            <label for="stock_quantity">Stock Quantity:</label>
+            <input type="number" id="stock_quantity" name="stock_quantity" required>
+        
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="Available">Available</option>
+                <option value="Not Available">Not Available</option>
+            </select>
+        
             <label for="picture">Picture:</label>
             <input type="file" id="picture" name="picture" accept="image/*" required>
-
+        
             <button type="submit">Add Equipment</button>
         </form>
+        
     </div>
     <a class="back-link" href="/admin/equipment">Back to Equipment List</a>
 </body>

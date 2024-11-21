@@ -31,15 +31,30 @@ exports.getAddEquipmentForm = (req, res) => {
 
 // Handle adding equipment
 exports.addEquipment = async (req, res) => {
-    const { name, description, rentalPrice, available } = req.body; // Get data from form
-    const picture = req.file ? req.file.filename : null; // Handle file upload
-    try {
-        console.log({ name, description, rentalPrice, available }); // Log the incoming data
-        await Equipment.addEquipment(name, description, picture, rentalPrice, available === 'on' ? "Yes" : "No");
-        res.redirect('/admin/equipment'); // Redirect after successful addition
+  const { name, description, price, stockQuantity, status } = req.body; // Get data from form
+  const picture = req.file ? req.file.filename : null; // Handle file upload
+  try {
+      // Log the incoming data for debugging
+      console.log({ name, description, price, stockQuantity, status, picture }); 
+      
+      // Make sure 'price' is provided and not null
+      if (!price || isNaN(price)) {
+          return res.status(400).send('Price must be a valid number');
+      }
+
+      // Insert new equipment into the database
+      await Equipment.addEquipment(name, description, picture, price, stockQuantity, status === 'on' ? 'Available' : 'Not Available');
+      
+      // After successful addition, fetch all equipment to display on the same page
+      const equipmentList = await Equipment.getAllEquipment();
+
+
+      
+      // Render the admin page with the updated equipment list
+      res.redirect('/admin'); // Redirect to the dashboard after update
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Error adding equipment");
+        console.error("Error updating member:", error.message);
+        res.status(500).send("An error occurred while updating the member profile. Please try again.");
     }
 };
 
@@ -56,11 +71,19 @@ exports.getEditEquipmentForm = async (req, res) => {
 
 // Handle updating equipment
 exports.updateEquipment = async (req, res) => {
-    const { name, description, rentalPrice, available } = req.body;
+    const { name, description, price, stockQuantity, status } = req.body;
     const picture = req.file ? req.file.filename : req.body.currentPicture; // Handle picture
     try {
-        console.log({ id: req.params.id, name, description, rentalPrice, available }); // Log incoming data
-        await Equipment.updateEquipment(req.params.id, name, description, picture, rentalPrice, available === 'on' ? "Yes" : "No");
+        // Log incoming data for debugging
+        console.log({ id: req.params.id, name, description, price, stockQuantity, status, picture });
+
+        // Validate price
+        if (!price || isNaN(price)) {
+            return res.status(400).send('Price must be a valid number');
+        }
+
+        // Update equipment in the database
+        await Equipment.updateEquipment(req.params.id, name, description, picture, price, stockQuantity, status === 'on' ? 'Available' : 'Not Available');
         res.redirect('/admin/equipment');
     } catch (error) {
         console.error(error);

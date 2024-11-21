@@ -126,8 +126,9 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Picture</th>
-                <th>Rental Price</th>
-                <th>Available</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -139,13 +140,14 @@
                     <td><%= equipment.description %></td>
                     <td>
                         <% if (equipment.picture) { %>
-                            <img src="/images/product/<%= product.picture %>" alt="<%= equipment.name %>" style="width: 100px;">
+                            <img src="/images/product/<%= equipment.picture %>" alt="<%= equipment.name %>" style="width: 100px;">
                         <% } else { %>
                             <img src="/images/default.png" alt="Default Image" style="width: 100px;">
                         <% } %>
                     </td>
-                    <td><%= equipment.rental_price %></td>
-                    <td><%= equipment.available ? 'Yes' : 'No' %></td>
+                    <td><%= equipment.price %></td>
+                    <td><%= equipment.stock_quantity %></td>
+                    <td><%= equipment.status %></td>
                     <td>
                         <button class="edit-button" onclick="openModal('/admin/equipment/edit/<%= equipment.id %>')">Edit</button>
                         <form action="/admin/equipment/delete/<%= equipment.id %>" method="POST" style="display:inline;">

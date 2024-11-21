@@ -131,6 +131,7 @@ app.post('/update-member', async (req, res) => {
     }
 });
 
+
 // Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {

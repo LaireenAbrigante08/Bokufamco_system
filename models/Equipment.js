@@ -16,10 +16,16 @@ class Equipment {
     }
 
     // Add new equipment
-    static addEquipment(name, description, picture, rentalPrice, available) {
+    static addEquipment(name, description, picture, price, stockQuantity = 0, status = 'Available') {
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO equipment (name, description, picture, rental_price, available) VALUES (?, ?, ?, ?, ?)';
-            db.query(query, [name, description, picture, rentalPrice, available], (err, result) => {
+            // Validate that price is provided
+            if (price === null || price === undefined || price === '') {
+                reject(new Error('Price is required'));
+                return;
+            }
+    
+            const query = 'INSERT INTO equipment (name, description, picture, price, stock_quantity, status) VALUES (?, ?, ?, ?, ?, ?)';
+            db.query(query, [name, description, picture, price, stockQuantity, status], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -28,6 +34,7 @@ class Equipment {
             });
         });
     }
+    
 
     // Get equipment by ID for editing
     static getEquipmentById(id) {
@@ -44,10 +51,10 @@ class Equipment {
     }
 
     // Update existing equipment
-    static updateEquipment(id, name, description, picture, rentalPrice, available) {
+    static updateEquipment(id, name, description, picture, price, stockQuantity, status) {
         return new Promise((resolve, reject) => {
-            const query = 'UPDATE equipment SET name = ?, description = ?, picture = ?, rental_price = ?, available = ? WHERE id = ?';
-            db.query(query, [name, description, picture, rentalPrice, available, id], (err, result) => {
+            const query = 'UPDATE equipment SET name = ?, description = ?, picture = ?, price = ?, stock_quantity = ?, status = ? WHERE id = ?';
+            db.query(query, [name, description, picture, price, stockQuantity, status, id], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {

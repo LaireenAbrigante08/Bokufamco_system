@@ -51,18 +51,24 @@ class Equipment {
     }
 
     // Update existing equipment
-    static updateEquipment(id, name, description, picture, price, stockQuantity, status) {
-        return new Promise((resolve, reject) => {
-            const query = 'UPDATE equipment SET name = ?, description = ?, picture = ?, price = ?, stock_quantity = ?, status = ? WHERE id = ?';
-            db.query(query, [name, description, picture, price, stockQuantity, status, id], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
+static updateEquipment(id, { name, description, picture, price, stockQuantity, status }) {
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE equipment
+            SET name = ?, description = ?, picture = ?, price = ?, stock_quantity = ?, status = ?
+            WHERE id = ?
+        `;
+        db.query(query, [name, description, picture, price, stockQuantity, status, id], (err, result) => {
+            if (err) {
+                console.error("Error updating equipment:", err);  // For better error tracking
+                reject(err);
+            } else {
+                resolve(result);
+            }
         });
-    }
+    });
+}
+
 
     // Delete equipment by ID
     static deleteEquipment(id) {

@@ -8,7 +8,8 @@
 </head>
 <body>
     <div class="container">
-        <%- include('partials/header') %>
+        <%- include('partials/header') %> <!-- Include the header partial -->
+
         <header>
             <h1>Equipment Rentals</h1>
         </header>
@@ -16,18 +17,27 @@
         <section class="equipment">
             <h2>Available Equipment</h2>
             <div class="equipment-list">
-                <% equipment.forEach(item => { %>
+                <% equipment.forEach(item => { %> <!-- Loop through the equipment list -->
                     <div class="equipment-item">
                         <img src="/images/product/<%= item.picture %>" alt="<%= item.name %>">
                         <h3><%= item.name %></h3>
-                        <p>Description: <%= item.description %></p>
-                        <p>Rental Price: $<%= item.rental_price %></p>
-                        <p>Available: <%= item.available %></p>
-                        
+                        <p><strong>Description:</strong> <%= item.description %></p>
+
+                        <!-- Display the price -->
+                        <% if (item.price && !isNaN(item.price)) { %>
+                            <p><strong>Price:</strong> ₱<%= item.price.toLocaleString() %></p>
+                        <% } else { %>
+                            <p><strong>Price:</strong> Not Available</p>
+                        <% } %>
+
+                        <!-- Display stock quantity -->
+                        <p><strong>Available:</strong> <%= item.stock_quantity %> in stock</p>
+
+                        <!-- Rent button -->
                         <% if (isAuthenticated) { %>
                             <p><a href="/equipment/<%= item.id %>">Rent Now</a></p>
                         <% } else { %>
-                            <p><a href="/login">Login to rent</a></p>
+                            <p><a href="/login">Login to Rent</a></p>
                         <% } %>
                     </div>
                 <% }); %>

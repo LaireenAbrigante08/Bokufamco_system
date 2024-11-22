@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent Equipment</title>
+</head>
+<body>
+    <h1>Rent Equipment</h1>
+    <div class="equipment-details">
+        <img src="/images/product/<%= equipment.picture %>" alt="<%= equipment.name %>">
+        <h2><%= equipment.name %></h2>
+        <p><strong>Description:</strong> <%= equipment.description %></p>
+        <p><strong>Price:</strong> ₱<%= equipment.price.toLocaleString() %></p>
+        <p><strong>Available:</strong> <%= equipment.stock_quantity %> in stock</p>
+    </div>
+
+    <form action="/rentals" method="POST">
+        <input type="hidden" name="equipment_id" value="<%= equipment.id %>">
+        <input type="hidden" name="user_id" value="<%= userId %>">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+        <button type="submit">Rent Now</button>
+    </form>
+</body>
+</html>

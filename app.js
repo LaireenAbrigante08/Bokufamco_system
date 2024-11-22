@@ -131,6 +131,37 @@ app.post('/update-member', async (req, res) => {
     }
 });
 
+// In your route handler (e.g., for the equipment rentals page)
+app.get('/equipment/rentals', async (req, res) => {
+    try {
+        const equipment = await Equipment.getAllEquipment(); // Fetch all available equipment
+        const isAuthenticated = req.isAuthenticated(); // Check if the user is logged in
+        res.render('equipment-rentals', { equipment, isAuthenticated });
+    } catch (error) {
+        console.error('Error fetching equipment:', error);
+        res.status(500).send('Error fetching equipment.');
+    }
+});
+
+// Add rental to database
+app.post('/rentals', async (req, res) => {
+    const { equipment_id, user_id, start_date, end_date } = req.body;
+
+    try {
+        // Insert rental data into the database
+        await db.query(
+            'INSERT INTO rentals (equipment_id, user_id, start_date, end_date, rental_status) VALUES (?, ?, ?, ?, ?)',
+            [equipment_id, user_id, start_date, end_date, 'Pending']
+        );
+
+        res.redirect('/'); // Redirect to homepage or another page after renting
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to rent equipment');
+    }
+});
+
+
 
 // Logout route
 app.get('/logout', (req, res) => {

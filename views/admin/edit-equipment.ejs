@@ -31,7 +31,7 @@
             display: block;
             font-weight: bold;
         }
-        .form-container input, .form-container textarea, .form-container button {
+        .form-container input, .form-container textarea, .form-container button, .form-container select {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -79,19 +79,26 @@
             <label for="description">Description:</label>
             <textarea id="description" name="description" rows="4" required><%= equipment.description %></textarea>
 
-            <label for="rentalPrice">Rental Price:</label>
-            <input type="number" id="rentalPrice" name="rentalPrice" value="<%= equipment.rental_price %>" required>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" value="<%= equipment.price %>" required>
 
-            <label for="available">Available:</label>
-            <input type="checkbox" id="available" name="available" <%= equipment.available === 'Yes' ? 'checked' : '' %>>
+            <label for="stockQuantity">Stock Quantity:</label>
+            <input type="number" id="stockQuantity" name="stockQuantity" value="<%= equipment.stock_quantity %>" required>
+
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="Available" <%= equipment.status === 'Available' ? 'selected' : '' %>>Available</option>
+                <option value="Rented" <%= equipment.status === 'Rented' ? 'selected' : '' %>>Rented</option>
+                <option value="Maintenance" <%= equipment.status === 'Maintenance' ? 'selected' : '' %>>Maintenance</option>
+            </select>
 
             <label for="currentPicture">Current Picture:</label>
             <div class="current-picture">
-                <img src="/images/product/<%= product.picture %>" alt="<%= equipment.name %>" style="width: 100px;">
+                <img src="/images/product/<%= equipment.picture %>" alt="<%= equipment.name %>" style="width: 100px;">
             </div>
 
             <label for="picture">Change Picture:</label>
-            <input type="file" id="picture" name="picture">
+            <input type="file" id="picture" name="picture" accept="image/*">
 
             <input type="hidden" name="currentPicture" value="<%= equipment.picture %>">
 

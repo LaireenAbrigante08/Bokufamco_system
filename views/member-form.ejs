@@ -15,7 +15,7 @@
 
     /* Center form container */
     .w-full {
-        max-width: 1000px; /* Reduced width for a more compact form */
+        max-width: 1000px;
         margin: 0 auto;
     }
 
@@ -54,33 +54,31 @@
     }
 
     input:focus, select:focus {
-        border-color: #038d03; /* Green border on focus */
+        border-color: #038d03;
         outline: none;
     }
 
     /* Button styling */
     button {
-        background-color: #006d77; /* Green button */
+        background-color: #006d77;
         color: white;
         font-size: 1rem;
         padding: 0.75rem 1.5rem;
         border-radius: 4px;
         border: none;
         cursor: pointer;
-        width: 100%; /* Full width button */
+        width: 100%;
         transition: background-color 0.3s ease;
     }
 
     button:hover {
-        background-color: #83c5be; /* Darker green on hover */
+        background-color: #83c5be;
     }
 
-    /* Media Queries for mobile responsiveness */
     @media (max-width: 768px) {
         .w-full {
             padding: 1rem;
         }
-
         .min-h-screen {
             padding-top: 2rem;
         }
@@ -90,64 +88,63 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="w-full max-w-2xl bg-white p-8 rounded shadow-lg">
         <h2 class="text-2xl font-semibold mb-4 text-center">Member Profile</h2>
-        <form action="/update-member" method="POST">
-            <!-- Change the hidden field name to user_id -->
+        <form action="/update-member" method="POST" onsubmit="return validateForm()">
             <input type="hidden" name="user_id" value="<%= member.user_id %>">
             <div class="space-y-4">
                 <div class="flex justify-between">
                     <label class="font-semibold" for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="<%= member.email %>" class="border p-2 w-full">
+                    <input type="email" id="email" name="email" value="<%= member.email %>" required>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="first_name">First Name:</label>
-                    <input type="text" id="first_name" name="first_name" value="<%= member.first_name %>" class="border p-2 w-full">
+                    <input type="text" id="first_name" name="first_name" value="<%= member.first_name %>" required>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="middle_name">Middle Name:</label>
-                    <input type="text" id="middle_name" name="middle_name" value="<%= member.middle_name %>" class="border p-2 w-full">
+                    <input type="text" id="middle_name" name="middle_name" value="<%= member.middle_name %>">
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="last_name">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name" value="<%= member.last_name %>" class="border p-2 w-full">
+                    <input type="text" id="last_name" name="last_name" value="<%= member.last_name %>" required>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="address">Address:</label>
-                    <input type="text" id="address" name="address" value="<%= member.address %>" class="border p-2 w-full">
+                    <input type="text" id="address" name="address" value="<%= member.address %>" required>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="dob">Date of Birth:</label>
-                    <input type="date" id="dob" name="dob" value="<%= member.dob.toISOString().substring(0, 10) %>" class="border p-2 w-full">
+                    <input type="date" id="dob" name="dob" value="<%= member.dob.toISOString().substring(0, 10) %>" required>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="gender">Gender:</label>
-                    <select id="gender" name="gender" class="border p-2 w-full">
+                    <select id="gender" name="gender" required>
                         <option value="Male" <%= member.gender === 'Male' ? 'selected' : '' %>>Male</option>
                         <option value="Female" <%= member.gender === 'Female' ? 'selected' : '' %>>Female</option>
                     </select>
                 </div>
                 <div class="flex justify-between">
                     <label class="font-semibold" for="contact_number">Contact Number:</label>
-                    <input type="text" id="contact_number" name="contact_number" value="<%= member.contact_number %>" class="border p-2 w-full">
+                    <input type="text" id="contact_number" name="contact_number" value="<%= member.contact_number %>" required>
                 </div>
             </div>
-            <br><button type="submit" class="mt-4">Save Changes</button></br>
+            <button type="submit">Save Changes</button>
         </form>
     </div>
 </div>
 
 <script>
-    function loadSection(url) {
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                $('#main-content').html(data);
-            },
-            error: function(err) {
-                console.error("Error loading content:", err);
-                $('#main-content').html('<p>Error loading content. Please try again.</p>');
-            }
-        });
+    function validateForm() {
+        const email = document.getElementById('email').value;
+        const firstName = document.getElementById('first_name').value;
+        const lastName = document.getElementById('last_name').value;
+        const address = document.getElementById('address').value;
+
+        if (!email || !firstName || !lastName || !address) {
+            alert("Please fill in all required fields.");
+            return false;
+        }
+
+        return true;
     }
 </script>
 

@@ -139,22 +139,23 @@ exports.deleteEquipment = async (req, res) => {
     }
 };
 
-// controllers/equipmentController.js
-exports.rentEquipment = async (req, res) => {
-    const equipmentId = req.params.id;
+exports.rentEquipment = (req, res) => {
+    const equipmentId = req.params.id; // Get the equipment ID from the URL
 
-    try {
-        const [equipment] = await db.query('SELECT * FROM equipment WHERE id = ?', [equipmentId]);
-
-        if (!equipment.length) {
-            return res.status(404).send('Equipment not found');
-        }
-
-        res.render('rentEquipment', { equipment: equipment[0] }); // Render rent page
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
+    Equipment.getEquipmentById(equipmentId)
+        .then((equipment) => {
+            if (equipment) {
+                res.render('rentEquipment', {
+                    equipment: equipment,
+                    userId: req.session.userId,  // Assuming user session is set
+                    memberId: req.session.memberId // Assuming member session is set
+                });
+            } else {
+                res.status(404).send('Equipment not found');
+            }
+        })
+        .catch((err) => {
+            console.error('Error fetching equipment by ID:', err);
+            res.status(500).send('Error fetching equipment');
+        });
 };
-
-

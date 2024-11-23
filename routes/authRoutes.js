@@ -21,6 +21,37 @@ router.get('/register', (req, res) => res.render('register'));
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await authController.login(username, password); // Authenticate user
+        if (!user) {
+            req.session.error = 'Invalid credentials';
+            return res.redirect('/login');
+        }
+
+        req.session.user = user; // Store user info in session
+        req.session.userId = user.id;
+
+        // Fetch member details
+        const [member] = await db.promise().query('SELECT id FROM members WHERE user_id = ?', [user.id]);
+        if (member.length > 0) {
+            req.session.memberId = member[0].id;
+        } else {
+            req.session.memberId = null; // Set as null if no member record found
+        }
+
+        // Redirect based on role
+        if (user.role === 'Admin') return res.redirect('/admin');
+        res.redirect('/home');
+    } catch (err) {
+        console.error('Login error:', err);
+        req.session.error = 'An error occurred during login.';
+        res.redirect('/login');
+    }
+});
+
 router.get('/admin', (req, res) => {
     if (req.session.user && req.session.user.role === 'Admin') {
         res.render('admin');

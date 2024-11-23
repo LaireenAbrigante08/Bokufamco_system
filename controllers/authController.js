@@ -19,6 +19,7 @@ exports.register = async (req, res) => {
     }
 };
 
+// Controller for login
 exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -35,6 +36,7 @@ exports.login = async (req, res) => {
                     console.log("User is a member");
                 }
 
+                // Redirect based on the role
                 if (user.role === 'Admin') {
                     return res.redirect('/admin');
                 } else {

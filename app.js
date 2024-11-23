@@ -78,23 +78,25 @@ app.get('/admin/member', (req, res) => {
 });
 
 app.get('/member-profile', (req, res) => {
-    const userId = req.session.user?.id; // Get the logged-in user's ID from the session
+    const userId = req.session.userId; // Use session's userId
 
     if (!userId) {
-        return res.redirect('/login'); // Redirect to login if the user is not logged in
+        return res.redirect('/login'); // Redirect to login if not logged in
     }
 
     // Fetch member information from the database
     db.query('SELECT * FROM members WHERE user_id = ?', [userId], (err, results) => {
         if (err) {
-            console.error(err);
+            console.error('Error fetching member data:', err);
             return res.status(500).send('Error retrieving member information');
         }
 
-        // Check if member data exists
-        const member = results[0];
+        const member = results.length > 0 ? results[0] : null;
         if (!member) {
-            return res.render('member-form', { member: null, message: 'No member information found' });
+            return res.render('member-form', { 
+                member: null, 
+                message: 'No member information found. Please complete your profile.' 
+            });
         }
 
         // Pass the member data to the EJS template
@@ -105,16 +107,18 @@ app.get('/member-profile', (req, res) => {
 app.post('/update-member', async (req, res) => {
     const { user_id, email, first_name, middle_name, last_name, address, dob, gender, contact_number } = req.body;
 
+    console.log('Form data received:', req.body);  // Log to see the incoming form data
+
+    // Ensure the user_id is passed correctly
+    if (!user_id) {
+        return res.status(400).send("User ID is missing. Please complete your profile.");
+    }
+
     try {
-        // Ensure the user_id is passed correctly
-        if (!user_id) {
-            return res.status(400).send("User ID is required.");
-        }
+        // Debugging log for user_id
+        console.log('Updating member with user_id:', user_id);
 
-        console.log('Updating member with user_id:', user_id);  // Debugging log
-        console.log('Form data received:', req.body);  // Debugging log
-
-        // Use promise-based query
+        // Use promise-based query to update the member information
         const [rows, fields] = await db.promise().query(
             `UPDATE members SET email = ?, first_name = ?, middle_name = ?, last_name = ?, address = ?, dob = ?, gender = ?, contact_number = ? WHERE user_id = ?`,
             [email, first_name, middle_name, last_name, address, dob, gender, contact_number, user_id]
@@ -124,43 +128,68 @@ app.post('/update-member', async (req, res) => {
             return res.status(404).send("Member not found or no changes made.");
         }
 
-        res.redirect('/home'); // Redirect to the dashboard after update
+        // Successfully updated, redirect to the home page or profile page
+        res.redirect('/home');
     } catch (error) {
         console.error("Error updating member:", error.message);
         res.status(500).send("An error occurred while updating the member profile. Please try again.");
     }
 });
 
-// In your route handler (e.g., for the equipment rentals page)
-app.get('/equipment/rentals', async (req, res) => {
-    try {
-        const equipment = await Equipment.getAllEquipment(); // Fetch all available equipment
-        const isAuthenticated = req.isAuthenticated(); // Check if the user is logged in
-        res.render('equipment-rentals', { equipment, isAuthenticated });
-    } catch (error) {
-        console.error('Error fetching equipment:', error);
-        res.status(500).send('Error fetching equipment.');
+
+const Equipment = require('./models/Equipment');
+
+app.get('/equipment/:id', (req, res) => {
+    const equipmentId = req.params.id;
+
+    if (!req.session.userId || !req.session.memberId) {
+        return res.status(400).send('User or Member ID is missing. Please complete your profile.');
     }
+
+    Equipment.getEquipmentById(equipmentId)
+        .then(equipment => {
+            res.render('rentEquipment', {
+                equipment,
+                userId: req.session.userId,
+                memberId: req.session.memberId,
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching equipment:', err);
+            res.status(500).send('Error fetching equipment');
+        });
 });
 
-// Add rental to database
-app.post('/rentals', async (req, res) => {
-    const { equipment_id, user_id, start_date, end_date } = req.body;
 
-    try {
-        // Insert rental data into the database
-        await db.query(
-            'INSERT INTO rentals (equipment_id, user_id, start_date, end_date, rental_status) VALUES (?, ?, ?, ?, ?)',
-            [equipment_id, user_id, start_date, end_date, 'Pending']
-        );
+app.post('/rentals', (req, res) => {
+    const { equipment_id, user_id, member_id, start_date, end_date } = req.body;
 
-        res.redirect('/'); // Redirect to homepage or another page after renting
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Failed to rent equipment');
+    // Validate that user_id and member_id are not empty
+    if (!user_id || !member_id) {
+        return res.status(400).send('User or Member ID is missing');
     }
-});
 
+    // Validate that start_date and end_date are valid
+    if (!start_date || !end_date) {
+        return res.status(400).send('Start Date or End Date is missing');
+    }
+
+    // Correcting the query to ensure the right number of values (remove 'id' from query)
+    const query = `
+        INSERT INTO rentals (equipment_id, user_id, member_id, start_date, end_date, rental_status)
+        VALUES (?, ?, ?, ?, ?, 'pending')
+    `;
+
+    // Execute the query with the provided values
+    db.query(query, [equipment_id, user_id, member_id, start_date, end_date], (err, result) => {
+        if (err) {
+            console.error('Error processing rental:', err);
+            return res.status(500).send('Error processing rental');
+        }
+
+        res.redirect('/rentals/success');
+    });
+});
 
 
 // Logout route
@@ -181,6 +210,7 @@ app.use('/equipment', equipmentRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
+
 
 // Start the server
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

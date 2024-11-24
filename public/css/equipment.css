@@ -12,56 +12,130 @@ body {
 }
 
 header {
-    background-color: #0c5b6d;
+    background: linear-gradient(135deg, #0c5b6d, #4CAF50); /* Gradient background for a modern look */
     color: white;
-    padding: 10px 20px;
+    padding: 10px 10px;
     text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(250, 239, 239, 0.1); /* Add depth to the header */
+    margin-bottom: 40px;
 }
 
-.equipment {
-    margin: 20px;
+header h1 {
+    font-size: 36px;
+    font-weight: 700; /* Bold title */
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+header p {
+    font-size: 18px;
+    font-weight: 300; /* Lighter text */
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.8); /* Softened color for description */
+}
+
+header .tagline {
+    font-size: 22px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* Equipment Container */
+.equipment-container {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+    margin-top: 40px; /* Adds space before equipment section */
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.equipment h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Adds a bit of spacing for emphasis */
+    border-bottom: 3px solid #0c5b6d; /* Underline effect */
+    padding-bottom: 10px;
 }
 
 .equipment-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: center; /* Center the items on the page */
 }
 
 .equipment-item {
     background: white;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: calc(33.33% - 20px);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Space between rows */
 }
 
 .equipment-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .equipment-item img {
     max-width: 100%;
-    height: auto;
-    border-radius: 5px;
+    height: 200px; /* Fixed height for consistent image sizes */
+    object-fit: cover; /* Ensures proper image cropping */
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
-button {
+.equipment-details {
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+    margin-top: 15px;
+}
+
+.equipment-details h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.equipment-details .info {
+    margin: 5px 0;
+}
+
+.equipment-details .info span {
+    font-weight: bold;
+}
+
+.rent-btn {
     background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+    border-radius: 8px;
+    padding: 12px 20px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 15px;
+    width: 100%; /* Makes button span full width of the card */
 }
 
-button:hover {
+.rent-btn:hover {
     background-color: #45a049;
+    transform: scale(1.05); /* Slight scaling effect on hover */
+}
+
+button:focus {
+    outline: none;
 }
 
 a {
@@ -71,4 +145,29 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Media Queries for responsiveness */
+@media screen and (max-width: 1024px) {
+    .equipment-item {
+        width: calc(50% - 20px); /* Two items per row on medium screens */
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .equipment-item {
+        width: 100%; /* One item per row on small screens */
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    .equipment-list {
+        justify-content: center;
+    }
 }

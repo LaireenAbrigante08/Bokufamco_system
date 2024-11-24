@@ -77,32 +77,18 @@ app.get('/admin/member', (req, res) => {
     });
 });
 
-app.get('/member-profile', (req, res) => {
-    const userId = req.session.userId; // Use session's userId
-
-    if (!userId) {
-        return res.redirect('/login'); // Redirect to login if not logged in
-    }
-
-    // Fetch member information from the database
-    db.query('SELECT * FROM members WHERE user_id = ?', [userId], (err, results) => {
+app.get('/admin/member-profile/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const query = `SELECT * FROM members WHERE user_id = ?`;
+    db.query(query, [userId], (err, results) => {
         if (err) {
-            console.error('Error fetching member data:', err);
-            return res.status(500).send('Error retrieving member information');
+            res.status(500).send({ error: 'Database error' });
+        } else {
+            res.json(results[0]);  // Return the member's profile data as JSON
         }
-
-        const member = results.length > 0 ? results[0] : null;
-        if (!member) {
-            return res.render('member-form', { 
-                member: null, 
-                message: 'No member information found. Please complete your profile.' 
-            });
-        }
-
-        // Pass the member data to the EJS template
-        res.render('member-form', { member, message: null });
     });
 });
+
 
 app.post('/update-member', async (req, res) => {
     const { user_id, email, first_name, middle_name, last_name, address, dob, gender, contact_number } = req.body;
@@ -161,36 +147,23 @@ app.get('/equipment/:id', (req, res) => {
 });
 
 
-app.post('/rentals', (req, res) => {
-    const { equipment_id, user_id, member_id, start_date, end_date } = req.body;
+app.get('/admin/view-member/:userId', (req, res) => {
+    const userId = req.params.userId;
 
-    // Validate that user_id and member_id are not empty
-    if (!user_id || !member_id) {
-        return res.status(400).send('User or Member ID is missing');
-    }
-
-    // Validate that start_date and end_date are valid
-    if (!start_date || !end_date) {
-        return res.status(400).send('Start Date or End Date is missing');
-    }
-
-    // Correcting the query to ensure the right number of values (remove 'id' from query)
-    const query = `
-        INSERT INTO rentals (equipment_id, user_id, member_id, start_date, end_date, rental_status)
-        VALUES (?, ?, ?, ?, ?, 'pending')
-    `;
-
-    // Execute the query with the provided values
-    db.query(query, [equipment_id, user_id, member_id, start_date, end_date], (err, result) => {
+    // Fetch member details from the database
+    db.query('SELECT * FROM members WHERE user_id = ?', [userId], (err, results) => {
         if (err) {
-            console.error('Error processing rental:', err);
-            return res.status(500).send('Error processing rental');
+            return res.status(500).send("Error fetching member details.");
         }
 
-        res.redirect('/rentals/success');
+        if (results.length > 0) {
+            const memberData = results[0]; // Get the first result (single member)
+            res.render('admin/view-member', { member: memberData }); // Render the profile page with member data
+        } else {
+            res.status(404).send("Member not found.");
+        }
     });
 });
-
 
 // Logout route
 app.get('/logout', (req, res) => {

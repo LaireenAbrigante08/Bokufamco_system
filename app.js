@@ -190,6 +190,18 @@ app.post('/rentals', (req, res) => {
     });
 });
 
+app.get('/admin/member-profile/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const query = `SELECT * FROM members WHERE user_id = ?`;
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            res.status(500).send({ error: 'Database error' });
+        } else {
+            res.json(results[0]);  // Return the member's profile data as JSON
+        }
+    });
+});
+
 
 // Logout route
 app.get('/logout', (req, res) => {

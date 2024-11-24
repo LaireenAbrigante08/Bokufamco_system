@@ -15,6 +15,19 @@ class Product {
         });
     }
 
+    static reduceStock(productId, quantity) {
+        return new Promise((resolve, reject) => {
+            db.query(
+                'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
+                [quantity, productId, quantity],
+                (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result.affectedRows);
+                }
+            );
+        });
+    }
+
     // Find product by ID
     static findById(id) {
         return new Promise((resolve, reject) => {

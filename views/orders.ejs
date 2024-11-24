@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="/css/orders.css">
+</head>
+<body>
+    <header>
+        <h1>My Orders</h1>
+    </header>
+
+    <section class="orders">
+        <% if (orders.length === 0) { %>
+            <p class="no-orders-message">You have no orders yet. Start shopping now!</p>
+        <% } else { %>
+            <div class="order-list">
+                <% orders.forEach(order => { %>
+                    <div class="order-card">
+                        <h2 class="product-name">Product: <%= order.product_name %></h2>
+                        <p class="order-details">Quantity: <%= order.quantity %></p>
+                        <p class="order-details">Total Price: $<%= Number(order.total_price).toFixed(2) %></p>
+                        <p class="order-details">Ordered On: <%= new Date(order.created_at).toLocaleDateString() %></p>
+                        <p class="order-status">
+                            Status: <strong class="<%= order.status ? order.status.toLowerCase().replace(' ', '-') : 'unknown-status' %>">
+                                <%= order.status || 'No Status' %>
+                            </strong>
+                                            
+                        </p>                        
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </section>
+</body>
+</html>

@@ -4,6 +4,7 @@ const { isAdmin } = require('../Middleware/isAdmin');
 const productController = require('../controllers/productController');
 const equipmentController = require('../controllers/equipmentController');
 const adminController = require('../controllers/adminController');
+const orderController = require('../controllers/orderController');
 const multer = require('multer');
 const path = require('path');
 
@@ -28,6 +29,11 @@ router.get('/admin', (req, res) => {
         res.status(403).send('Access denied');
     }
 });
+
+// Admin Orders Routes
+router.get('/orders', orderController.getAllOrders); // List all orders
+router.get('/orders/:id', orderController.getOrderById); // View order details
+router.post('/orders/:id/update', orderController.updateOrderStatus); // Update order status
 
 // Admin Farm Supplies Routes
 router.get('/farm-supplies', productController.getAdminFarmSupplies);

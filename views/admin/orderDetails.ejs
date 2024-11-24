@@ -1,0 +1,23 @@
+<h1>Order Details</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (order.products && order.products.length > 0) { %>
+            <% order.products.forEach(product => { %>
+                <tr>
+                    <td><%= product.name %></td>
+                    <td><%= product.quantity %></td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="2">No products found for this order.</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

@@ -1,0 +1,108 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 0;
+    color: #333;
+}
+
+.order-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Table Styling */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.order-table th, .order-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-table th {
+    background-color: #34495e;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.order-table tr:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+.order-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Status Column Styling */
+.status {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.status.pending {
+    color: #f39c12;
+}
+
+.status.shipped {
+    color: #2980b9;
+}
+
+.status.delivered {
+    color: #27ae60;
+}
+
+.status.cancelled {
+    color: red;
+}
+
+/* Action Buttons Styling */
+.view-btn {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.view-btn:hover {
+    background-color: #2980b9;
+}
+
+.status-form {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.status-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.update-btn {
+    padding: 8px 14px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-btn:hover {
+    background-color: #27ae60;
+}

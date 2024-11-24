@@ -7,33 +7,31 @@
     <link rel="stylesheet" href="/css/farmSupplies.css">
 </head>
 <body>
-    <div class="container">
-        <%- include('partials/header') %>
-        <header>
-            <h1>Farm Supplies</h1>
-        </header>
+    <header>
+        <h1>Farm Supplies</h1>
+    </header>
 
-        <section class="products">
-            <h2>Available Products</h2>
-            <div class="product-list">
-                <% products.forEach(product => { %>
-                    <div class="product">
-                        <img src="/images/product/<%= product.picture %>" alt="<%= product.name %>">
-                        <h3><%= product.name %></h3>
-                        <p><%= product.description %></p>
-                        <p>Price: $<%= product.price %></p>
-                        <p>Stock: <%= product.stock %></p>
-                        <% if (isAuthenticated) { %>
-                            <form action="/purchase/<%= product.id %>" method="POST">
-                                <button type="submit">Purchase</button>
-                            </form>
-                        <% } else { %>
-                            <p><a href="/login">Login to purchase</a></p>
-                        <% } %>                    
-                    </div>
-                <% }); %>
-            </div>
-        </section>
-    </div>
+    <section class="products">
+        <h2>Available Products</h2>
+        <div class="product-list">
+            <% products.forEach(product => { %>
+                <div class="product">
+                    <img src="/images/product/<%= product.picture %>" alt="<%= product.name %>">
+                    <h3><%= product.name %></h3>
+                    <p><%= product.description %></p>
+                    <p>Price: $<%= product.price %></p>
+                    <p>Stock: <%= product.stock %></p>
+                    <% if (isAuthenticated) { %>
+                        <form action="/purchase/<%= product.id %>" method="POST">
+                            <input type="number" name="quantity" min="1" max="<%= product.stock %>" value="1" required>
+                            <button type="submit">Purchase</button>
+                        </form>
+                    <% } else { %>
+                        <p><a href="/login">Login to purchase</a></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </section>
 </body>
 </html>

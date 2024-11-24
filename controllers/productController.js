@@ -1,4 +1,65 @@
+const Order = require('../models/Order');
 const Product = require('../models/Product');
+exports.getUserOrders = async (req, res) => {
+    const userId = req.session.userId;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    try {
+        const orders = await Order.findByUserId(userId);
+        res.render('orders', { orders });
+    } catch (error) {
+        console.error('Error fetching user orders:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+exports.purchaseProduct = async (req, res) => {
+    const userId = req.session.userId; // Assume user session stores their ID
+    const { productId } = req.params;
+    const { quantity } = req.body;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    try {
+        // Fetch product details
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        if (product.stock < quantity) {
+            return res.status(400).json({ message: 'Insufficient stock' });
+        }
+
+        // Reduce product stock
+        const updatedStock = await Product.reduceStock(productId, quantity);
+        if (!updatedStock) {
+            return res.status(400).json({ message: 'Unable to process purchase' });
+        }
+
+        // Calculate total price
+        const totalPrice = product.price * quantity;
+
+        // Create an order
+        await Order.createOrder({
+            userId,
+            productId,
+            quantity,
+            totalPrice,
+            status,
+        });
+
+        // Redirect to orders page
+        res.redirect('/home');
+    } catch (error) {
+        console.error('Error processing purchase:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 
 // Get products for user view
 exports.getFarmSupplies = async (req, res) => {

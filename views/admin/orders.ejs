@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/css/admin-orders.css">
+<h1 class="order-title">Orders</h1>
+<table class="order-table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Status</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(order => { %>
+            <tr>
+                <td><%= order.id %></td>
+                <td><%= order.user_name %></td>
+                <td class="status <%= order.status.toLowerCase().replace(' ', '-') %>"><%= order.status %></td>
+                <td><%= order.total_price %></td>
+                <td>
+                    <a href="/admin/orders/<%= order.id %>" class="view-btn">View</a>
+                    <form action="/admin/orders/<%= order.id %>/update" method="POST" class="status-form">
+                        <select name="status" class="status-select">
+                            <option value="Pending" <% if(order.status === 'Pending') { %>selected<% } %>>Pending</option>
+                            <option value="Shipped" <% if(order.status === 'Shipped') { %>selected<% } %>>Shipped</option>
+                            <option value="Delivered" <% if(order.status === 'Delivered') { %>selected<% } %>>Delivered</option>
+                            <option value="Cancelled" <% if(order.status === 'Cancelled') { %>selected<% } %>>Cancelled</option>
+                        </select>
+                        <button type="submit" class="update-btn">Update Status</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

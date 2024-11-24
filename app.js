@@ -11,7 +11,6 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const memberRoutes = require('./routes/memberRoutes');
-
 const app = express();
 
 // Middleware setup
@@ -180,9 +179,11 @@ app.use('/', authRoutes);
 app.use('/loans', loansRoutes);
 app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment', equipmentRoutes);
-app.use('/purchase', purchaseRoutes);
 app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
+app.use('/', purchaseRoutes);
+app.use('/purchase', purchaseRoutes);
+
 
 
 // Start the server

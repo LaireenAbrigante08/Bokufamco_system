@@ -50,7 +50,7 @@ exports.purchaseProduct = async (req, res) => {
             productId,
             quantity,
             totalPrice,
-            status,
+    
         });
 
         // Redirect to orders page

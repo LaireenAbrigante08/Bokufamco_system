@@ -1,7 +1,7 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 console.log(authController); // Check if this logs an object with `register` and `login` functions
-
+const db = require('../config/db');
 const router = express.Router();
 
 // Routes setup
@@ -59,12 +59,19 @@ router.get('/admin', (req, res) => {
         res.status(403).send('Access denied');
     }
 });
+
 // Route to display user profile
-router.get('/profile', async (req, res) => {
+router.get('/memberProfile', async (req, res) => {
     if (req.session.user) {
         try {
-            const user = await User.findById(req.session.user.id); // Fetch user info from DB
-            res.render('user-profile', { user }); // Pass user info to view
+            const [user] = await db.promise().query('SELECT * FROM users WHERE id = ?', [req.session.user.id]); // Fetch user info from DB
+            const member = await db.promise().query('SELECT * FROM members WHERE user_id = ?', [req.session.user.id]); // Fetch member info
+            
+            if (user.length > 0) {
+                res.render('memberProfile', { user: user[0], member: member[0] });
+            } else {
+                res.status(404).send('User not found');
+            }
         } catch (error) {
             console.error('Error fetching user:', error);
             res.status(500).send('Error fetching user data');
@@ -77,23 +84,23 @@ router.get('/profile', async (req, res) => {
 // Route to handle profile update
 router.post('/update-profile', async (req, res) => {
     if (req.session.user) {
-        try {
-            const updatedUser = {
-                username: req.body.username,
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                address: req.body.address,
-                contactNumber: req.body.contactNumber,
-                dob: req.body.dob,
-                gender: req.body.gender
-            };
+        const { username, email, firstName, lastName, address, contactNumber, dob, gender } = req.body;
 
+        try {
             // Update user info in DB
-            await User.update(req.session.user.id, updatedUser); // Assuming you have an update method
+            await db.promise().query(
+                'UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, address = ?, contact_number = ?, dob = ?, gender = ? WHERE id = ?',
+                [username, email, firstName, lastName, address, contactNumber, dob, gender, req.session.user.id]
+            );
+
+            // Optionally update the member's profile
+            await db.promise().query(
+                'UPDATE members SET first_name = ?, last_name = ?, address = ?, contact_number = ? WHERE user_id = ?',
+                [firstName, lastName, address, contactNumber, req.session.user.id]
+            );
 
             // After updating, redirect to the profile page
-            res.redirect('/profile');
+            res.redirect('/memberProfile');
         } catch (error) {
             console.error('Error updating user info:', error);
             res.status(500).send('Error updating user information');

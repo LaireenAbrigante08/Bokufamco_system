@@ -76,66 +76,6 @@ app.get('/admin/member', (req, res) => {
     });
 });
 
-app.get('/member-profile', (req, res) => {
-    const userId = req.session.userId; // Use session's userId
-
-    if (!userId) {
-        return res.redirect('/login'); // Redirect to login if not logged in
-    }
-
-    // Fetch member information from the database
-    db.query('SELECT * FROM members WHERE user_id = ?', [userId], (err, results) => {
-        if (err) {
-            console.error('Error fetching member data:', err);
-            return res.status(500).send('Error retrieving member information');
-        }
-
-        const member = results.length > 0 ? results[0] : null;
-        if (!member) {
-            return res.render('member-form', { 
-                member: null, 
-                message: 'No member information found. Please complete your profile.' 
-            });
-        }
-
-        // Pass the member data to the EJS template
-        res.render('member-form', { member, message: null });
-    });
-});
-
-app.post('/update-member', async (req, res) => {
-    const { user_id, email, first_name, middle_name, last_name, address, dob, gender, contact_number } = req.body;
-
-    console.log('Form data received:', req.body);  // Log to see the incoming form data
-
-    // Ensure the user_id is passed correctly
-    if (!user_id) {
-        return res.status(400).send("User ID is missing. Please complete your profile.");
-    }
-
-    try {
-        // Debugging log for user_id
-        console.log('Updating member with user_id:', user_id);
-
-        // Use promise-based query to update the member information
-        const [rows, fields] = await db.promise().query(
-            `UPDATE members SET email = ?, first_name = ?, middle_name = ?, last_name = ?, address = ?, dob = ?, gender = ?, contact_number = ? WHERE user_id = ?`,
-            [email, first_name, middle_name, last_name, address, dob, gender, contact_number, user_id]
-        );
-
-        if (rows.affectedRows === 0) {
-            return res.status(404).send("Member not found or no changes made.");
-        }
-
-        // Successfully updated, redirect to the home page or profile page
-        res.redirect('/home');
-    } catch (error) {
-        console.error("Error updating member:", error.message);
-        res.status(500).send("An error occurred while updating the member profile. Please try again.");
-    }
-});
-
-
 const Equipment = require('./models/Equipment');
 
 app.get('/equipment/:id', (req, res) => {
@@ -190,7 +130,7 @@ app.post('/rentals', (req, res) => {
     });
 });
 
-app.get('/admin/member-profile/:userId', (req, res) => {
+app.get('/admin/memberProfile/:userId', (req, res) => {
     const userId = req.params.userId;
     const query = `SELECT * FROM members WHERE user_id = ?`;
     db.query(query, [userId], (err, results) => {

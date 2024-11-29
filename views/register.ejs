@@ -7,7 +7,6 @@
         </div>
         <h2>Create New Account</h2>
 
-
         <form action="/register" method="POST">
             <input type="text" name="username" placeholder="Choose a username" required>
             <input type="email" name="email" placeholder="Email" required>
@@ -23,6 +22,7 @@
                 <option value="Female">Female</option>
             </select>
             <input type="text" name="contactNumber" placeholder="Contact Number" required>
+            <input type="number" name="shareCapital" placeholder="Share Capital" min="0" step="0.01" required>
             <button type="submit">Register</button>
         </form>
 

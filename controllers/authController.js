@@ -3,14 +3,28 @@ const Member = require('../models/Member');
 const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
-    const { username, email, password, role = "User", firstName, middleName, lastName, address, dob, gender, contactNumber } = req.body;
+    const { 
+        username, 
+        email, 
+        password, 
+        role = "User", 
+        firstName, 
+        middleName, 
+        lastName, 
+        address, 
+        dob, 
+        gender, 
+        contactNumber, 
+        shareCapital 
+    } = req.body;
+
     try {
         // Create the user entry
         const userResult = await User.createUser(username, email, password, role);
         const userId = userResult.insertId; // Assuming 'insertId' returns the ID of the inserted user
 
         // Create the member entry with the newly created user ID
-        await Member.createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber);
+        await Member.createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber, shareCapital);
 
         res.redirect('/login');
     } catch (err) {
@@ -18,6 +32,7 @@ exports.register = async (req, res) => {
         res.status(500).send('Error during registration');
     }
 };
+
 
 // Controller for login
 exports.login = async (req, res) => {

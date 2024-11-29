@@ -1,0 +1,187 @@
+<%- include('partials/basic-header') %>
+
+<style>
+    /* Basic page styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #047997;
+        margin: 0;
+        padding: 0;
+    }
+
+    .min-h-screen {
+        background-color: #047997;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 3rem;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 3rem;
+    }
+
+    .form-container h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .space-y-4 > * + * {
+        margin-top: 1rem;
+    }
+
+    label {
+        color: #333;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        box-sizing: border-box;
+    }
+
+    input[type="date"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    input:focus, select:focus {
+        border-color: #038d03;
+        outline: none;
+    }
+
+    button {
+        background-color: #006d77;
+        color: white;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #83c5be;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="container">
+        <div class="form-container">
+            <h2>Member Profile</h2>
+            <form action="/update-member" method="POST" onsubmit="return validateForm()">
+                <input type="hidden" name="user_id" value="<%= member.user_id %>">
+                <div class="space-y-4">
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="<%= member.email %>" required>
+                    </div>
+                    <!-- First Name Field -->
+                    <div>
+                        <label for="first_name">First Name:</label>
+                        <input type="text" id="first_name" name="first_name" value="<%= member.first_name %>" required>
+                    </div>
+                    <!-- Middle Name Field -->
+                    <div>
+                        <label for="middle_name">Middle Name:</label>
+                        <input type="text" id="middle_name" name="middle_name" value="<%= member.middle_name %>">
+                    </div>
+                    <!-- Last Name Field -->
+                    <div>
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name" value="<%= member.last_name %>" required>
+                    </div>
+                    <!-- Address Field -->
+                    <div>
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address" value="<%= member.address %>">
+                    </div>
+                    <!-- Date of Birth Field -->
+                    <div>
+                        <label for="dob">Date of Birth:</label>
+                        <input type="date" id="dob" name="dob" value="<%= member.dob ? member.dob.toISOString().substring(0, 10) : '' %>">
+                    </div>
+                    <!-- Gender Field -->
+                    <div>
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="" <%= !member.gender ? 'selected' : '' %>>Select</option>
+                            <option value="Male" <%= member.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                            <option value="Female" <%= member.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                        </select>
+                    </div>
+                    <!-- Contact Number Field -->
+                    <div>
+                        <label for="contact_number">Contact Number:</label>
+                        <input type="text" id="contact_number" name="contact_number" value="<%= member.contact_number %>" required>
+                    </div>
+                    <!-- Status Field -->
+                    <div>
+                        <label for="status">Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="pending" <%= member.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="approved" <%= member.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                        </select>
+                    </div>
+                    <!-- Share Capital Field -->
+                    <div>
+                        <label for="share_capital">Share Capital:</label>
+                        <input type="number" id="share_capital" name="share_capital" value="<%= member.share_capital %>" step="0.01" required>
+                    </div>
+                    <!-- Loan Balance Field -->
+                    <div>
+                        <label for="loan_balance">Loan Balance:</label>
+                        <input type="number" id="loan_balance" name="loan_balance" value="<%= member.loan_balance %>" step="0.01" required>
+                    </div>
+                </div>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const firstName = document.getElementById('first_name').value;
+        const lastName = document.getElementById('last_name').value;
+        const email = document.getElementById('email').value;
+        const contactNumber = document.getElementById('contact_number').value;
+
+        if (!firstName || !lastName || !email || !contactNumber) {
+            alert("First Name, Last Name, Email, and Contact Number are required.");
+            return false;
+        }
+
+        const contactPattern = /^[0-9]{10}$/; // Simple validation for 10-digit contact numbers
+        if (!contactPattern.test(contactNumber)) {
+            alert("Please enter a valid 10-digit Contact Number.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+<%- include('partials/basic-footer') %>

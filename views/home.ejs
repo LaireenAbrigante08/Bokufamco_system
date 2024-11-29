@@ -3,98 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>BOCOFAMCO E-commerce Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/home.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <style>
-        /* General styles for the body */
+        /* Global Styles */
         body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('/public/images/blurredbackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: rgba(37, 140, 163, 0.9);
+            color: white;
+            padding: 15px 20px;
             display: flex;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f5;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
-            padding-top: 20px;
+
+        .header .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
-        .user-profile {
-            padding: 20px;
-            text-align: center;
+
+        .header .search-bar {
+            flex: 1;
+            margin: 0 20px;
         }
-        .user-profile img {
-            width: 80px;
-            border-radius: 50%;
-            border: 2px solid #ecf0f1;
+
+        .header .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s;
         }
-        .menu {
-            list-style: none;
-            padding: 0;
+
+        .header .search-bar input:focus {
+            border-color: #258ca3;
+            box-shadow: 0px 0px 8px rgba(37, 140, 163, 0.5);
         }
-        .menu li {
-            margin: 0;
+
+        .header .icons {
+            font-size: 1.5rem;
         }
-        .menu a {
-            display: block;
-            padding: 15px;
+
+        .header .icons a {
+            color: white;
+            margin-left: 15px;
             text-decoration: none;
-            color: #ecf0f1;
-            transition: background-color 0.3s, color 0.3s;
+            transition: color 0.3s;
         }
-        .menu a:hover {
-            background-color: #34495e;
-            color: #ffffff;
+
+        .header .icons a:hover {
+            color: #ffdd57;
         }
-        .logout {
-            margin-top: auto;
-        }
+
+        /* Main Content */
         .main-content {
-            margin-left: 250px;
             padding: 20px;
-            flex-grow: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-content h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #258ca3;
+        }
+
+        /* Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .category-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+
+        .category-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-card i {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-size: 1.5rem; /* Smaller icon size */
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover i {
+            transform: scale(1.1);
+        }
+
+        .category-card h3 {
+            margin: 10px 0;
+            font-size: 0.9rem; /* Smaller text size */
+            color: #333;
+        }
+
+        /* Dynamic Content */
+        .dynamic-content {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .dynamic-content p {
+            font-size: 1rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="user-profile">
-            <img src="images/UserPic.jpg" alt="User Avatar" class="avatar">
-            <h2><%= userName %></h2>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="logo">BOCOFAMCO</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search for products, services...">
         </div>
-        <ul class="menu">
-            <li><a href="#" onclick="loadSection('/member-profile')"><i class="fa-solid fa-user"></i> Member Information</a></li>
-            <li><a href="#" onclick="loadSection('/equipment')"><i class="fa-solid fa-truck-ramp-box"></i> Equipment Rentals</a></li>
-            <li><a href="#" onclick="loadSection('/farm-supplies')"><i class="fa-solid fa-wheat-awn"></i> Farm Supplies</a></li>
-            <li><a href="#" onclick="loadSection('/orders')"><i class="fa-solid fa-receipt"></i> Orders</a></li>
-            <li><a href="#" onclick="loadSection('/loans')"><i class="fa-solid fa-landmark"></i> Loans</a></li>
-            <li><a href="#" onclick="loadSection('/about')"><i class="fa-solid fa-info-circle"></i> About Us</a></li>
-            <li><a href="#" onclick="loadSection('/contact')"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
-            <li class="logout"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
+        <div class="icons">
+            <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            <a href="/memberProfile" id="memberProfile"><i class="fas fa-user"></i></a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
     </div>
 
-    <div class="main-content" id="main-content">
-        <h2>Welcome to BOCOFAMCO Dashboard</h2>
-        <p>Select a menu item to view details.</p>
-    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Shop Categories</h2>
+        <div class="categories">
+            <!-- Farm Supplies -->
+            <div class="category-card" onclick="loadSection('/farm-supplies')">
+                <i class="fas fa-seedling" style="color: #28a745;"></i>
+                <h3>Farm Supplies</h3>
+            </div>
 
+            <!-- Equipment Rentals -->
+            <div class="category-card" onclick="loadSection('/equipment')">
+                <i class="fas fa-tractor" style="color: #ff5722;"></i>
+                <h3>Equipment Rentals</h3>
+            </div>
+
+            <!-- Orders -->
+            <div class="category-card" onclick="loadSection('/orders')">
+                <i class="fas fa-shopping-cart" style="color: #007bff;"></i>
+                <h3>Orders</h3>
+            </div>
+
+            <!-- Loans -->
+            <div class="category-card" onclick="loadSection('/loans')">
+                <i class="fas fa-handshake" style="color: #ffc107;"></i>
+                <h3>Loans</h3>
+            </div>
+        </div>
+        <div class="dynamic-content" id="dynamic-content">
+            <p>Select a category to view details.</p>
+        </div>
+    </div>    
     <script>
         function loadSection(url) {
             $.ajax({
                 url: url,
                 method: 'GET',
                 success: function(data) {
-                    $('#main-content').html(data);
+                    $('#dynamic-content').html(data);
                 },
                 error: function(err) {
                     console.error("Error loading content:", err);
-                    $('#main-content').html('<p>Error loading content. Please try again.</p>');
+                    $('#dynamic-content').html('<p>Error loading content. Please try again.</p>');
                 }
             });
         }

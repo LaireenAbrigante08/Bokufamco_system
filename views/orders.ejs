@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders</title>
     <link rel="stylesheet" href="/css/orders.css">
+    <script>
+        function confirmCancel() {
+            return confirm("Are you sure you want to cancel this order? This action cannot be undone.");
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -18,16 +23,37 @@
             <div class="order-list">
                 <% orders.forEach(order => { %>
                     <div class="order-card">
-                        <h2 class="product-name">Product: <%= order.product_name %></h2>
-                        <p class="order-details">Quantity: <%= order.quantity %></p>
-                        <p class="order-details">Total Price: $<%= Number(order.total_price).toFixed(2) %></p>
-                        <p class="order-details">Ordered On: <%= new Date(order.created_at).toLocaleDateString() %></p>
-                        <p class="order-status">
-                            Status: <strong class="<%= order.status ? order.status.toLowerCase().replace(' ', '-') : 'unknown-status' %>">
-                                <%= order.status || 'No Status' %>
-                            </strong>
-                                            
-                        </p>                        
+                        <% if (order.status !== 'Canceled') { %>
+                            <div class="order-header">
+                                <img src="/images/product/<%= order.product_picture || 'default-product.jpg' %>" alt="<%= order.product_name %>" class="product-image">
+                                <div class="order-info">
+                                    <h2 class="product-name">Product: <%= order.product_name %></h2>
+                                    <p class="order-details">Quantity: <%= order.quantity %></p>
+                                    <p class="order-details">Total Price: $<%= Number(order.total_price).toFixed(2) %></p>
+                                    <p class="order-details">Ordered On: <%= new Date(order.created_at).toLocaleString() %></p>
+                                    <p class="order-status">
+                                        Status: <strong class="<%= order.status ? order.status.toLowerCase().replace(' ', '-') : 'unknown-status' %>">
+                                            <%= order.status || 'No Status' %>
+                                        </strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="order-details">Shipping Address: <%= order.shipping_add || 'Not provided' %></p>
+                            <p class="order-details">Payment Method: <%= order.payment_method || 'Not specified' %></p>
+                            <p class="order-details">Payment Status: <%= order.payment_status || 'Pending' %></p>
+                            <p class="order-details">Delivery Status: <%= order.delivery_status || 'Pending' %></p>
+                            <p class="order-details">Notes: <%= order.notes || 'No notes' %></p>
+                            <p class="order-details">Tracking Number: <%= order.tracking_number || 'Not available' %></p>
+
+                            <% if (order.status === 'Pending') { %>
+                                <!-- Cancel Order Form -->
+                                <form action="/cancel-order/<%= order.id %>" method="POST" onsubmit="return confirmCancel()">
+                                    <button type="submit" class="cancel-order-btn">Cancel Order</button>
+                                </form>
+                            <% } %>
+                        <% } else { %>
+                            <p class="order-canceled">This order has been canceled.</p>
+                        <% } %>
                     </div>
                 <% }); %>
             </div>

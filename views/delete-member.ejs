@@ -1,1 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Member</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete this member?</h1>
+    <p>First Name: <%= member.firstName %></p>
+    <p>Last Name: <%= member.lastName %></p>
+    <form action="/members/<%= member.id %>/delete" method="POST">
+        <button type="submit">Yes, delete</button>
+    </form>
+    <a href="/members">Cancel</a>
+</body>
+</html>
 

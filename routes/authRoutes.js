@@ -60,53 +60,96 @@ router.get('/admin', (req, res) => {
     }
 });
 
-// Route to display user profile
 router.get('/memberProfile', async (req, res) => {
+    if (!req.session.user) return res.redirect('/login');
+
+    try {
+        // Fetch user and member info
+        const [[user]] = await db.promise().query('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
+        const [[member]] = await db.promise().query('SELECT * FROM members WHERE user_id = ?', [req.session.user.id]);
+
+        if (user && member) {
+            // Render profile with user and member data
+            res.render('memberProfile', { user, member });
+        } else {
+            res.redirect('/dashboard'); // Redirect if data is missing
+        }
+    } catch (error) {
+        console.error('Error fetching user or member:', error);
+        res.status(500).send('Error fetching user or member data.');
+    }
+});
+
+
+router.post('/update-profile', async (req, res) => {
     if (req.session.user) {
+        const { email, first_name, middle_name, last_name, gender, contact_number } = req.body;
+
+        // Validate input
+        if (!email || !first_name || !last_name || !gender || !contact_number) {
+            return res.status(400).send('All fields are required.');
+        }
+
         try {
-            const [user] = await db.promise().query('SELECT * FROM users WHERE id = ?', [req.session.user.id]); // Fetch user info from DB
-            const member = await db.promise().query('SELECT * FROM members WHERE user_id = ?', [req.session.user.id]); // Fetch member info
-            
-            if (user.length > 0) {
-                res.render('memberProfile', { user: user[0], member: member[0] });
-            } else {
-                res.status(404).send('User not found');
+            // Update the user's email in the `users` table
+            const [userUpdateResult] = await db.promise().query(
+                'UPDATE users SET email = ? WHERE id = ?',
+                [email, req.session.user.id]
+            );
+
+            if (userUpdateResult.affectedRows === 0) {
+                return res.status(404).send('User not found');
             }
+
+            // Update member details in the `members` table
+            const [memberUpdateResult] = await db.promise().query(
+                'UPDATE members SET first_name = ?, middle_name = ?, last_name = ?, gender = ?, contact_number = ? WHERE user_id = ?',
+                [first_name, middle_name, last_name, gender, contact_number, req.session.user.id]
+            );
+
+            if (memberUpdateResult.affectedRows === 0) {
+                return res.status(404).send('Member details not found');
+            }
+
+            // Redirect after successful update
+            res.redirect('/memberProfile');
         } catch (error) {
-            console.error('Error fetching user:', error);
-            res.status(500).send('Error fetching user data');
+            console.error('Error updating user or member info:', error);
+            res.status(500).send('Error updating profile.');
         }
     } else {
         res.redirect('/login');
     }
 });
 
-// Route to handle profile update
-router.post('/update-profile', async (req, res) => {
-    if (req.session.user) {
-        const { username, email, firstName, lastName, address, contactNumber, dob, gender } = req.body;
+router.post('/edit-address', async (req, res) => {
+    if (!req.session.user) return res.redirect('/login');
 
-        try {
-            // Update user info in DB
-            await db.promise().query(
-                'UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, address = ?, contact_number = ?, dob = ?, gender = ? WHERE id = ?',
-                [username, email, firstName, lastName, address, contactNumber, dob, gender, req.session.user.id]
-            );
+    const { address, contact_number } = req.body;
 
-            // Optionally update the member's profile
-            await db.promise().query(
-                'UPDATE members SET first_name = ?, last_name = ?, address = ?, contact_number = ? WHERE user_id = ?',
-                [firstName, lastName, address, contactNumber, req.session.user.id]
-            );
+    // Validate input
+    if (!address || !contact_number) {
+        return res.status(400).send('All required fields must be filled.');
+    }
 
-            // After updating, redirect to the profile page
-            res.redirect('/memberProfile');
-        } catch (error) {
-            console.error('Error updating user info:', error);
-            res.status(500).send('Error updating user information');
+    try {
+        // Update the address in the `members` table
+        const [result] = await db.promise().query(
+            `UPDATE members 
+             SET address = ?, 
+                 contact_number = ?, 
+             WHERE user_id = ?`,
+            [address, contact_number, address_type, req.session.user.id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send('Member not found.');
         }
-    } else {
-        res.redirect('/login');
+
+        res.redirect('/memberProfile'); // Redirect back to the profile page
+    } catch (error) {
+        console.error('Error updating address:', error);
+        res.status(500).send('Error updating address.');
     }
 });
 

@@ -11,6 +11,7 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const memberRoutes = require('./routes/memberRoutes');
+const cartRoutes = require('./routes/cartRoutes');  // Import the cart routes
 const app = express();
 
 // Middleware setup
@@ -130,6 +131,7 @@ app.post('/rentals', (req, res) => {
     });
 });
 
+
 app.get('/admin/memberProfile/:userId', (req, res) => {
     const userId = req.params.userId;
     const query = `SELECT * FROM members WHERE user_id = ?`;
@@ -153,6 +155,7 @@ app.get('/logout', (req, res) => {
     });
 });
 
+
 // Routes
 app.use('/', authRoutes);
 app.use('/loans', loansRoutes);
@@ -162,6 +165,7 @@ app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
 app.use('/', purchaseRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/', cartRoutes);  // Use the routes in the application
 
 
 

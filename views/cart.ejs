@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        /* General Layout */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('/images/blurredbackground.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background-color: rgba(245, 245, 245, 0.8); /* Transparent background */
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Content Area Styling */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Cart Table */
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cart-table th, .cart-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .cart-table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .cart-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .checkout-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .checkout-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Empty Cart Section */
+        #empty-cart-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .continue-shopping {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            position: sticky;
+            bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartItemsSection = document.getElementById('cart-items-section');
+            const emptyCartSection = document.getElementById('empty-cart-section');
+            
+            if (cartItemsSection.children.length > 0) {
+                cartItemsSection.style.display = 'block';
+                emptyCartSection.style.display = 'none';
+            } else {
+                cartItemsSection.style.display = 'none';
+                emptyCartSection.style.display = 'block';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>My Cart</h3>
+            <a href="/home">Home</a>
+            <a href="/cart">Your Cart</a>
+            <a href="/checkout">Checkout</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Your Cart</h1>
+            </header>
+
+            <!-- Cart Items -->
+            <div id="cart-items-section">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic content here -->
+                    </tbody>
+                </table>
+                <div class="cart-total">
+                    Total Amount: ₱0.00
+                </div>
+                <a href="/checkout" class="checkout-button">Checkout</a>
+            </div>
+
+            <!-- Empty Cart Section -->
+            <div id="empty-cart-section">
+                <p>Your cart is empty.</p>
+                <a href="/products" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

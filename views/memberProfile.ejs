@@ -1,187 +1,343 @@
 <%- include('partials/basic-header') %>
 
 <style>
-    /* Basic page styling */
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #047997;
-        margin: 0;
-        padding: 0;
-    }
-
-    .min-h-screen {
-        background-color: #047997;
-    }
-
+    /* General Layout */
     .container {
-        max-width: 1000px;
+        display: flex;
         margin: 0 auto;
-        padding: 3rem;
+        padding: 0;
+        min-height: 100vh;
+        background-image: url('/images/blurredbackground.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
 
-    .form-container {
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 3rem;
+    /* Sidebar Styling */
+    .sidebar {
+        width: 250px;
+        background-color: rgba(245, 245, 245, 0.8); /* Slight transparency for better visual effect */
+        padding: 20px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        font-family: 'Arial', sans-serif;
+        position: sticky;
+        top: 0;
+        height: 100vh; /* Ensures the sidebar extends to the bottom of the page */
+        z-index: 1;
     }
 
-    .form-container h2 {
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-
-    .space-y-4 > * + * {
-        margin-top: 1rem;
-    }
-
-    label {
+    .sidebar h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
         color: #333;
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
     }
 
-    input, select {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-        box-sizing: border-box;
-    }
-
-    input[type="date"] {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    }
-
-    input:focus, select:focus {
-        border-color: #038d03;
-        outline: none;
-    }
-
-    button {
-        background-color: #006d77;
-        color: white;
-        font-size: 1rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        width: 100%;
+    .sidebar a {
+        display: block;
+        padding: 12px 0;
+        font-size: 14px;
+        color: #333;
+        text-decoration: none;
+        border-bottom: 1px solid #ddd;
         transition: background-color 0.3s ease;
     }
 
-    button:hover {
-        background-color: #83c5be;
+    .sidebar a:hover {
+        background-color: #007bff;
+        color: white;
     }
 
+    /* Content Area Styling */
+    .content {
+        flex-grow: 1;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+        background-color: rgba(255, 255, 255, 0.8); /* Slight transparency to blend with background */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #333;
+    }
+
+    /* Section Styling */
+    .section {
+        margin-bottom: 30px;
+        display: none; /* Initially hide all sections */
+    }
+
+    .section h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #007bff;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .action-buttons .btn {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .action-buttons .btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
         .container {
-            padding: 1rem;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .sidebar {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .content {
+            padding: 15px;
         }
     }
 </style>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="container">
-        <div class="form-container">
-            <h2>Member Profile</h2>
-            <form action="/update-member" method="POST" onsubmit="return validateForm()">
-                <input type="hidden" name="user_id" value="<%= member.user_id %>">
-                <div class="space-y-4">
-                    <!-- Email Field -->
-                    <div>
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="<%= member.email %>" required>
-                    </div>
-                    <!-- First Name Field -->
-                    <div>
-                        <label for="first_name">First Name:</label>
-                        <input type="text" id="first_name" name="first_name" value="<%= member.first_name %>" required>
-                    </div>
-                    <!-- Middle Name Field -->
-                    <div>
-                        <label for="middle_name">Middle Name:</label>
-                        <input type="text" id="middle_name" name="middle_name" value="<%= member.middle_name %>">
-                    </div>
-                    <!-- Last Name Field -->
-                    <div>
-                        <label for="last_name">Last Name:</label>
-                        <input type="text" id="last_name" name="last_name" value="<%= member.last_name %>" required>
-                    </div>
-                    <!-- Address Field -->
-                    <div>
-                        <label for="address">Address:</label>
-                        <input type="text" id="address" name="address" value="<%= member.address %>">
-                    </div>
-                    <!-- Date of Birth Field -->
-                    <div>
-                        <label for="dob">Date of Birth:</label>
-                        <input type="date" id="dob" name="dob" value="<%= member.dob ? member.dob.toISOString().substring(0, 10) : '' %>">
-                    </div>
-                    <!-- Gender Field -->
-                    <div>
-                        <label for="gender">Gender:</label>
-                        <select id="gender" name="gender" required>
-                            <option value="" <%= !member.gender ? 'selected' : '' %>>Select</option>
-                            <option value="Male" <%= member.gender === 'Male' ? 'selected' : '' %>>Male</option>
-                            <option value="Female" <%= member.gender === 'Female' ? 'selected' : '' %>>Female</option>
-                        </select>
-                    </div>
-                    <!-- Contact Number Field -->
-                    <div>
-                        <label for="contact_number">Contact Number:</label>
-                        <input type="text" id="contact_number" name="contact_number" value="<%= member.contact_number %>" required>
-                    </div>
-                    <!-- Status Field -->
-                    <div>
-                        <label for="status">Status:</label>
-                        <select id="status" name="status" required>
-                            <option value="pending" <%= member.status === 'pending' ? 'selected' : '' %>>Pending</option>
-                            <option value="approved" <%= member.status === 'approved' ? 'selected' : '' %>>Approved</option>
-                        </select>
-                    </div>
-                    <!-- Share Capital Field -->
-                    <div>
-                        <label for="share_capital">Share Capital:</label>
-                        <input type="number" id="share_capital" name="share_capital" value="<%= member.share_capital %>" step="0.01" required>
-                    </div>
-                    <!-- Loan Balance Field -->
-                    <div>
-                        <label for="loan_balance">Loan Balance:</label>
-                        <input type="number" id="loan_balance" name="loan_balance" value="<%= member.loan_balance %>" step="0.01" required>
-                    </div>
-                </div>
-                <button type="submit">Save Changes</button>
-            </form>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- BOCOFAMCO Link -->
+        <a href="/home" class="bocofamco-link">BOCOFAMCO</a>
+        
+        <h3>Manage My Account</h3>
+        <a href="javascript:void(0);" onclick="showSection('profile-section')">My Profile</a>
+        <a href="javascript:void(0);" onclick="showSection('address-book-section')">Address Book</a>
+        <a href="javascript:void(0);" onclick="showSection('share-capital-section')">Savings / My Share Capital</a>
+        <a href="javascript:void(0);" onclick="showSection('transactions-section')">My Transactions</a>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+        <!-- My Profile Section -->
+        <div id="profile-section" class="section">
+            <h3>Personal Profile</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (member) { %>
+                        <tr>
+                            <td><%= member.id %></td>
+                            <td><%= member.first_name %></td>
+                            <td><%= member.middle_name %></td>
+                            <td><%= member.last_name %></td>
+                            <td><%= member.email %></td>
+                            <td><%= member.gender %></td>
+                        </tr>
+                    <% } else { %>
+                        <tr><td colspan="7">No member data found.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <!-- Edit Profile Button -->
+    <% if (member) { %>
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="toggleEditForm()">Edit Profile</button>
         </div>
+    <% } %>
+
+    <!-- Edit Profile Form -->
+    <div id="edit-profile-form" style="display: none; margin-top: 20px; border: 1px solid #ddd; padding: 20px; border-radius: 5px; background-color: #f9f9f9;">
+        <h3>Edit Profile</h3>
+        <form action="/update-profile" method="POST" style="display: grid; gap: 15px;">
+            <div>
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="<%= member.first_name %>" required>
+            </div>
+            <div>
+                <label for="middle_name">Middle Name:</label>
+                <input type="text" id="middle_name" name="middle_name" value="<%= member.middle_name %>" required>
+            </div>
+            <div>
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="<%= member.last_name %>" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= member.email %>" required>
+            </div>
+            <div>
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="Male" <% if (member.gender === 'Male') { %>selected<% } %>>Male</option>
+                    <option value="Female" <% if (member.gender === 'Female') { %>selected<% } %>>Female</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleEditForm() {
+            var form = document.getElementById('edit-profile-form');
+            form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+        }
+    </script>
+        <!-- Address Book Section -->
+        <div id="address-book-section" class="section">
+            <h3>Address Book</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (member && member.address) { %>
+                        <tr>
+                            <td><%= member.address %></td>
+                            <td><%= member.contact_number %></td>
+                            <td>
+                                <!-- Show the Edit button if the address exists -->
+                                <a href="javascript:void(0)" onclick="showEditForm()" class="btn">Edit</a>
+                            </td>
+                        </tr>
+                        <!-- Edit Address Form will appear below -->
+                        <tr id="edit-form-row" style="display:none;">
+                            <td colspan="4">
+                                <form action="/edit-address" method="POST">
+                                    <div>
+                                        <label for="address">Address:</label>
+                                        <textarea name="address" id="address" required><%= member.address %></textarea>
+                                    </div>
+                                    <div>
+                                        <label for="contact_number">Phone:</label>
+                                        <input type="text" name="contact_number" id="contact_number" value="<%= member.contact_number %>" required>
+                                    </div>
+                                    <button type="submit" class="btn">Save Changes</button>
+                                    <button type="button" onclick="hideEditForm()">Cancel</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } else { %>
+                        <tr><td colspan="4">No address found.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- JavaScript to show/hide the edit form -->
+        <script>
+            function showEditForm() {
+                document.getElementById('edit-form-row').style.display = 'table-row';
+            }
+
+            function hideEditForm() {
+                document.getElementById('edit-form-row').style.display = 'none';
+            }
+        </script>
+
+        <!-- Share Capital Section -->
+        <div id="share-capital-section" class="section">
+            <h3>Savings / My Share Capital</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Share Capital</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%= member ? member.share_capital : "N/A" %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- My Transactions Section -->
+        <div id="transactions-section" class="section">
+            <h3>My Transactions</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Orders</th>
+                            <th>Rentals</th>
+                            <th>Loans</th>
+                            <th>History</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/orders">View Orders</a></td>
+                            <td><a href="/rentals">View Rentals</a></td>
+                            <td><a href="/loans">View Loans</a></td>
+                            <td><a href="/history">View History</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    function validateForm() {
-        const firstName = document.getElementById('first_name').value;
-        const lastName = document.getElementById('last_name').value;
-        const email = document.getElementById('email').value;
-        const contactNumber = document.getElementById('contact_number').value;
+    function showSection(sectionId) {
+        // Hide all sections first
+        var sections = document.querySelectorAll('.section');
+        sections.forEach(function(section) {
+            section.style.display = 'none';
+        });
 
-        if (!firstName || !lastName || !email || !contactNumber) {
-            alert("First Name, Last Name, Email, and Contact Number are required.");
-            return false;
+        // Show the selected section
+        var selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.style.display = 'block';
         }
-
-        const contactPattern = /^[0-9]{10}$/; // Simple validation for 10-digit contact numbers
-        if (!contactPattern.test(contactNumber)) {
-            alert("Please enter a valid 10-digit Contact Number.");
-            return false;
-        }
-
-        return true;
     }
-</script>
 
+    // Optionally, you can show the profile section by default when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        showSection('profile-section');
+    });
+</script>
+<%- include('partials/footer') %>
 <%- include('partials/basic-footer') %>

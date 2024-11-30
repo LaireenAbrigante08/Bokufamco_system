@@ -78,6 +78,16 @@ exports.updateStatus = async (userId, status) => {
     }
 };
 
+exports.getMemberProfile = async (req, res) => {
+    try {
+        const [members] = await db.promise().query('SELECT * FROM members');
+        res.render('member-profile', { members });
+    } catch (err) {
+        console.error("Error fetching member data: ", err);
+        res.status(500).send('Server Error');
+    }
+};
+
 
 
 module.exports = Member;

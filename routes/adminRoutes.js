@@ -8,6 +8,11 @@ const orderController = require('../controllers/orderController');
 const multer = require('multer');
 const path = require('path');
 
+// Route to fetch all loans
+router.get('/loans', adminController.getAdminLoans);
+
+// Route to update loan status
+router.post('/loans/:id/update-status', adminController.updateLoanStatus);
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {

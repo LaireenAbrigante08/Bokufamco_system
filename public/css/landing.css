@@ -1,79 +1,359 @@
+:root {
+    --primary-color: rgba(37, 140, 163, 0.9);
+    --secondary-color: #00796b;
+}
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #e6f2f2; /* Light teal background */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #bbefeb, #0a4b51);
+    background-size: cover;
+    padding-top: 0px;
+    color: #333;
 }
+
+/* Header */
 header {
+    background-color: rgba(37, 140, 163, 0.9);
+    color: black;
+    padding: 0px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    background-color: #0c585f; /* Dark teal */
-    color: #edf6f9; /* Very light teal */
-    text-align: center;
-    padding: 30px 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-header p {
-    font-size: 1.2em;
-    margin: 10px 0 20px;
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
 }
-.btn {
-    display: inline-block;
-    padding: 12px 24px;
-    margin: 10px;
-    font-size: 1em;
-    color: #edf6f9; /* Light teal */
-    background: linear-gradient(135deg, #ff6b6b, #ff8e72); /* Coral gradient */
+
+nav a {
+    color: white;
     text-decoration: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s, transform 0.3s;
+    margin: 0 15px;
+    font-size: 1.2em;
 }
-.btn-secondary {
-    background: linear-gradient(135deg, #83c5be, #006d77); /* Soft teal gradient */
+
+nav a:hover {
+    text-decoration: underline;
 }
-.btn:hover {
-    background: linear-gradient(135deg, #ff8e72, #ff6b6b); /* Reverse coral gradient */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+.btn-login-register {
+    padding: 8px 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
 }
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #006d77, #83c5be); /* Reverse soft teal */
-}
-.vision-mission {
-    width: 90%;
-    max-width: 1000px;
+
+/* Hero Section */
+.main-section {
+    background-image: url('/images/CoconutPalm.webp');
+    background-size: cover;
+    background-position: center;
     text-align: center;
-    background-color: #ffffff;
-    padding: 30px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: white;
+    padding: 100px 20px;
 }
-.vision, .mission {
-    background-color: #f0f9f9; /* Very light teal */
+
+.main-section h2 {
+    color: white;
+    -webkit-text-stroke: 1px black;
+    font-weight: bold;
+}
+
+.main-section .content {
+    position: relative;
+    z-index: 2;
+}
+
+.main-section h2 {
+    font-size: 3em;
+}
+
+.main-section p {
+    font-size: 1.2em;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.shop-now-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 30px;
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.shop-now-btn:hover {
+    background-color: #00594c;
+}
+
+/* Farm Supplies Section */
+.farm-supplies {
+    padding: 50px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    background-color: #f9f9f9;
+}
+
+.farm-supply {
+    background-color: white;
     padding: 20px;
     border-radius: 10px;
-    margin: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.vision h3, .mission h3 {
-    color: #006d77;
-    margin-top: 0;
-}
-footer {
-    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    padding: 10px 0;
-    background-color: #006d77;
-    color: #edf6f9;
-    margin-top: auto;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.farm-supply img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.farm-supply h3 {
+    margin: 15px 0;
+    font-size: 1.5em;
+}
+
+.farm-supply p {
+    font-size: 1em;
+    color: #555;
+}
+
+.order-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.order-btn:hover {
+    background-color: #00594c;
+}
+
+/* About Section */
+.about-contact-section {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+.about-contact-section h3 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.about-contact-section {
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    background-color: #f4f4f4;
+}
+
+.card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 2em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.card p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Styling for map container */
+.map-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 1200px) {
+    .main-section h2 {
+        font-size: 2.5em;
+    }
+    
+    .main-section p {
+        font-size: 1.1em;
+    }
+    
+    .shop-now-btn {
+        font-size: 1.1em;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 992px) {
+    header {
+        padding: 10px 15px;
+    }
+
+    nav {
+        display: block;
+        text-align: center;
+    }
+
+    nav a {
+        display: block;
+        margin: 10px 0;
+        font-size: 1.1em;
+    }
+
+    .main-section h2 {
+        font-size: 2em;
+    }
+
+    .farm-supplies {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .farm-supply h3 {
+        font-size: 1.4em;
+    }
+
+    .farm-supply p {
+        font-size: 0.95em;
+    }
+
+    .order-btn {
+        font-size: 1em;
+        padding: 8px 18px;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px;
+    }
+
+    .main-section h2 {
+        font-size: 1.8em;
+    }
+
+    .main-section p {
+        font-size: 1em;
+    }
+
+    .shop-now-btn {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .farm-supplies {
+        grid-template-columns: 1fr;
+    }
+
+    .farm-supply h3 {
+        font-size: 1.3em;
+    }
+
+    .farm-supply p {
+        font-size: 0.9em;
+    }
+
+    .order-btn {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .card {
+        width: 95%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .main-section h2 {
+        font-size: 1.6em;
+    }
+
+    .main-section p {
+        font-size: 0.9em;
+    }
+
+    .shop-now-btn {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .farm-supply h3 {
+        font-size: 1.2em;
+    }
+
+    .farm-supply p {
+        font-size: 0.85em;
+    }
+
+    .order-btn {
+        font-size: 0.85em;
+        padding: 7px 12px;
+    }
+
+    footer {
+        font-size: 0.9em;
+    }
 }

@@ -8,7 +8,6 @@ const authRoutes = require('./routes/authRoutes');
 const loansRoutes = require('./routes/loansRoutes');
 const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
 const equipmentRoutes = require('./routes/equipmentRoutes');
-const purchaseRoutes = require('./routes/purchaseRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const memberRoutes = require('./routes/memberRoutes');
 const cartRoutes = require('./routes/cartRoutes');  // Import the cart routes
@@ -163,8 +162,6 @@ app.use('/farm-supplies', farmSuppliesRoutes);
 app.use('/equipment', equipmentRoutes);
 app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
-app.use('/', purchaseRoutes);
-app.use('/purchase', purchaseRoutes);
 app.use('/', cartRoutes);  // Use the routes in the application
 
 

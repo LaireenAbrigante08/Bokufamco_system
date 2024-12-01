@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db'); // Your existing mysql2 connection
+const db = require('../config/db'); // Your existing MySQL2 connection
 
+// Render Cart Page
 router.get('/cart', (req, res) => {
     const userId = req.session.userId;
 
@@ -30,14 +31,16 @@ router.get('/cart', (req, res) => {
                 return res.render('cart', { cartItems: null, cartTotal: 0 });
             }
 
-            // Calculate the total cart value as a number
+            // Calculate the total cart value
             const cartTotal = results.reduce((total, item) => total + item.total, 0);
 
-            // Ensure cartTotal is a number before passing it to the template
+            // Render cart page with cart items and total value
             res.render('cart', { cartItems: results, cartTotal: cartTotal });
         }
     );
 });
+
+// Remove item from cart and update stock
 router.post('/cart/remove/:id', (req, res) => {
     const itemId = req.params.id;
 
@@ -85,39 +88,37 @@ router.post('/cart/remove/:id', (req, res) => {
     );
 });
 
-
+// Update item quantity in the cart
 router.post('/cart/update-quantity/:id', (req, res) => {
     const { id } = req.params; // Cart item ID
     const { quantity } = req.body; // New quantity
-    console.log('Received quantity update request:', id, quantity);
 
-    // Validate that the quantity is a number and greater than 0
+    // Validate quantity input
     if (isNaN(quantity) || quantity < 1) {
-        console.log('Invalid quantity received:', quantity);
         return res.status(400).json({ success: false, message: 'Invalid quantity' });
     }
 
     // Update the quantity in the cart table
-    db.query('UPDATE cart SET quantity = ? WHERE id = ?', [quantity, id], (error, result) => {
+    db.query('UPDATE cart SET quantity = ? WHERE id = ?', [quantity, id], (error) => {
         if (error) {
             console.error('Error updating cart:', error);
             return res.status(500).json({ success: false, error: 'Failed to update cart' });
         }
-        
-        // After updating, get the updated cart total
-        db.query('SELECT * FROM cart WHERE user_id = ?', [req.user.id], (error, cartItems) => {
+
+        // Get updated cart total
+        db.query('SELECT * FROM cart WHERE user_id = ?', [req.session.userId], (error, cartItems) => {
             if (error) {
                 console.error('Error fetching cart items:', error);
                 return res.status(500).json({ success: false, error: 'Failed to fetch cart items' });
             }
 
             const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-            console.log('Updated cart total:', cartTotal);
             res.json({ success: true, cartTotal });
         });
     });
 });
 
+// Add item to the cart
 router.post('/add-to-cart/:id', (req, res) => {
     const productId = req.params.id;
     const userId = req.session.userId; // Assuming session authentication
@@ -144,7 +145,7 @@ router.post('/add-to-cart/:id', (req, res) => {
 
         const { name, price, stock } = results[0];
 
-        // Check if the stock is sufficient
+        // Check if stock is sufficient
         if (stock < quantity) {
             return res.status(400).send('Insufficient stock');
         }
@@ -170,12 +171,165 @@ router.post('/add-to-cart/:id', (req, res) => {
                             return res.status(500).send('Unable to update product stock');
                         }
 
-                        res.redirect('/cart'); // Redirect to the cart page after adding
+                        res.redirect('/cart'); // Redirect to cart page after adding
                     }
                 );
             }
         );
     });
 });
+
+// Render Checkout Form
+router.get('/checkout', (req, res) => {
+    const userId = req.session.userId;
+
+    if (!userId) {
+        return res.redirect('/login'); // Redirect to login if unauthenticated
+    }
+
+    // Fetch cart items for the user
+    db.query('SELECT * FROM cart WHERE user_id = ?', [userId], (error, cartItems) => {
+        if (error) {
+            console.error('Error fetching cart items:', error);
+            return res.status(500).send('Unable to fetch cart items');
+        }
+
+        // Calculate total price
+        const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+        res.render('checkout', { cartItems, totalPrice });
+    });
+});
+
+// Handle Checkout (Place Order)
+router.post('/checkout', (req, res) => {
+    const userId = req.session.userId;
+    const { deliveryAddress, paymentMethod } = req.body;
+
+    if (!userId) {
+        return res.redirect('/login');
+    }
+
+    // Fetch cart items for checkout, including the picture (image_url)
+    db.query('SELECT * FROM cart WHERE user_id = ?', [userId], (error, cartItems) => {
+        if (error) {
+            console.error('Error fetching cart items:', error);
+            return res.status(500).send('Unable to process order');
+        }
+
+        if (cartItems.length === 0) {
+            return res.status(400).send('No items in cart');
+        }
+
+        const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+        // Insert order into the orders table
+        db.query(
+            'INSERT INTO orders (user_id, total_price, status, created_at, delivery_address, payment_method) VALUES (?, ?, ?, NOW(), ?, ?)',
+            [userId, totalPrice, 'Pending', deliveryAddress, paymentMethod],
+            (error, result) => {
+                if (error) {
+                    console.error('Error creating order:', error);
+                    return res.status(500).send('Unable to create order');
+                }
+
+                const orderId = result.insertId; // Get the order_id of the inserted order
+
+                // Loop through the cart items to insert them into the order_items table
+                cartItems.forEach(item => {
+                    // Fetch the picture (image_url) for the product from the products table
+                    db.query('SELECT picture FROM products WHERE id = ?', [item.product_id], (error, productResults) => {
+                        if (error) {
+                            console.error('Error fetching product picture:', error);
+                            return res.status(500).send('Unable to fetch product picture');
+                        }
+
+                        const productPicture = productResults[0]?.picture; // Get the picture URL from the products table
+
+                        // Insert the order item into the order_items table
+                        db.query(
+                            'INSERT INTO order_items (order_id, product_id, product_name, quantity, price, picture) VALUES (?, ?, ?, ?, ?, ?)',
+                            [orderId, item.product_id, item.product_name, item.quantity, item.price, productPicture], // Insert the picture here
+                            (error) => {
+                                if (error) {
+                                    console.error('Error saving order item:', error);
+                                    return res.status(500).send('Unable to save order items');
+                                }
+                            }
+                        );
+                    });
+                });
+
+                // Clear cart after successful checkout
+                db.query('DELETE FROM cart WHERE user_id = ?', [userId], (error) => {
+                    if (error) {
+                        console.error('Error clearing cart:', error);
+                        return res.status(500).send('Unable to clear cart');
+                    }
+
+                    // Redirect to the "My Orders" page or an order confirmation page
+                    res.redirect('/orders');
+                });
+            }
+        );
+    });
+});
+
+
+router.get('/orders', (req, res) => {
+    const userId = req.session.userId;
+
+    if (!userId) {
+        return res.redirect('/login'); // Redirect to login if the user is not authenticated
+    }
+
+    // Fetch user's orders along with their items
+    db.query(
+        'SELECT o.id as order_id, o.total_price, o.status, o.created_at, o.delivery_address, oi.product_id, oi.product_name, oi.quantity, oi.price, oi.picture ' +
+        'FROM orders o ' +
+        'JOIN order_items oi ON o.id = oi.order_id ' +
+        'WHERE o.user_id = ? ORDER BY o.created_at DESC', 
+        [userId], (error, results) => {
+            if (error) {
+                console.error('Error fetching orders and items:', error);
+                return res.status(500).send('Unable to fetch orders');
+            }
+
+            // Group order items by order_id
+            const orders = [];
+            results.forEach(row => {
+                const order = orders.find(order => order.order_id === row.order_id);
+                if (!order) {
+                    orders.push({
+                        order_id: row.order_id,
+                        total_price: row.total_price,
+                        status: row.status,
+                        created_at: row.created_at,
+                        delivery_address: row.delivery_address,
+                        items: [{
+                            product_id: row.product_id,
+                            product_name: row.product_name,
+                            quantity: row.quantity,
+                            price: row.price,
+                            picture: row.picture
+                        }]
+                    });
+                } else {
+                    order.items.push({
+                        product_id: row.product_id,
+                        product_name: row.product_name,
+                        quantity: row.quantity,
+                        price: row.price,
+                        picture: row.picture
+                    });
+                }
+            });
+
+            res.render('orders', { orders }); // Pass the orders data to the view
+        }
+    );
+});
+
+
 
 module.exports = router;

@@ -190,13 +190,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Dynamic content here -->
+                        <% if (cartItems && cartItems.length > 0) { %>
+                            <% let totalAmount = 0; %> <!-- Initialize totalAmount variable -->
+                            <% cartItems.forEach(item => { %>
+                                <tr>
+                                    <td><%= item.product_name %></td>
+                                    <td><%= item.quantity %></td>
+                                    <td>₱<%= parseFloat(item.price).toFixed(2) %></td>
+                                    <td>₱<%= parseFloat(item.total).toFixed(2) %></td>
+                                    <td>
+                                        <form action="/cart/remove/<%= item.cart_id %>" method="POST">
+                                            <button type="submit">Remove</button>
+                                        </form>                                        
+                                    </td>
+                                </tr>
+                                <% totalAmount += parseFloat(item.total); %> <!-- Sum up the total amount -->
+                            <% }); %>
+                            <tr>
+                                <td colspan="4" class="cart-total">Total Amount: ₱<%= totalAmount.toFixed(2) %></td>
+                                <td><a href="/checkout" class="checkout-button">Checkout</a></td>
+                            </tr>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5">Your cart is empty.</td>
+                            </tr>
+                        <% } %>
                     </tbody>
-                </table>
-                <div class="cart-total">
-                    Total Amount: ₱0.00
-                </div>
-                <a href="/checkout" class="checkout-button">Checkout</a>
+                </table>                
             </div>
 
             <!-- Empty Cart Section -->

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Loan</title>
+    <script>
+        // Function to calculate the repayment details dynamically
+        function calculateRepayment() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const loanType = document.getElementById('loanType').value;
+            const loanDuration = parseInt(document.getElementById('loanDuration').value);
+
+            const loanTypes = {
+                'Coconut Farming': {
+                    1: 0.2,  
+                    2: 0.4, 
+                    3: 0.5  
+                },
+                'Personal': {
+                    1: 0.2,  
+                    2: 0.15, 
+                    3: 0.1  
+                }
+            };
+
+            // If loan amount or selected values are invalid
+            if (!loanAmount || !loanTypes[loanType] || !loanTypes[loanType][loanDuration]) {
+                return;
+            }
+
+            // Calculate the interest rate based on the type and duration
+            const interestRate = loanTypes[loanType][loanDuration];
+            const interestAmount = (loanAmount * interestRate * loanDuration).toFixed(2);
+            const dueDate = new Date();
+            dueDate.setMonth(dueDate.getMonth() + loanDuration); // Calculate due date based on loan duration
+
+            // Display the calculated repayment details
+            document.getElementById('repaymentDetails').innerHTML = ` 
+                <p><strong>Loan Amount:</strong> ₱${loanAmount.toFixed(2)}</p>
+                <p><strong>Interest Rate (per month):</strong> ${interestRate * 10}%</p>
+                <p><strong>Interest Amount:</strong> ₱${interestAmount}</p>
+                <p><strong>Total Repayment:</strong> ₱${(parseFloat(loanAmount) + parseFloat(interestAmount)).toFixed(2)}</p>
+                <p><strong>Due Date:</strong> ${dueDate.toLocaleDateString()}</p>
+            `;
+
+            // Store these values for confirmation modal
+            document.getElementById('confirmLoanAmount').value = loanAmount.toFixed(2);
+            document.getElementById('confirmLoanType').value = loanType;
+            document.getElementById('confirmLoanDuration').value = loanDuration;
+            document.getElementById('confirmInterestAmount').value = interestAmount;
+            document.getElementById('confirmTotalRepayment').value = (parseFloat(loanAmount) + parseFloat(interestAmount)).toFixed(2);
+            document.getElementById('confirmDueDate').value = dueDate.toLocaleDateString();
+        }
+
+        // Show confirmation modal before submitting
+        function showConfirmation() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const loanType = document.getElementById('loanType').value;
+            const loanDuration = parseInt(document.getElementById('loanDuration').value);
+
+            if (loanAmount && loanType && loanDuration) {
+                const interestRate = {
+                    'Coconut Farming': {
+                        1: 0.2,
+                        2: 0.4,
+                        3: 0.5
+                    },
+                    'Personal': {
+                        1: 0.2,
+                        2: 0.15,
+                        3: 0.1
+                    }
+                }[loanType][loanDuration];
+
+                const interestAmount = (loanAmount * interestRate * loanDuration).toFixed(2);
+                const totalRepayment = (loanAmount + parseFloat(interestAmount)).toFixed(2);
+
+                document.getElementById('confirmationDetails').innerHTML = ` 
+                    <p><strong>Loan Type:</strong> ${loanType}</p>
+                    <p><strong>Loan Amount:</strong> ₱${loanAmount.toFixed(2)}</p>
+                    <p><strong>Interest Rate:</strong> ${interestRate * 100}%</p>
+                    <p><strong>Interest Amount:</strong> ₱${interestAmount}</p>
+                    <p><strong>Total Repayment:</strong> ₱${totalRepayment}</p>
+                    <p><strong>Loan Duration:</strong> ${loanDuration} months</p>
+                `;
+                document.getElementById('confirmationModal').style.display = 'flex';
+            } else {
+                alert('Please fill in all fields correctly.');
+            }
+        }
+
+        // Close the confirmation modal
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #confirmationModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modalContent {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-close-btn {
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Create Loan</h1>
+        <form onsubmit="event.preventDefault(); showConfirmation();">
+            <label for="loanAmount">Loan Amount:</label>
+            <input type="number" id="loanAmount" name="loanAmount" placeholder="Enter loan amount" required oninput="calculateRepayment()">
+            
+            <label for="loanType">Loan Type:</label>
+            <select id="loanType" name="loanType" required onchange="calculateRepayment()">
+                <option value="Coconut Farming">Coconut Farming</option>
+                <option value="Personal">Personal</option>
+            </select>
+
+            <label for="loanDuration">Loan Duration (Months):</label>
+            <select id="loanDuration" name="loanDuration" required onchange="calculateRepayment()">
+                <option value="1">1 Month</option>
+                <option value="2">2 Months</option>
+                <option value="3">3 Months</option>
+            </select>
+
+            <div id="repaymentDetails">
+                <!-- Dynamic loan details will be displayed here -->
+            </div>
+
+            <button type="submit">Submit Loan</button>
+        </form>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal">
+        <div id="modalContent">
+            <h3>Please confirm your loan details:</h3>
+            <div id="confirmationDetails"></div>
+            <button class="modal-close-btn" onclick="closeModal()">Close</button>
+            <form action="/loans/create" method="POST">
+                <input type="hidden" name="loanAmount" id="confirmLoanAmount">
+                <input type="hidden" name="loanType" id="confirmLoanType">
+                <input type="hidden" name="loanDuration" id="confirmLoanDuration">
+                <input type="hidden" name="interestAmount" id="confirmInterestAmount">
+                <input type="hidden" name="totalRepayment" id="confirmTotalRepayment">
+                <input type="hidden" name="dueDate" id="confirmDueDate">
+                <button type="submit" style="background-color: green;">Confirm</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,6 +1,35 @@
 const db = require('../config/db');
 
 class Member {
+    /////////////////////////////////////////////////////
+    ///for payments 
+    // Method to get a member by loan ID
+static getMemberByLoanId(loanId) {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT m.* FROM members m JOIN loans l ON m.user_id = l.user_id WHERE l.id = ?`;
+        db.query(sql, [loanId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result[0]);
+            }
+        });
+    });
+}
+
+// Method to update the member's share capital
+static updateShareCapital(userId, percentageToAdd) {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE members SET share_capital = share_capital + ? WHERE user_id = ?`;
+        db.query(sql, [percentageToAdd, userId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
     // Create a new member
     static async createMember(userId, firstName, middleName, lastName, address, dob, email, gender, contactNumber, shareCapital) {
         return new Promise((resolve, reject) => {

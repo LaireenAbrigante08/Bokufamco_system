@@ -3,30 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to BOCOFAMCOoperatives</title>
+    <title>BOCOFAMCOoperatives - Your Online Farm Supplies Store</title>
     <link rel="stylesheet" href="/css/landing.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // JavaScript function to show a login/register message and redirect to login page
+        function showLoginMessage(event) {
+            event.preventDefault(); // Prevent default link behavior
+            alert('You need to log in or register to place an order.');
+            window.location.href = '/login'; // Redirect to the login page
+        }
+    </script>
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <h1>Welcome to BOCOFAMCOoperatives</h1>
-        <p>Your trusted cooperative for farm supplies, equipment rentals, member information, and loans.</p>
-        <a href="/login" class="btn">Login</a>
-        <a href="/register" class="btn btn-secondary">Register</a>
+        <div class="logo">
+            <img src="/images/logo.jpg" alt="BOCOFAMCO Logo">
+        </div>
+        <nav>
+            <a href="#home"><i class="fas fa-house"></i> Home</a>
+            <a href="#about"><i class="fas fa-info-circle"></i> About Us</a>
+            <a href="#contact"><i class="fas fa-headset"></i> Contact</a>
+            <a href="/login"><i class="fas fa-user"></i> Login</a>
+        </nav>
     </header>
 
-     <section class="vision-mission">
-        <h2>Our Vision and Mission</h2>
-        <div class="vision">
-            <h3>Vision</h3>
-            <p>Our vision is to become the foremost cooperative that empowers and uplifts local farmers, equipping them with the resources and skills necessary to achieve sustainable growth, improve quality of life, and create a resilient, prosperous community. We aspire to foster a future where every cooperative member plays an active role in promoting economic stability and environmental sustainability, contributing to the well-being of future generations.</p>
+    <!-- Hero Section -->
+    <section class="main-section" id="home">
+        <div class="content">
+            <h2>Welcome to BOCOFAMCO</h2>
+            <p>Your trusted place for high-quality farm supplies and equipment. Start your journey with us today!</p>
+            <a href="#products" class="shop-now-btn">Shop Now</a>
         </div>
-        <div class="mission">
-            <h3>Mission</h3>
-            <p>Our mission is to empower farmers and local communities through accessible resources, equitable financing, and essential services that support both individual and collective growth. We are committed to providing ongoing education and training programs that build skills in sustainable farming and business management, ensuring fair pricing and access to markets to help members maximize their economic potential, and promoting environmentally conscious practices that safeguard natural resources. By creating a strong support network, we aim to foster unity, collaboration, and mutual growth within our cooperative and community, building a sustainable future that enhances our members’ livelihoods and contributes positively to society and the environment.</p>
-        </div>
-        
     </section>
 
-    <%- include('partials/footer') %>
+    <!-- Farm Supplies Section -->
+    <section class="farm-supplies" id="products">
+        <div class="farm-supply">
+            <img src="/images/Tractor.png" alt="Tractor">
+            <h3>Tractors</h3>
+            <p>High-quality tractors for every farm's needs.</p>
+            <a href="#" class="order-btn" onclick="showLoginMessage(event)">Order Now</a>
+        </div>
+        <div class="farm-supply">
+            <img src="/images/product/seed_pack.jpg" alt="Seeds">
+            <h3>Seeds</h3>
+            <p>Organic and GMO-free seeds available.</p>
+            <a href="#" class="order-btn" onclick="showLoginMessage(event)">Order Now</a>
+        </div>
+        <div class="farm-supply">
+            <img src="/images/Farm tools.jpg" alt="Tools">
+            <h3>Farm Tools</h3>
+            <p>Durable tools for all farming tasks.</p>
+            <a href="#" class="order-btn" onclick="showLoginMessage(event)">Order Now</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+<section class="about-contact-section" id="about">
+    <div class="card">
+        <h3>About Us</h3>
+        <p>BOCOFAMCO is a cooperative focused on providing local farmers with high-quality supplies and expert agricultural advice. Our mission is to support sustainable farming practices and help our members grow their businesses.</p>
+
+        <h4>Our Values</h4>
+        <ul>
+            <li><strong>Quality:</strong> We only offer the best products for your farming needs.</li>
+            <li><strong>Community:</strong> We are committed to supporting local farmers and fostering collaboration.</li>
+            <li><strong>Sustainability:</strong> We promote eco-friendly practices to protect the future of farming.</li>
+        </ul>
+
+        <h4>Why Choose Us?</h4>
+        <p>At BOCOFAMCO, we provide reliable products, expert guidance, and personalized service to help you succeed in your farming journey.</p>
+    </div>
+</section>
+
+
+<!-- Contact Section -->
+<section class="about-contact-section" id="contact">
+    <div class="card">
+        <h3>Contact Us</h3>
+        <p>Email: support@bocofamco.com | Phone: +63 123 456 7890</p>
+        <p>Address: BOCOFAMCO Office, Barangay, Philippines</p>
+        
+        <!-- Embed Google Map -->
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31049.69532691864!2d121.15642313955075!3d13.399200899999991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bce8d27d531029%3A0x81ffe177523af5e8!2sBOCOFAMCO%20STORE!5e0!3m2!1sen!2sph!4v1733043404617!5m2!1sen!2sph"
+                width="600" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </div>
+</section>
+
+
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 BOCOFAMCOoperatives. All rights reserved.</p>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+        <a href="/terms">Terms & Conditions</a>
+    </footer>
 </body>
 </html>

@@ -4,170 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOCOFAMCO E-commerce Dashboard</title>
+    <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <style>
-        /* Global Styles */
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #bbefeb, #0a4b51);
-            background-size: cover;
-            color: #333;
-        }
-
-        /* Header */
-        .header {
-            background-color: rgba(37, 140, 163, 0.9); /* Color from your palette */
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .header .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .header .search-bar {
-            flex: 1;
-            margin: 0 20px;
-        }
-
-        .header .search-bar input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .header .search-bar input:focus {
-            border-color: #258ca3; /* Color match on focus */
-            box-shadow: 0px 0px 8px rgba(37, 140, 163, 0.5);
-        }
-
-        .header .icons {
-            font-size: 1.5rem;
-        }
-
-        .header .icons a {
-            color: white;
-            margin-left: 15px;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .header .icons a:hover {
-            color: #ffdd57; /* Hover effect gold */
-        }
-
-        /* Categories Section */
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .category-card {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .category-card .icon-wrapper {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .category-card i {
-            color: #258ca3; /* Color for icons */
-        }
-
-        .category-card h3 {
-            font-size: 1rem;
-            color: #333;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        /* Dynamic Content */
-        .main-content {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .main-content h2 {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #212121; /* Heading color */
-        }
-
-        /* Featured Section */
-        .featured-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .featured-item {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .featured-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .featured-item h3 {
-            margin: 10px 0;
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .about-contact-section {
-            margin-top: 30px;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .about-contact-section h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #006d77; /* Darker accent color */
-        }
-
-        .about-contact-section p {
-            font-size: 1rem;
-            color: #666;
-            line-height: 1.5;
-        }
-    </style>
 </head>
 <body>
     <!-- Header Section -->
@@ -178,110 +17,162 @@
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Search for products, services...">
+            <input type="text" placeholder="Search">
+            <i class="fa-solid fa-magnifying-glass"></i>
         </div>
+        
         <div class="icons">
+            <!-- Farm Supplies Link -->
+            <a href="#" id="farm-supplies-link" style="text-decoration: none; color: white; margin-right: 15px;">
+                Farm Supplies
+            </a>
+            <!-- Equipment Rentals Link -->
+            <a href="#" id="equipment-link" style="text-decoration: none; color: white; margin-right: 15px;">
+                Equipment
+            </a>
+            <!-- Loan Services Text Link -->
+            <a href="/loans" style="text-decoration: none; color: white; margin-right: 15px;">
+                Loan
+            </a>
+            <!-- Other Links -->
+            <a href="#about" style="text-decoration: none; color: white;">About</a>
+            <a href="#contact" style="text-decoration: none; color: white;">Contact</a>
+            <!-- Shopping Cart Icon -->
             <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
+            <!-- User Profile Icon -->
             <a href="/memberProfile" id="memberProfile"><i class="fas fa-user"></i></a>
+            <!-- Logout Icon -->
             <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i></a>
         </div>
     </div>
 
-
     <!-- Main Content -->
-    <div class="main-content">
-        <h2>Shop Categories</h2>
-        <div class="categories">
-            <div class="category-card" onclick="loadSection('/farm-supplies')">
-                <i class="fas fa-seedling" style="color: #28a745;"></i>
-                <h3>Farm Supplies</h3>
-            </div>
-            <div class="category-card" onclick="loadSection('/equipment')">
-                <i class="fas fa-tractor" style="color: #ff5722;"></i>
-                <h3>Equipment Rentals</h3>
-            </div>
-            <div class="category-card" onclick="loadSection('/loans')">
-                <i class="fas fa-money-check-alt" style="color: #6f42c1;"></i>
-                <h3>Loans</h3>
-            </div>
-            <div class="category-card" onclick="scrollToSection('about')">
-                <i class="fas fa-info-circle" style="color: #007bff;"></i>
-                <h3>About Us</h3>
-            </div>
-            <div class="category-card" onclick="scrollToSection('contact')">
-                <i class="fas fa-envelope" style="color: #ffc107;"></i>
-                <h3>Contact Us</h3>
-            </div>
+    <section class="main-section" id="home">
+        <div class="content">
+            <h2>Welcome to BOCOFAMCO</h2>
+            <p>Your trusted place for high-quality farm supplies and equipment. Start your journey with us today!</p>
         </div>
+    </section>
 
-        <!-- Featured Items -->
-        <div class="dynamic-content" id="dynamic-content">
-            <h2>Featured Items</h2>
-            <div class="featured-section">
-                <div class="featured-item">
-                    <img src="/images/Tractor.png" alt="Equipment 1">
-                    <h3>Tractor Rental</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/Harvester.png" alt="Equipment 2">
-                    <h3>Harvester Rental</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/OraganicFertilizer.png" alt="Farm Supplies 1">
-                    <h3>Organic Fertilizer</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/Pesticides.png" alt="Farm Supplies 2">
-                    <h3>Pesticides</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/Talong.png" alt="Farm Supplies 3">
-                    <h3>High-Quality Seeds Talong</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/Ironite.png" alt="Farm Supplies 4">
-                    <h3>Ironite Liquid Lawn & Garden Fertilizer</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/GrassCutter.png" alt="Equipment 3">
-                    <h3>GrassCutter</h3>
-                </div>
-                <div class="featured-item">
-                    <img src="/images/PumpSprayer.png" alt="Equipment 4">
-                    <h3>PumpSprayer</h3>
-                </div>
+    <!-- Dynamic Content Area (Content will be injected here) -->
+    <div id="dynamic-content">
+        <h2>Featured Items</h2>
+        <div class="featured-section">
+            <div class="featured-item">
+                <img src="/images/Tractor.png" alt="Equipment 1">
+                <h3>Tractor Rental</h3>
             </div>
-        </div>
-
-        <!-- About and Contact Section -->
-        <div class="about-contact-section" id="about">
-            <h3>About Us</h3>
-            <p>BOCOFAMCO is a cooperative dedicated to providing high-quality farm supplies, equipment rentals, and financial services to its members. Our goal is to support farmers and empower local communities through sustainable agricultural practices.</p>
-        </div>
-        <div class="about-contact-section" id="contact">
-            <h3>Contact Us</h3>
-            <p>For inquiries, please contact us:</p>
-            <p>Email: support@bocofamco.com</p>
-            <p>Phone: +63 123 456 7890</p>
-            <p>Address: BOCOFAMCO Office, Barangay, Philippines</p>
+            <div class="featured-item">
+                <img src="/images/Harvester.png" alt="Equipment 2">
+                <h3>Harvester Rental</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/OraganicFertilizer.png" alt="Farm Supplies 1">
+                <h3>Organic Fertilizer</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/Pesticides.png" alt="Farm Supplies 2">
+                <h3>Pesticides</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/Talong.png" alt="Farm Supplies 3">
+                <h3>High-Quality Seeds Talong</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/Ironite.png" alt="Farm Supplies 4">
+                <h3>Ironite Liquid Lawn & Garden Fertilizer</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/GrassCutter.png" alt="Equipment 3">
+                <h3>GrassCutter</h3>
+            </div>
+            <div class="featured-item">
+                <img src="/images/PumpSprayer.png" alt="Equipment 4">
+                <h3>PumpSprayer</h3>
+            </div>
         </div>
     </div>
 
-    <script>
-        function loadSection(url) {
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(data) {
-                    $('#dynamic-content').html(data);
-                },
-                error: function(err) {
-                    console.error("Error loading content:", err);
-                    $('#dynamic-content').html('<p>Error loading content. Please try again.</p>');
-                }
-            });
-        }
+    <!-- About Section -->
+    <section class="about-contact-section" id="about">
+        <div class="card">
+            <h3>About Us</h3>
+            <p>BOCOFAMCO is a cooperative focused on providing local farmers with high-quality supplies and expert agricultural advice. Our mission is to support sustainable farming practices and help our members grow their businesses.</p>
+            <h4>Our Values</h4>
+            <ul>
+                <li><strong>Quality:</strong> We only offer the best products for your farming needs.</li>
+                <li><strong>Community:</strong> We are committed to supporting local farmers and fostering collaboration.</li>
+                <li><strong>Sustainability:</strong> We promote eco-friendly practices to protect the future of farming.</li>
+            </ul>
+            <h4>Why Choose Us?</h4>
+            <p>At BOCOFAMCO, we provide reliable products, expert guidance, and personalized service to help you succeed in your farming journey.</p>
+        </div>
+    </section>
 
+    <!-- Contact Section -->
+    <section class="about-contact-section" id="contact">
+        <div class="card">
+            <h3>Contact Us</h3>
+
+            <!-- Flex container for Contact Form and Map -->
+            <div class="contact-map-container">
+                <!-- Contact Form -->
+                <form action="#" method="post" class="contact-form">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" name="full-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+                
+                <!-- Google Map -->
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31049.69532691864!2d121.15642313955075!3d13.399200899999991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bce8d27d531029%3A0x81ffe177523af5e8!2sBOCOFAMCO%20STORE!5e0!3m2!1sen!2sph!4v1733043404617!5m2!1sen!2sph"
+                        width="600" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Contact Information Icons -->
+            <div class="contact-icons">
+                <div class="icon-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>BOCOFAMCO Office, Barangay, Philippines</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <p>+63 123 456 7890</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>support@bocofamco.com</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-globe"></i>
+                    <p><a href="https://bocofamco.com" target="_blank">www.bocofamco.com</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
         function logout() {
             const confirmation = confirm("Are you sure you want to log out?");
             if (confirmation) {
@@ -289,12 +180,14 @@
             }
         }
 
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+        // Handle clicks on Farm Supplies and Equipment Links
+        $("#farm-supplies-link").click(function() {
+            $("#dynamic-content").load("/farm-supplies"); // Load farm-supplies.ejs
+        });
+
+        $("#equipment-link").click(function() {
+            $("#dynamic-content").load("/equipment"); // Load equipment.ejs
+        });
     </script>
 </body>
 </html>

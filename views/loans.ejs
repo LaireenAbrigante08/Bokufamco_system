@@ -6,69 +6,49 @@
     <title>Your Loans</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/loans.css">
 </head>
 <body class="bg-light">
+    <header class="main-header">
+        <h1><a href="/home" style="text-decoration: none; color: inherit;">Your Loans</a></h1>
+    </header>
 
-    <!-- Apply for a New Loan Button -->
-    <div class="container mt-4">
-        <a href="/loans/create" class="btn btn-success">Apply for a New Loan</a>
+    <div class="container mt-5">
+         <!-- Download Loan Agreement Form -->
+         <a href="/form.pdf" download="Bocofamco_Loan_Form.pdf" class="btn btn-primary">
+            Download Loan Agreement Form
+        </a>
+        
+        <!-- Button to trigger modal -->
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#loanModal">
+            Apply for a New Loan
+        </button>
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="loanModal" tabindex="-1" aria-labelledby="loanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loanModalLabel">Apply for a New Loan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Include the loan form here -->
+                    <%- include('loanForm') %> <!-- This includes your existing loanForm.ejs -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Your Loans</h1>
-
-        <% if (loans && loans.length > 0) { %>
-
-            <!-- Active and Partially Paid Loans Section -->
-            <div class="loan-section">
-                <h2 class="mb-3">Active and Partially Paid Loans</h2>
-                <table class="table table-bordered table-striped table-hover">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Loan Amount</th>
-                            <th>Loan Type</th>
-                            <th>Interest Rate</th>
-                            <th>Duration</th>
-                            <th>Interest Amount</th>
-                            <th>Total Repayment</th>
-                            <th>Created At</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Action</th> <!-- Added column for actions -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% loans.forEach(function(loan) { %>
-                            <% if (loan.loan_status === 'active' || loan.loan_status === 'partially paid') { %>
-                                <tr>
-                                    <td><%= loan.loan_amount %></td>
-                                    <td><%= loan.loan_type %></td>
-                                    <td><%= loan.interest_rate %>%</td>
-                                    <td><%= loan.months_to_pay %> months</td>
-                                    <td><%= loan.interest_amount %></td>
-                                    <td><%= loan.total_repayment %></td>
-                                    <td><%= new Date(loan.created_at).toLocaleDateString() %></td>
-                                    <td><%= new Date(loan.due_date).toLocaleDateString() %></td>
-                                    <td><%= loan.loan_status %></td>
-                                    <td>
-                                        <!-- Pay Button (redirect to payment page or trigger payment process) -->
-                                        <a href="/loans/pay/<%= loan.id %>" class="btn btn-primary">Pay</a>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        <% }); %>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Collapsible Section for Non-Active Loans -->
-            <div class="loan-section mt-4">
-                <button type="button" class="btn btn-primary w-100" data-bs-toggle="collapse" data-bs-target="#nonActiveLoans" aria-expanded="false" aria-controls="nonActiveLoans">
-                    Non-Active Loans (Approved, Pending, Canceled)
-                </button>
-                <div class="collapse mt-2" id="nonActiveLoans">
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead class="table-secondary">
+        <section>
+            <h2>Loans</h2>
+            <% if (loans && loans.length > 0) { %>
+                <div class="loan-section">
+                    <h3>Active and Partially Paid Loans</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
                             <tr>
                                 <th>Loan Amount</th>
                                 <th>Loan Type</th>
@@ -77,28 +57,26 @@
                                 <th>Interest Amount</th>
                                 <th>Total Repayment</th>
                                 <th>Created At</th>
+                                <th>Due Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% loans.forEach(function(loan) { %>
-                                <% if (loan.loan_status !== 'active' && loan.loan_status !== 'partially paid') { %>
+                                <% if (loan.loan_status === 'active' || loan.loan_status === 'partially paid') { %>
                                     <tr>
                                         <td><%= loan.loan_amount %></td>
                                         <td><%= loan.loan_type %></td>
                                         <td><%= loan.interest_rate %>%</td>
-                                        <td><%= loan.months_to_pay %> month/s</td>
+                                        <td><%= loan.months_to_pay %> months</td>
                                         <td><%= loan.interest_amount %></td>
                                         <td><%= loan.total_repayment %></td>
                                         <td><%= new Date(loan.created_at).toLocaleDateString() %></td>
+                                        <td><%= new Date(loan.due_date).toLocaleDateString() %></td>
                                         <td><%= loan.loan_status %></td>
                                         <td>
-                                            <% if (loan.loan_status === 'pending') { %>
-                                                <form action="/loans/cancel/<%= loan.id %>" method="POST" onsubmit="return confirmCancellation()">
-                                                    <button type="submit" class="btn btn-danger">Cancel</button>
-                                                </form>
-                                            <% } %>
+                                            <a href="/loans/pay/<%= loan.id %>" class="btn btn-primary">Pay</a>
                                         </td>
                                     </tr>
                                 <% } %>
@@ -106,23 +84,66 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-        <% } else { %>
-            <p class="text-center">You have no loans.</p>
-        <% } %>
-
+                <div class="loan-section mt-4">
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="collapse" data-bs-target="#nonActiveLoans" aria-expanded="false" aria-controls="nonActiveLoans">
+                        Non-Active Loans (Approved, Pending, Canceled)
+                    </button>
+                    <div class="collapse mt-2" id="nonActiveLoans">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Loan Amount</th>
+                                    <th>Loan Type</th>
+                                    <th>Interest Rate</th>
+                                    <th>Duration</th>
+                                    <th>Interest Amount</th>
+                                    <th>Total Repayment</th>
+                                    <th>Created At</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% loans.forEach(function(loan) { %>
+                                    <% if (loan.loan_status !== 'active' && loan.loan_status !== 'partially paid') { %>
+                                        <tr>
+                                            <td><%= loan.loan_amount %></td>
+                                            <td><%= loan.loan_type %></td>
+                                            <td><%= loan.interest_rate %>%</td>
+                                            <td><%= loan.months_to_pay %> month/s</td>
+                                            <td><%= loan.interest_amount %></td>
+                                            <td><%= loan.total_repayment %></td>
+                                            <td><%= new Date(loan.created_at).toLocaleDateString() %></td>
+                                            <td><%= loan.loan_status %></td>
+                                            <td>
+                                                <% if (loan.loan_status === 'pending') { %>
+                                                    <form action="/loans/cancel/<%= loan.id %>" method="POST" onsubmit="return confirmCancellation()">
+                                                        <button type="submit" class="btn btn-danger">Cancel</button>
+                                                    </form>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% } else { %>
+                <p class="no-loans-message">You have no loans.</p>
+            <% } %>
+        </section>
     </div>
 
-    <!-- Bootstrap JS and Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
     <script>
-        // Confirmation prompt before canceling the loan
         function confirmCancellation() {
             return confirm("Are you sure you want to cancel this loan? This action cannot be undone.");
         }
     </script>
+
+    <!-- Bootstrap JS (Optional if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

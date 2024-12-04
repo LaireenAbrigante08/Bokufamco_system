@@ -96,17 +96,10 @@
         }
     </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
+        
 
         .form-container {
+            
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -176,31 +169,29 @@
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>Create Loan</h1>
+    <div class="loan-form-container"></div>
         <form onsubmit="event.preventDefault(); showConfirmation();">
             <label for="loanAmount">Loan Amount:</label>
             <input type="number" id="loanAmount" name="loanAmount" placeholder="Enter loan amount" required oninput="calculateRepayment()">
-            
             <label for="loanType">Loan Type:</label>
             <select id="loanType" name="loanType" required onchange="calculateRepayment()">
                 <option value="Coconut Farming">Coconut Farming</option>
                 <option value="Personal">Personal</option>
             </select>
-
             <label for="loanDuration">Loan Duration (Months):</label>
             <select id="loanDuration" name="loanDuration" required onchange="calculateRepayment()">
                 <option value="1">1 Month</option>
                 <option value="2">2 Months</option>
                 <option value="3">3 Months</option>
             </select>
-
+            <input type="file" id="attachment" name="attachment" required accept=".pdf">
             <div id="repaymentDetails">
                 <!-- Dynamic loan details will be displayed here -->
             </div>
 
             <button type="submit">Submit Loan</button>
         </form>
+        
     </div>
 
     <!-- Confirmation Modal -->
@@ -209,7 +200,7 @@
             <h3>Please confirm your loan details:</h3>
             <div id="confirmationDetails"></div>
             <button class="modal-close-btn" onclick="closeModal()">Close</button>
-            <form action="/loans/create" method="POST">
+            <form action="/loans/create" method="POST" >
                 <input type="hidden" name="loanAmount" id="confirmLoanAmount">
                 <input type="hidden" name="loanType" id="confirmLoanType">
                 <input type="hidden" name="loanDuration" id="confirmLoanDuration">

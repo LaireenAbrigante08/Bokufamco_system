@@ -121,9 +121,8 @@ static getLoanById(loanId) {
     }
 
     // Create a new loan entry
-    static async createLoan(userId, loanAmount, loanType, loanDuration, interestAmount, totalRepayment, dueDate) {
+    static createLoan(userId, loanAmount, loanType, loanDuration, interestAmount, totalRepayment, dueDate, attachment) {
         return new Promise((resolve, reject) => {
-            // Validate loan type and duration
             if (!Loan.loanTypes[loanType]) {
                 return reject(new Error(`Invalid loan type: ${loanType}`));
             }
@@ -133,14 +132,12 @@ static getLoanById(loanId) {
             }
 
             const sql = `
-                INSERT INTO loans (user_id, loan_amount, loan_type, interest_rate, loan_status, months_to_pay, due_date, interest_amount, total_repayment, created_at)
-                VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, NOW())
+                INSERT INTO loans (user_id, loan_amount, loan_type, interest_rate, loan_status, months_to_pay, due_date, interest_amount, total_repayment, created_at, attachment)
+                VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, NOW(), ?)
             `;
-            const interestRate = Loan.loanTypes[loanType].interestRates[loanDuration]; // Get interest rate based on loan type and duration
+            const interestRate = Loan.loanTypes[loanType].interestRates[loanDuration];
 
-            console.log(`Creating loan for type: ${loanType}, duration: ${loanDuration}, interest rate: ${interestRate}`); // Debugging log
-
-            db.query(sql, [userId, loanAmount, loanType, interestRate, loanDuration, dueDate, interestAmount, totalRepayment], (err, result) => {
+            db.query(sql, [userId, loanAmount, loanType, interestRate, loanDuration, dueDate, interestAmount, totalRepayment, attachment], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {

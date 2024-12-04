@@ -1,18 +1,4 @@
 /* General Styling */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    padding: 20px;
-    margin: 0;
-    color: #333;
-}
-
-.order-title {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 30px;
-}
 
 /* Table Styling */
 .order-table {

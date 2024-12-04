@@ -12,8 +12,9 @@
     <!-- Header Section -->
     <div class="header">
         <div class="logo">
-            <a href="/home" style="text-decoration: none; color: white;">
-                <i class="fas fa-home"></i> BOCOFAMCO
+            <a href="/home" style="text-decoration: none; color: white; display: flex; align-items: center;">
+                <img src="/images/logo.jpg" alt="Logo" style="height: 50px; margin-right: 10px;">
+                <span>BOCOFAMCO</span>
             </a>
         </div>
         <div class="search-bar">
@@ -30,8 +31,7 @@
             <a href="#" id="equipment-link" style="text-decoration: none; color: white; margin-right: 15px;">
                 Equipment
             </a>
-            <!-- Loan Services Text Link -->
-            <a href="/loans" style="text-decoration: none; color: white; margin-right: 15px;">
+            <a href="#" id="loans-link" style="text-decoration: none; color: white; margin-right: 15px;">
                 Loan
             </a>
             <!-- Other Links -->
@@ -56,7 +56,7 @@
 
     <!-- Dynamic Content Area (Content will be injected here) -->
     <div id="dynamic-content">
-        <h2>Featured Items</h2>
+        <h1>Featured Items</h1>
         <div class="featured-section">
             <div class="featured-item">
                 <img src="/images/Tractor.png" alt="Equipment 1">
@@ -187,6 +187,9 @@
 
         $("#equipment-link").click(function() {
             $("#dynamic-content").load("/equipment"); // Load equipment.ejs
+        });
+        $("#loans-link").click(function() {
+            $("#dynamic-content").load("/loans"); // Load equipment.ejs
         });
     </script>
 </body>

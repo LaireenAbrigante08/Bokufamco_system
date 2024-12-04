@@ -11,41 +11,21 @@ body {
     padding: 20px;
 }
 
-header {
-    background: linear-gradient(135deg, #0c5b6d, #4CAF50); /* Gradient background for a modern look */
+h1 {
+    background-color: #0c5b6d;
     color: white;
-    padding: 10px 10px;
+    padding: 10px 20px;
     text-align: center;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(250, 239, 239, 0.1); /* Add depth to the header */
-    margin-bottom: 40px;
-}
-
-header h1 {
-    font-size: 36px;
-    font-weight: 700; /* Bold title */
-    letter-spacing: 1px;
+    }
+h1 {
+    font-size: 1.8rem;
     margin: 0;
-}
-
-header p {
-    font-size: 18px;
-    font-weight: 300; /* Lighter text */
-    margin-top: 15px;
-    color: rgba(255, 255, 255, 0.8); /* Softened color for description */
-}
-
-header .tagline {
-    font-size: 22px;
-    margin-top: 10px;
-    font-weight: 500;
 }
 
 /* Equipment Container */
 .equipment-container {
     background-color: #f9f9f9;
     padding: 40px 20px;
-    margin-top: 40px; /* Adds space before equipment section */
     border-radius: 12px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
@@ -54,11 +34,8 @@ header .tagline {
     font-size: 28px;
     font-weight: 700;
     color: #333;
-    text-align: center;
+    text-align: left;
     margin-bottom: 30px;
-    text-transform: uppercase;
-    letter-spacing: 2px; /* Adds a bit of spacing for emphasis */
-    border-bottom: 3px solid #0c5b6d; /* Underline effect */
     padding-bottom: 10px;
 }
 

@@ -9,7 +9,7 @@ router.get('/', isAuthenticated, loanController.getLoans);
 
 // Route to show loan creation form
 router.get('/create', isAuthenticated, loanController.createLoanPage); 
-
+router.post('/create-loan', loanController.createLoan);
 // Route to handle loan creation
 router.post('/create', isAuthenticated, loanController.createLoan);
 

@@ -1,0 +1,195 @@
+/* General Styles */
+
+h1 {
+    background-color: #0c5b6d;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    }
+h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.icons a {
+    color: white;
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+.icons a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Section */
+.main-section {
+    background-image: url('/images/CoconutPalm.webp');
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    color: white;
+    padding: 100px 20px;
+}
+
+.main-section h2 {
+    color: white;
+    -webkit-text-stroke: 1px black;
+    font-weight: bold;
+}
+
+.main-section .content {
+    position: relative;
+    z-index: 2;
+}
+
+.main-section h2 {
+    font-size: 3em;
+}
+
+.main-section p {
+    font-size: 1.2em;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* Featured Items */
+.dynamic-content {
+    padding: 30px;
+    background-color: #ffffff;
+}
+
+.featured-section {
+    padding-top: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.featured-item {
+    text-align: center;
+    width: 200px;
+}
+
+.featured-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.featured-item h3 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/* About and Contact Section */
+.about-contact-section {
+    padding: 50px 0;
+}
+
+.card {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary-color); /* Applying primary color */
+}
+
+.card p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.card ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.contact-map-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.contact-form {
+    flex: 1;
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.contact-form .form-group label {
+    font-size: 14px;
+    display: block;
+}
+
+.contact-form .form-group input,
+.contact-form .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.contact-form .form-group textarea {
+    resize: vertical;
+}
+
+.submit-btn {
+    background-color: var(--secondary-color); /* Applying secondary color */
+    color: #2980b9;
+    padding: 10px 20px;
+    border:none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #87c5ef;
+}
+
+.contact-icons {
+    margin-top: 40px;
+    display: flex;
+    color: #5596c7;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.contact-icons .icon-item {
+    text-align: center;
+    width: 200px;
+}
+
+.contact-icons i {
+    font-size: 20px;
+    color: var(--secondary-color); /* Applying secondary color */
+    margin-bottom: 10px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--primary-color); /* Applying primary color */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+

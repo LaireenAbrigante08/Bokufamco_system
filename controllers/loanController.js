@@ -1,18 +1,6 @@
 const Loan = require('../models/Loan');
 const Member = require('../models/Member'); 
-const path = require('path');
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Ensure that this path exists and is correct
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
-    }
-});
 
-
-const upload = multer({ storage: storage });
 class loanController {
     // Fetch loans for the logged-in user
     static async getLoans(req, res) {
@@ -33,68 +21,39 @@ class loanController {
 
     // Handle loan creation
     static async createLoan(req, res) {
-        const { loanAmount, loanType, loanDuration } = req.body;
+        const { loanAmount, loanType, loanDuration } = req.body; // Get loan amount, type, and duration from the form
         const userId = req.session.userId;
-    
-        if (!loanType) {
-            console.error('Loan type is missing!');
-            return res.status(400).send('Loan type is required.');
-        }
-    
-        console.log(`Loan type: ${loanType}`);  // Debugging line
-    
-        upload.single('attachment')(req, res, async (err) => {
-            if (err) {
-                console.error('Error uploading file:', err);
-                return res.status(500).send('File upload error');
-            }
-    
-            console.log('File uploaded:', req.file);  // Debugging line
-    
-            // Proceed with loan creation
-            const { interestAmount, totalRepayment } = Loan.calculateRepayment(loanAmount, loanType, parseInt(loanDuration));
-    
-            const dueDate = new Date();
-            dueDate.setMonth(dueDate.getMonth() + parseInt(loanDuration));
-    
-            const attachment = req.file ? `/uploads/${req.file.filename}` : null;
-    
-            console.log({
-                userId,
-                loanAmount,
-                loanType,
-                loanDuration,
-                interestAmount,
-                totalRepayment,
-                dueDate: dueDate.toISOString().split('T')[0],
-                attachment
-            });
-    
-            try {
-                // Insert the loan into the database
-                await Loan.createLoan(
-                    userId,
-                    loanAmount,
-                    loanType,
-                    parseInt(loanDuration),
-                    interestAmount,
-                    totalRepayment,
-                    dueDate.toISOString().split('T')[0],
-                    attachment
-                );
-    
-                res.render('loanSuccess', {
-                    message: 'Loan successfully created! It is pending approval.',
-                    redirectUrl: '/'
-                });
-    
-            } catch (error) {
-                console.error('Error creating loan:', error);
-                res.status(500).send('Failed to create loan.');
-            }
+
+        // Calculate repayment details (interest amount and total repayment)
+        const { interestAmount, totalRepayment } = Loan.calculateRepayment(loanAmount, loanType, parseInt(loanDuration));
+
+        // Set the due date (adding loan duration in months to the current date)
+        const dueDate = new Date();
+        dueDate.setMonth(dueDate.getMonth() + parseInt(loanDuration)); // Adjust due date based on loan duration
+
+        try {
+            // Create the loan record
+            await Loan.createLoan(
+                userId, 
+                loanAmount, 
+                loanType, 
+                parseInt(loanDuration), 
+                interestAmount, 
+                totalRepayment, 
+                dueDate.toISOString().split('T')[0] // Format the date to YYYY-MM-DD
+            );
+
+        // Render a success page with the loan created message
+        res.render('loanSuccess', { 
+            message: 'Loan successfully created! It is pending approval.',
+            redirectUrl: '/' // This will be the link to return home or to the loans page
         });
+
+    } catch (error) {
+        console.error('Error creating loan:', error);
+        res.status(500).send('Failed to create loan.');
     }
-    
+    }
 
     // Method to cancel a loan
     static async cancelLoan(req, res) {

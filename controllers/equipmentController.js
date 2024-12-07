@@ -1,11 +1,13 @@
-const Equipment = require('../models/Equipment'); // Ensure this path matches your folder structure
+const Equipment = require('../models/Equipment');  // Ensure your Equipment model is defined properly
+const Rental = require('../models/Rental');  // Assuming you have a Rental model for storing rental info
 
 // Get all equipment for display
 exports.getEquipment = async (req, res) => {
     try {
         const equipment = await Equipment.getAllEquipment(); // Get all equipment
         const isAuthenticated = req.session && req.session.userId; // Check if user is logged in
-        res.render('equipment', { equipment, isAuthenticated }); // Render view
+        const userId = req.session.userId || null; // Get userId if authenticated, otherwise null
+        res.render('equipment', { equipment, isAuthenticated, userId }); // Pass userId to the view
     } catch (error) {
         console.error('Error in getEquipment:', error);
         res.status(500).send('Server Error');
@@ -29,6 +31,7 @@ exports.getAddEquipmentForm = (req, res) => {
     res.render('admin/add-equipment');
 };
 
+// Handle adding new equipment
 exports.addEquipment = async (req, res) => {
     const { name, description, price, stock_quantity, status } = req.body; // Use 'stock_quantity'
     const picture = req.file ? req.file.filename : null; // Handle file upload
@@ -127,7 +130,6 @@ exports.updateEquipment = async (req, res) => {
     }
 };
 
-
 // Handle deleting equipment
 exports.deleteEquipment = async (req, res) => {
     try {
@@ -139,23 +141,55 @@ exports.deleteEquipment = async (req, res) => {
     }
 };
 
-exports.rentEquipment = (req, res) => {
+// Rent equipment - Show rental form
+exports.rentEquipment = async (req, res) => {
     const equipmentId = req.params.id; // Get the equipment ID from the URL
 
-    Equipment.getEquipmentById(equipmentId)
-        .then((equipment) => {
-            if (equipment) {
-                res.render('rentEquipment', {
-                    equipment: equipment,
-                    userId: req.session.userId,  // Assuming user session is set
-                    memberId: req.session.memberId // Assuming member session is set
-                });
-            } else {
-                res.status(404).send('Equipment not found');
-            }
-        })
-        .catch((err) => {
-            console.error('Error fetching equipment by ID:', err);
-            res.status(500).send('Error fetching equipment');
+    try {
+        const equipment = await Equipment.getEquipmentById(equipmentId);
+        if (!equipment) {
+            return res.status(404).send('Equipment not found');
+        }
+        
+        // Render rental form with equipment details
+        res.render('rentEquipment', {
+            equipment: equipment,
+            userId: req.session.userId,  // Pass the userId if available
+            memberId: req.session.memberId // Assuming member session is set
         });
+    } catch (err) {
+        console.error('Error fetching equipment by ID:', err);
+        res.status(500).send('Error fetching equipment');
+    }
+};
+
+// Process the rental form submission
+exports.processRental = async (req, res) => {
+    const { equipment_id, rental_start_date, rental_end_date, address } = req.body;
+
+    try {
+        const equipment = await Equipment.getEquipmentById(equipment_id);
+        if (!equipment || equipment.stock_quantity <= 0) {
+            return res.status(400).send('Equipment not available or out of stock.');
+        }
+
+        // Create rental record
+        const rental = await Rental.create({
+            equipment_id,
+            user_id: req.session.userId,  // Assuming you use user ID from the session
+            rental_start_date,
+            rental_end_date,
+            address,
+            status: 'pending'  // Status could be 'pending' or 'approved'
+        });
+
+        // Update stock quantity for the rented equipment
+        equipment.stock_quantity -= 1;
+        await equipment.save();
+
+        res.redirect('/equipment');  // Redirect to the equipment page after renting
+    } catch (error) {
+        console.error('Error processing rental:', error);
+        res.status(500).send('Server Error');
+    }
 };

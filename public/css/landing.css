@@ -2,6 +2,11 @@
     --primary-color: rgba(37, 140, 163, 0.9);
     --secondary-color: #00796b;
 }
+        /* Enable smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
 
 body {
     margin: 0;

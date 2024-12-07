@@ -8,43 +8,191 @@
     <link rel="stylesheet" href="/css/equipment.css">
 </head>
 
-<body> 
+<body>
     <header>
-            <h1>Equipment Rentals</h1>
-        </header>
-            <div class="container">
-                <section class="equipment">
-                    <h2>Available Equipment</h2>
-                    <div class="equipment-list">
-                        <% equipment.forEach(item => { %> <!-- Loop through the equipment list -->
-                            <div class="equipment-item">
-                                <img src="/images/product/<%= item.picture %>" alt="<%= item.name %>" class="equipment-img">
-                                <div class="equipment-details">
-                                    <h3><%= item.name %></h3>
-                                    <p><strong>Description:</strong> <%= item.description %></p>
-
-                                    <!-- Display the price -->
-                                    <% if (item.price && !isNaN(item.price)) { %>
-                                        <p><strong>Price:</strong> ₱<%= item.price.toLocaleString() %></p>
-                                    <% } else { %>
-                                        <p><strong>Price:</strong> Not Available</p>
-                                    <% } %>
-
-                                    <!-- Display stock quantity -->
-                                    <p><strong>Available:</strong> <%= item.stock_quantity %> in stock</p>
-
-                                    <!-- Rent button -->
-                                    <% if (isAuthenticated) { %>
-                                        <a href="/equipment/<%= item.id %>" class="rent-btn">Rent Now</a>
-                                    <% } else { %>
-                                        <a href="/login" class="login-btn">Login to Rent</a>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% }); %>
+        <h1>Equipment Rentals</h1>
+        <p>Your Trusted Partner for High-Quality Equipment Rentals</p>
+    </header>
+    
+    <div class="container">
+        <section class="equipment">
+            <h2>Available Equipment</h2>
+            <div class="equipment-list">
+                <% equipment.forEach(item => { %> <!-- Loop through the equipment list -->
+                    <div class="equipment-item">
+                        <img src="/images/product/<%= item.picture %>" alt="<%= item.name %>" class="equipment-img">
+                        <div class="equipment-details">
+                            <h3><%= item.name %></h3>
+                            <p><strong>Description:</strong> <%= item.description %></p>
+                            <% if (item.price && !isNaN(item.price)) { %>
+                                <p><strong>Price:</strong> ₱<%= item.price.toLocaleString() %></p>
+                            <% } else { %>
+                                <p><strong>Price:</strong> Not Available</p>
+                            <% } %>
+                            <p><strong>Available:</strong> <%= item.stock_quantity %> in stock</p>
+                            <% if (isAuthenticated) { %>
+                                <button class="rent-btn" onclick="openModal('rent', '<%= item.id %>', '<%= item.price %>', '<%= item.name %>')">Rent Now</button>
+                            <% } else { %>
+                                <a href="/login" class="login-btn">Login to Rent</a>
+                            <% } %>
+                        </div>
                     </div>
-                </section>
+                <% }); %>
             </div>
-</body>
+        </section>
+    </div>
 
-</html>
+<!-- Rental Modal -->
+<div id="transactionModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle">Rental Requirements</h3>
+        <form id="transactionForm" action="/transaction" method="POST">
+            <input type="hidden" name="equipment_id" id="equipment_id">
+            <input type="hidden" name="user_id" value="<%= userId || '' %>">
+
+            <label for="equipment_name">Equipment Name:</label>
+            <input type="text" name="equipment_name" id="equipment_name" readonly><br><br>
+
+            <label for="price">Price:</label>
+            <input type="text" name="price" id="price" readonly><br><br>
+
+            <label for="pickup_date">Pickup Date:</label>
+            <input type="date" name="pickup_date" id="pickup_date" required><br><br>
+
+            <label for="pickup_time">Pickup Time:</label>
+            <input type="time" name="pickup_time" id="pickup_time" required><br><br>
+
+            <label for="rental_interest">Rental Interest:</label>
+            <input type="text" name="rental_interest" id="rental_interest" value="3%" readonly><br><br>
+
+            <p><strong>Total Rental Cost:</strong> ₱<span id="totalRentalCost">0</span></p>
+            <p><strong>Share Capital Contribution:</strong> ₱<span id="shareCapital">0</span></p>
+
+            <button type="submit">Confirm Rental</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Styles -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        overflow-y: auto; /* Ensure scrollable if content overflows */
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto; /* Move the modal higher (was 15%) */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        position: relative;
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for better look */
+    }
+
+    .close-btn {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+    }
+
+    .close-btn:hover,
+    .close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .rent-btn, .login-btn {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .login-btn {
+        background-color: #f44336;
+    }
+
+    .rent-btn:hover, .login-btn:hover {
+        background-color: #45a049;
+    }
+
+    .modal-content form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-content form input, .modal-content form button {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .modal-content p {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+</style>
+
+<!-- JavaScript to Handle Modal -->
+<script>
+    function openModal(transactionType, equipmentId, price, equipmentName) {
+        const modal = document.getElementById("transactionModal");
+        const equipmentIdField = document.getElementById("equipment_id");
+        const equipmentNameField = document.getElementById("equipment_name");
+        const priceField = document.getElementById("price");
+        const totalRentalCostField = document.getElementById("totalRentalCost");
+        const shareCapitalField = document.getElementById("shareCapital");
+
+        // Set modal fields
+        modal.style.display = "block";
+        equipmentIdField.value = equipmentId;
+        equipmentNameField.value = equipmentName;
+        priceField.value = price.toLocaleString();
+
+        // Calculate costs
+        calculateRentalCost(price);
+
+        // Event listener for pickup date to recalculate rental cost
+        document.getElementById("pickup_date").addEventListener("change", () => {
+            calculateRentalCost(price);
+        });
+    }
+
+    function closeModal() {
+        document.getElementById("transactionModal").style.display = "none";
+    }
+
+    function calculateRentalCost(price) {
+    const totalInterestRate = 3 / 100; // 3% rental interest
+    const shareCapitalRate = 1.5 / 100; // 1.5% share capital contribution (from 3%)
+    
+    const totalInterest = price * totalInterestRate; // Total 3% interest
+    const shareCapital = price * shareCapitalRate; // 1.5% goes to share capital
+    const remainingInterest = totalInterest - shareCapital; // Remaining interest
+    
+    const totalRentalCost = price + totalInterest; // Total rental cost including interest
+
+    // Update fields
+    document.getElementById("totalRentalCost").textContent = totalRentalCost.toLocaleString();
+    document.getElementById("shareCapital").textContent = shareCapital.toLocaleString();
+}
+
+</script>

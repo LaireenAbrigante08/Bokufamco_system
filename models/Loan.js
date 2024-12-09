@@ -1,7 +1,6 @@
 const db = require('../config/db'); // Assuming you have a db configuration file
 
 class Loan {
-    ////////////////////////////////////////////////////////////
     //for payments
     static recordLoanPayment(loanId, paymentAmount) {
         return new Promise((resolve, reject) => {

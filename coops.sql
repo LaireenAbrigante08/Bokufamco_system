@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2024 at 04:57 PM
+-- Generation Time: Dec 09, 2024 at 04:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,14 +39,6 @@ CREATE TABLE `cart` (
   `product_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`id`, `user_id`, `product_name`, `quantity`, `price`, `created_at`, `updated_at`, `product_id`) VALUES
-(37, 12, 'Ironite Spray', 1, 737.00, '2024-12-01 15:55:08', '2024-12-01 15:55:08', 2),
-(38, 12, 'Organic Fertilizer', 1, 787.00, '2024-12-01 15:55:14', '2024-12-01 15:55:14', 3);
-
 -- --------------------------------------------------------
 
 --
@@ -60,15 +52,19 @@ CREATE TABLE `equipment` (
   `price` decimal(10,2) NOT NULL,
   `stock_quantity` int(11) DEFAULT NULL,
   `status` enum('available','rented','maintenance') DEFAULT 'available',
-  `picture` varchar(255) DEFAULT NULL
+  `picture` varchar(255) DEFAULT NULL,
+  `daily_rate` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `equipment`
 --
 
-INSERT INTO `equipment` (`id`, `name`, `description`, `price`, `stock_quantity`, `status`, `picture`) VALUES
-(12, 'Bea Alban Manalo', 'ytfd', 6000.00, 2, 'available', '1732407057014.jpg');
+INSERT INTO `equipment` (`id`, `name`, `description`, `price`, `stock_quantity`, `status`, `picture`, `daily_rate`) VALUES
+(13, 'Tractor', 'Tractor, high-power, low-speed traction vehicle and power unit mechanically similar to an automobile or truck but designed for use off the road. The two main types are wheeled, which is the earliest form, and continuous track.', 5200.00, 5, 'available', '1733112991043.png', 0.00),
+(14, 'GrassCutter', ' a device used to cut grass, as a lawn mower.. See examples of GRASSCUTTER used in a sentence.', 2000.00, 5, 'available', '1733113110404.png', 0.00),
+(15, 'Bulduser', 'a heavy vehicle with a large blade in front, used for pushing earth and stones away and for making areas of ground flat at the same time\r\n', 7500.00, 3, 'available', '1733113194233.png', 0.00),
+(16, 'Harvester', 'A combine harvester, also known as a combine, is a large agricultural machine that is used to harvest crops such as wheat, corn, soybeans, and other grains. It combines several different functions into one machine, including cutting, threshing, and cleaning the grain.', 7800.00, 3, 'available', '1733113370036.png', 0.00);
 
 -- --------------------------------------------------------
 
@@ -95,7 +91,12 @@ CREATE TABLE `loans` (
 --
 
 INSERT INTO `loans` (`id`, `user_id`, `loan_amount`, `loan_type`, `interest_rate`, `loan_status`, `months_to_pay`, `due_date`, `interest_amount`, `created_at`, `total_repayment`) VALUES
-(19, 12, 1200.00, 'Personal', 0.20, 'active', 1, '2025-01-01', 240.00, '2024-12-01 15:37:20', 1440.00);
+(19, 12, 1200.00, 'Personal', 0.20, 'approved', 1, '2025-01-01', 240.00, '2024-12-01 15:37:20', 1440.00),
+(20, 12, 50000.00, 'Personal', 0.20, 'canceled', 1, '2025-01-02', 10000.00, '2024-12-02 10:25:26', 60000.00),
+(21, 12, 12000.00, 'Personal', 0.20, 'canceled', 1, '2025-01-04', 2400.00, '2024-12-04 12:04:50', 14400.00),
+(22, 12, 50000.00, 'Coconut Farming', 0.20, 'pending', 1, '2025-01-04', 10000.00, '2024-12-04 12:50:33', 60000.00),
+(23, 12, 11244.00, 'Personal', 0.20, 'active', 1, '2025-01-06', 2248.80, '2024-12-06 12:03:24', 13492.80),
+(24, 12, 12333.00, 'Coconut Farming', 0.20, 'pending', 1, '2025-01-07', 2466.60, '2024-12-07 13:40:40', 14799.60);
 
 -- --------------------------------------------------------
 
@@ -110,6 +111,14 @@ CREATE TABLE `loan_payments` (
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('pending','verified','rejected') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loan_payments`
+--
+
+INSERT INTO `loan_payments` (`id`, `loan_id`, `payment_amount`, `payment_date`, `status`) VALUES
+(16, 19, 1440.00, '2024-12-02 02:01:26', 'pending'),
+(17, 22, 45000.00, '2024-12-04 12:51:46', 'pending');
 
 -- --------------------------------------------------------
 
@@ -147,7 +156,7 @@ INSERT INTO `members` (`id`, `first_name`, `middle_name`, `last_name`, `address`
 (11, 'Myrna', 'Alias', 'Abrigante', 'Sta. Rita. Calapan City', '1979-12-11', 'myrna@gmail.com', 'Female', '09517412165', 9, 'pending', 0.00, 0.00),
 (12, 'Alvin', 'Manalo', 'Villaverde', 'Ilaya', '2024-11-22', 'alvnvllavrd@gmail.com', 'Male', '09293934207', 10, 'approved', 0.00, 0.00),
 (13, 'Alvin', 'Manalo', 'Villaverde', 'Ilaya', '2024-11-24', 'alvnvllavrd@gmail.com', 'Male', '09293934207', 11, 'approved', 0.00, 0.00),
-(14, 'John Remuel ', 'Alias', 'Abrigante', 'Sta. Rita. Calapan City', '2002-08-22', 'remuel@gmail.com', 'Male', '09517412165', 12, 'pending', 5000.00, 0.00),
+(14, ']Remuel ', 'Alias', 'Abrigante', 'Sta. Rita. Calapan City', '2002-08-22', 'remuel@gmail.com', 'Male', '09517412165', 12, 'pending', 9644.00, 0.00),
 (15, 'LAIREEN', 'MAE ALIAS', 'ABRIGANTE', 'Sta. Rita. Calapan City', '2003-12-08', 'laireenabrigante@gmail.com', 'Female', '09517412165', 13, 'pending', 7000.00, 0.00),
 (16, 'LAIREEN', 'MAE ALIAS', 'ABRIGANTE', 'Sta. Rita. Calapan City', '2003-12-08', 'laireenabrigante@gmail.com', 'Female', '09517412165', 14, 'pending', 7000.00, 0.00);
 
@@ -175,8 +184,12 @@ INSERT INTO `orders` (`id`, `user_id`, `total_price`, `status`, `created_at`, `d
 (8, 12, 350.00, 'Pending', '2024-12-01 08:29:36', 'efqfwef', 'Cash on Delivery'),
 (10, 12, 837.00, 'Pending', '2024-12-01 08:42:13', 'dav xv ', 'Cash on Delivery'),
 (12, 12, 50.00, 'Pending', '2024-12-01 11:21:15', 'shgvdaghkvagk', 'Cash on Delivery'),
-(13, 12, 50.00, 'Pending', '2024-12-01 12:00:19', 'calapan', 'Cash on Delivery'),
-(14, 12, 737.00, 'Delivered', '2024-12-01 13:39:11', 'wfrefveqf', 'Cash on Delivery');
+(13, 12, 50.00, 'Delivered', '2024-12-01 12:00:19', 'calapan', 'Cash on Delivery'),
+(14, 12, 737.00, 'Delivered', '2024-12-01 13:39:11', 'wfrefveqf', 'Cash on Delivery'),
+(15, 12, 680.00, 'Pending', '2024-12-02 10:23:40', 'dfzdfggd', 'Cash on Delivery'),
+(16, 12, 50.00, 'Pending', '2024-12-04 12:03:01', 'cfucxhc', 'Cash on Delivery'),
+(17, 12, 100.00, 'Shipped', '2024-12-06 12:01:38', 'wqefvsavg', 'Cash on Delivery'),
+(18, 12, 50.00, 'Delivered', '2024-12-08 08:44:04', '65rty', 'Cash on Delivery');
 
 -- --------------------------------------------------------
 
@@ -204,7 +217,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quan
 (6, 10, 1, 'High Quality Talong Seeds', 1, 50.00, '1732945398135.png'),
 (9, 12, 1, 'High Quality Talong Seeds', 1, 50.00, '1732945398135.png'),
 (10, 13, 1, 'High Quality Talong Seeds', 1, 50.00, '1732945398135.png'),
-(11, 14, 2, 'Ironite Spray', 1, 737.00, '1732945490755.png');
+(11, 14, 2, 'Ironite Spray', 1, 737.00, '1732945490755.png'),
+(12, 15, 4, 'Pesticides', 2, 340.00, '1732945658171.png'),
+(13, 16, 1, 'High Quality Talong Seeds', 1, 50.00, '1732945398135.png'),
+(14, 17, 1, 'High Quality Talong Seeds', 2, 50.00, '1732945398135.png'),
+(15, 18, 1, 'High Quality Talong Seeds', 1, 50.00, '1732945398135.png');
 
 -- --------------------------------------------------------
 
@@ -226,10 +243,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `picture`, `price`, `stock`) VALUES
-(1, 'High Quality Talong Seeds', 'Eggplant (Solanum melongena L.), locally known as \"talong\", is an important vegetable crop in the Philippines due to its high nutritional value and versatile culinary uses. It is a popular ingredient in many Filipino dishes, such as tortang talong, pinakbet, and adobo.', '1732945398135.png', 50.00, 75),
-(2, 'Ironite Spray', 'Ironite is an iron-rich mineral supplement used on lawns to enhance greenness by aiding photosynthesis. Benefits include versatility, enriching lawns and nearby plants, Advanced Soil Technology, beneficial microbes used on all soil types, and no chemical burns.', '1732945490755.png', 737.00, 94),
-(3, 'Organic Fertilizer', 'Organic fertilizer is an essential source of plant nutrients and soil. Organic fertilizers differ from chemical fertilizers in that they provide nutrients for your plants while creating healthy soil. They are considered a greener option.', '1732945559024.png', 787.00, 88),
-(4, 'Pesticides', 'Pests can be insects, weeds, fungi, bacteria, rodents, or any other organism that reduces crop yield or quality.', '1732945658171.png', 340.00, 100);
+(1, 'High Quality Talong Seeds', 'Eggplant (Solanum melongena L.), locally known as \"talong\", is an important vegetable crop in the Philippines due to its high nutritional value and versatile culinary uses. It is a popular ingredient in many Filipino dishes, such as tortang talong, pinakbet, and adobo.', '1732945398135.png', 50.00, 71),
+(2, 'Ironite Spray', 'Ironite is an iron-rich mineral supplement used on lawns to enhance greenness by aiding photosynthesis. Benefits include versatility, enriching lawns and nearby plants, Advanced Soil Technology, beneficial microbes used on all soil types, and no chemical burns.', '1732945490755.png', 737.00, 95),
+(3, 'Organic Fertilizer', 'Organic fertilizer is an essential source of plant nutrients and soil. Organic fertilizers differ from chemical fertilizers in that they provide nutrients for your plants while creating healthy soil. They are considered a greener option.', '1732945559024.png', 787.00, 89),
+(4, 'Pesticides', 'Pests can be insects, weeds, fungi, bacteria, rodents, or any other organism that reduces crop yield or quality.', '1732945658171.png', 340.00, 98);
 
 -- --------------------------------------------------------
 
@@ -238,13 +255,35 @@ INSERT INTO `products` (`id`, `name`, `description`, `picture`, `price`, `stock`
 --
 
 CREATE TABLE `rentals` (
-  `id` int(11) NOT NULL,
-  `equipment_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `member_id` int(11) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `rental_status` enum('pending','confirmed','returned','overdue') DEFAULT 'pending'
+  `rental_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `equipment_name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `rental_start_date` date NOT NULL,
+  `rental_end_date` date NOT NULL,
+  `pickup_time` time NOT NULL,
+  `rental_interest` decimal(5,2) DEFAULT 3.00,
+  `total_rental_cost` decimal(10,2) NOT NULL,
+  `rental_status` enum('pending','approved','cancelled','completed') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rentals_payment`
+--
+
+CREATE TABLE `rentals_payment` (
+  `payment_id` int(11) NOT NULL,
+  `rental_id` int(11) NOT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_status` enum('pending','paid','failed') DEFAULT 'pending',
+  `payment_method` enum('credit','debit','cash','online') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -342,10 +381,15 @@ ALTER TABLE `products`
 -- Indexes for table `rentals`
 --
 ALTER TABLE `rentals`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `equipment_id` (`equipment_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `member_id` (`member_id`);
+  ADD PRIMARY KEY (`rental_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `rentals_payment`
+--
+ALTER TABLE `rentals_payment`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `rental_id` (`rental_id`);
 
 --
 -- Indexes for table `users`
@@ -361,25 +405,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `equipment`
 --
 ALTER TABLE `equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `loans`
 --
 ALTER TABLE `loans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `loan_payments`
 --
 ALTER TABLE `loan_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `members`
@@ -391,13 +435,13 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -409,7 +453,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `rentals`
 --
 ALTER TABLE `rentals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rental_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `rentals_payment`
+--
+ALTER TABLE `rentals_payment`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -456,9 +506,13 @@ ALTER TABLE `order_items`
 -- Constraints for table `rentals`
 --
 ALTER TABLE `rentals`
-  ADD CONSTRAINT `rentals_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`),
-  ADD CONSTRAINT `rentals_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `rentals_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`);
+  ADD CONSTRAINT `rentals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `rentals_payment`
+--
+ALTER TABLE `rentals_payment`
+  ADD CONSTRAINT `rentals_payment_ibfk_1` FOREIGN KEY (`rental_id`) REFERENCES `rentals` (`rental_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

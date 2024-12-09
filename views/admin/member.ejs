@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Information</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <style>
-       
-
         /* Container for the table */
         .container {
             max-width: 1200px;  /* Set a max-width for the table container */
@@ -55,60 +53,12 @@
             background-color: #7f8c8d;
         }
 
-        /* Modal Styling */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0); /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-        }
-
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            float: right;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         /* Sidebar and layout styling */
         body {
             display: flex; /* Use flexbox to align sidebar and content */
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f0f0f5; /* Light background for the body */
-        }
-
-        .sidebar {
-            width: 250px; /* Set a fixed width for the sidebar */
-            background-color: #2c3e50; /* Dark blue background for the sidebar */
-            color: #ecf0f1; /* Light text color */
-            position: fixed; /* Fix the sidebar's position */
-            height: 100%; /* Make the sidebar full height */
-            overflow-y: auto; /* Enable scrolling if content overflows */
-            padding-top: 20px; /* Add some padding at the top */
         }
 
         .user-profile {
@@ -120,28 +70,6 @@
             width: 80px; /* Fixed width for the avatar */
             border-radius: 50%; /* Make the avatar circular */
             border: 2px solid #ecf0f1; /* Add border to the avatar */
-        }
-
-        .menu {
-            list-style: none;
-            padding: 0;
-        }
-
-        .menu li {
-            margin: 0; /* Remove margin from menu items */
-        }
-
-        .menu a {
-            display: block; /* Make links block elements */
-            padding: 15px; /* Add padding for links */
-            text-decoration: none; /* Remove underline from links */
-            color: #ecf0f1; /* Light text for links */
-            transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
-        }
-
-        .menu a:hover {
-            background-color: #34495e; /* Change background on hover */
-            color: #ffffff; /* Change text color on hover */
         }
 
         .logout {
@@ -167,8 +95,7 @@
                     <th>Email</th>
                     <th>Contact Number</th>
                     <th>Status</th>
-                    <th>View</th> <!-- New column for View button -->
-                    <th>Action</th>
+                    <th>Action</th> <!-- Column for Approve button only -->
                 </tr>
             </thead>
             <tbody>
@@ -186,38 +113,10 @@
                                 <button disabled>Approved</button>
                             <% } %>
                         </td>
-                        <td>
-                            <!-- View Button that triggers the modal -->
-                            <button onclick="showProfile('<%= member.user_id %>')">View</button>
-                        </td>
                     </tr>
                 <% }) %>
             </tbody>
         </table>
-    </div>
-
-    <!-- Modal for Member Profile -->
-    <div id="profileModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>Member Profile</h3>
-            <p><strong>Name:</strong> <span id="profile-name"></span></p>
-            <p><strong>Email:</strong> <span id="profile-email"></span></p>
-            <p><strong>Contact Number:</strong> <span id="profile-contact-number"></span></p>
-            <p><strong>Address:</strong> <span id="profile-address"></span></p>
-            <p><strong>Date of Birth:</strong> <span id="profile-dob"></span></p>
-            <p><strong>Gender:</strong> <span id="profile-gender"></span></p>
-            <p><strong>Status:</strong> <span id="profile-status"></span></p>
-
-            <h4>Pending Rentals</h4>
-            <ul id="rentals-list"></ul> <!-- List of rented items -->
-
-            <h4>Purchased Items</h4>
-            <ul id="purchases-list"></ul> <!-- List of purchased items -->
-
-            <h4>Loaned Items</h4>
-            <ul id="loans-list"></ul> <!-- List of loaned items -->
-        </div>
     </div>
 
     <script>
@@ -236,67 +135,6 @@
                 });
             }
         }
-
-        function showProfile(userId) {
-            $.ajax({
-                url: '/admin/member-profile/' + userId, // Fetch profile data
-                method: 'GET',
-                success: function(response) {
-                    // Populate modal with member data
-                    $('#profile-name').text(response.first_name + ' ' + response.last_name);
-                    $('#profile-email').text(response.email);
-                    $('#profile-contact-number').text(response.contact_number);
-                    $('#profile-address').text(response.address);
-                    $('#profile-dob').text(response.dob);
-                    $('#profile-gender').text(response.gender);
-                    $('#profile-status').text(response.status);
-
-                    // Display the modal
-                    // Render rented items
-            let rentalsHtml = '';
-            if (response.rentals && response.rentals.length > 0) {
-                response.rentals.forEach(function(rental) {
-                    rentalsHtml += '<li>' + rental + '</li>';
-                });
-            } else {
-                rentalsHtml = '<li>No rentals</li>';
-            }
-            $('#rentals-list').html(rentalsHtml);
-
-            // Render purchased items
-            let purchasesHtml = '';
-            if (response.purchases && response.purchases.length > 0) {
-                response.purchases.forEach(function(purchase) {
-                    purchasesHtml += '<li>' + purchase + '</li>';
-                });
-            } else {
-                purchasesHtml = '<li>No purchases</li>';
-            }
-            $('#purchases-list').html(purchasesHtml);
-
-            // Render loaned items
-            let loansHtml = '';
-            if (response.loans && response.loans.length > 0) {
-                response.loans.forEach(function(loan) {
-                    loansHtml += '<li>' + loan + '</li>';
-                });
-            } else {
-                loansHtml = '<li>No loans</li>';
-            }
-            $('#loans-list').html(loansHtml);
-
-            // Display the modal
-            $('#profileModal').show();
-        },
-        error: function(err) {
-            alert('Error fetching profile. Please try again.');
-        }
-    });
-}
-
-function closeModal() {
-    $('#profileModal').hide();
-}
     </script>
 </body>
 </html>

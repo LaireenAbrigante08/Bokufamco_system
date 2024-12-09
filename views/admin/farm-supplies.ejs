@@ -125,9 +125,6 @@
                     <td><%= product.stock %></td>
                     <td>
                         <button class="edit-button" onclick="openModal('/admin/farm-supplies/edit/<%= product.id %>')">Edit</button>
-                        <form action="/admin/farm-supplies/delete/<%= product.id %>" method="POST" style="display:inline;">
-                            <button class="delete-button" type="submit" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                        </form>
                     </td>
                 </tr>
             <% }); %>

@@ -87,59 +87,6 @@ app.get('/admin/member', (req, res) => {
     });
 });
 
-const Equipment = require('./models/Equipment');
-
-app.get('/equipment/:id', (req, res) => {
-    const equipmentId = req.params.id;
-
-    if (!req.session.userId || !req.session.memberId) {
-        return res.status(400).send('User or Member ID is missing. Please complete your profile.');
-    }
-
-    Equipment.getEquipmentById(equipmentId)
-        .then(equipment => {
-            res.render('rentEquipment', {
-                equipment,
-                userId: req.session.userId,
-                memberId: req.session.memberId,
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching equipment:', err);
-            res.status(500).send('Error fetching equipment');
-        });
-});
-
-
-app.post('/rentals', (req, res) => {
-    const { equipment_id, user_id, member_id, start_date, end_date } = req.body;
-
-    // Validate that user_id and member_id are not empty
-    if (!user_id || !member_id) {
-        return res.status(400).send('User or Member ID is missing');
-    }
-
-    // Validate that start_date and end_date are valid
-    if (!start_date || !end_date) {
-        return res.status(400).send('Start Date or End Date is missing');
-    }
-
-    // Correcting the query to ensure the right number of values (remove 'id' from query)
-    const query = `
-        INSERT INTO rentals (equipment_id, user_id, member_id, start_date, end_date, rental_status)
-        VALUES (?, ?, ?, ?, ?, 'pending')
-    `;
-
-    // Execute the query with the provided values
-    db.query(query, [equipment_id, user_id, member_id, start_date, end_date], (err, result) => {
-        if (err) {
-            console.error('Error processing rental:', err);
-            return res.status(500).send('Error processing rental');
-        }
-
-        res.redirect('/rentals/success');
-    });
-});
 
 
 app.get('/admin/memberProfile/:userId', (req, res) => {
@@ -170,7 +117,7 @@ app.get('/logout', (req, res) => {
 app.use('/', authRoutes);
 app.use('/loans', loansRoutes);
 app.use('/farm-supplies', farmSuppliesRoutes);
-app.use('/equipment', equipmentRoutes);
+app.use('/', equipmentRoutes);
 app.use('/members', memberRoutes);
 app.use('/admin', adminRoutes); // Admin routes without isAdmin here
 app.use('/', cartRoutes);  // Use the routes in the application

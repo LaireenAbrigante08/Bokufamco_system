@@ -88,7 +88,7 @@
         <table id="paymentsTable" class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Members Name</th>
                     <th>Loan ID</th>
                     <th>Payment Amount</th>
                     <th>Verified</th>
@@ -99,7 +99,7 @@
             <tbody>
                 <% payments.forEach(payment => { %>
                     <tr>
-                        <td><%= payment.id %></td>
+                        <td><%= payment.first_name %> <%= payment.last_name %></td> 
                         <td><%= payment.loan_id %></td>
                         <td><%= payment.payment_amount %></td>
                         <td><%= payment.is_verified ? 'Yes' : 'No' %></td>

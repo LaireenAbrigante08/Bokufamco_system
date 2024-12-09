@@ -34,6 +34,9 @@
             <a href="#" id="loans-link" style="text-decoration: none; color: white; margin-right: 15px;">
                 Loan
             </a>
+            <a href="#" id="Myrent-link" style="text-decoration: none; color: white; margin-right: 15px;">
+                My Rent
+            </a>
             <!-- Other Links -->
             <a href="#about" style="text-decoration: none; color: white;">About</a>
             <a href="#contact" style="text-decoration: none; color: white;">Contact</a>
@@ -189,7 +192,10 @@
             $("#dynamic-content").load("/equipment"); // Load equipment.ejs
         });
         $("#loans-link").click(function() {
-            $("#dynamic-content").load("/loans"); // Load equipment.ejs
+            $("#dynamic-content").load("/loans"); // Load loan.ejs
+        });
+        $("#Myrent-link").click(function() {
+            $("#dynamic-content").load("/myrent"); // Load rent.ejs
         });
     </script>
 </body>

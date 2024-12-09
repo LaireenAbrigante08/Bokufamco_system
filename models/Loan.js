@@ -84,7 +84,11 @@ static async verifyPayment(paymentId, loanId, paymentAmount) {
     // Get all loans
     static getAllLoans() {
         return new Promise((resolve, reject) => {
-            const sql = `SELECT * FROM loans`;
+            const sql = `
+                SELECT loans.*, members.first_name, members.last_name
+                FROM loans
+                INNER JOIN members ON loans.user_id = members.id
+            `;
             db.query(sql, (err, results) => {
                 if (err) {
                     return reject(err);
@@ -93,6 +97,7 @@ static async verifyPayment(paymentId, loanId, paymentAmount) {
             });
         });
     }
+    
 
     // Fetch loans for a specific user
     static getUserLoans(userId) {

@@ -5,40 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Rentals</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/equipment.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
-<body class="bg-light">
-    <header class="main-header">
-        <h1><a href="/home" style="text-decoration: none; color: inherit;">Equipment Rentals</a></h1>
-        <p>Your Trusted Partner for High-Quality Equipment Rentals</p>
+<body>
+    <header>
+        <h1>Equipment Rentals</h1>
     </header>
-
-    <div class="container mt-5">
+    <div class="container">
         <section class="equipment">
             <h2>Available Equipment</h2>
             <div class="equipment-list">
-                <% equipment.forEach(item => { %>
+                <% equipment.forEach(item => { %> <!-- Loop through the equipment list -->
                     <div class="equipment-item">
                         <img src="/images/product/<%= item.picture %>" alt="<%= item.name %>" class="equipment-img">
                         <div class="equipment-details">
                             <h3><%= item.name %></h3>
                             <p><strong>Description:</strong> <%= item.description %></p>
+
+                            <!-- Display the price -->
                             <% if (item.price && !isNaN(item.price)) { %>
                                 <p><strong>Price:</strong> ₱<%= item.price.toLocaleString() %></p>
                             <% } else { %>
                                 <p><strong>Price:</strong> Not Available</p>
                             <% } %>
+
+                            <!-- Display stock quantity -->
                             <p><strong>Available:</strong> <%= item.stock_quantity %> in stock</p>
+
+                            <!-- Rent button -->
                             <% if (isAuthenticated) { %>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#rentModal"
-                                    data-id="<%= item.id %>" data-name="<%= item.name %>" data-price="<%= item.price %>">
+                                <button type="button" class="btn btn-primary rent-btn" data-bs-toggle="modal" data-bs-target="#rentModal" data-id="<%= item.id %>">
                                     Rent Now
                                 </button>
                             <% } else { %>
-                                <a href="/login" class="btn btn-danger">Login to Rent</a>
+                                <a href="/login" class="btn btn-secondary">Login to Rent</a>
                             <% } %>
                         </div>
                     </div>
@@ -47,163 +49,30 @@
         </section>
     </div>
 
-    <!-- Rental Modal -->
+    <!-- Modal -->
     <div class="modal fade" id="rentModal" tabindex="-1" aria-labelledby="rentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rentModalLabel">Confirm Rental</h5>
+                    <h5 class="modal-title" id="rentModalLabel">Rent</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="rentalForm">
-                        <input type="hidden" name="equipment_id" id="equipment_id">
-                        <input type="hidden" name="user_id" value="<%= userId || '' %>">
-
-                        <div class="mb-3">
-                            <label for="equipment_name" class="form-label">Equipment Name</label>
-                            <input type="text" class="form-control" name="equipment_name" id="equipment_name" readonly>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" name="price" id="price" readonly>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="rental_start_date" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" name="rental_start_date" id="rental_start_date" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="rental_end_date" class="form-label">End Date</label>
-                            <input type="date" class="form-control" name="rental_end_date" id="rental_end_date" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="pickup_time" class="form-label">Pickup Time</label>
-                            <input type="time" class="form-control" name="pickup_time" id="pickup_time" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="total_cost" class="form-label">Total Rental Cost</label>
-                            <input type="text" class="form-control" id="totalRentalCost" readonly>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Confirm Rental</button>
-                    </form>
+                    <iframe id="rentIframe" src="" width="100%" height="400px" style="border:none;"></iframe>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Rental Success</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Your rental has been successfully confirmed. Thank you for choosing our service!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript to Handle Modal and Cost Calculation -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const rentModal = document.getElementById('rentModal');
-        rentModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const equipmentId = button.getAttribute('data-id');
-            const equipmentName = button.getAttribute('data-name');
-            const price = parseFloat(button.getAttribute('data-price'));
-
-            const modalTitle = rentModal.querySelector('.modal-title');
-            const equipmentNameField = rentModal.querySelector('#equipment_name');
-            const priceField = rentModal.querySelector('#price');
-            const equipmentIdField = rentModal.querySelector('#equipment_id');
-            const totalRentalCostField = rentModal.querySelector('#totalRentalCost');
-
-            equipmentIdField.value = equipmentId;
-            equipmentNameField.value = equipmentName;
-            priceField.value = price.toLocaleString();
-
-            function calculateTotalCost() {
-                const startDate = document.getElementById('rental_start_date').value;
-                const endDate = document.getElementById('rental_end_date').value;
-
-                if (startDate && endDate) {
-                    const start = new Date(startDate);
-                    const end = new Date(endDate);
-                    const days = (end - start) / (1000 * 60 * 60 * 24);
-
-                    if (days > 0) {
-                        const rentalCost = price * days;
-                        const totalCost = rentalCost + (rentalCost * 0.03); // 3% interest
-                        totalRentalCostField.value = totalCost.toLocaleString();
-                    } else {
-                        totalRentalCostField.value = "Invalid dates";
-                    }
-                }
-            }
-
-            // Trigger calculation on change of dates
-            document.getElementById('rental_start_date').addEventListener('change', calculateTotalCost);
-            document.getElementById('rental_end_date').addEventListener('change', calculateTotalCost);
-
-            // Also trigger the calculation immediately when the modal is opened (if dates are already set)
-            calculateTotalCost();
-        });
-
-        const rentalForm = document.getElementById('rentalForm');
-        rentalForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            // Gather form data
-            const formData = new FormData(rentalForm);
-            const data = {
-                equipment_id: formData.get('equipment_id'),
-                user_id: formData.get('user_id'),
-                equipment_name: formData.get('equipment_name'),
-                price: formData.get('price'),
-                rental_start_date: formData.get('rental_start_date'),
-                rental_end_date: formData.get('rental_end_date'),
-                pickup_time: formData.get('pickup_time'),
-                rental_interest: 0.03, // Assuming 3% interest
-                total_rental_cost: document.getElementById('totalRentalCost').value,
-            };
-
-            // Send data to the backend using fetch
-            fetch('/transaction', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    // Show success modal upon successful insertion
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
-                } else {
-                    // Handle errors (if any)
-                    alert('Error: Unable to process rental.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error: Unable to process rental.');
+        document.querySelectorAll('.rent-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const equipmentId = this.getAttribute('data-id');
+                document.getElementById('rentIframe').src = `/equipment/${equipmentId}/rent`;
             });
         });
     </script>
 </body>
+
 </html>

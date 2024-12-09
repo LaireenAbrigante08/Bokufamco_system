@@ -115,8 +115,7 @@
             <table id="loansTable" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>User ID</th>
+                        <th>Members Name</th>
                         <th>Loan Amount</th>
                         <th>Loan Type</th>
                         <th>Interest Rate</th>
@@ -132,8 +131,7 @@
                 <tbody>
                     <% loans.forEach(function(loan) { %>
                         <tr>
-                            <td><%= loan.id %></td>
-                            <td><%= loan.user_id %></td>
+                            <td><%= loan.first_name %> <%= loan.last_name %></td>
                             <td><%= loan.loan_amount %></td>
                             <td><%= loan.loan_type %></td>
                             <td><%= loan.interest_rate %>%</td>
@@ -171,10 +169,11 @@
             $('#loansTable').DataTable({
                 "autoWidth": false, // Disable auto-width to control the width manually
                 "columnDefs": [
-                    { "width": "5%", "targets": [0, 1] }, // Set width for ID and User ID columns
-                    { "width": "15%", "targets": [2, 3] }, // Set width for Amount and Type columns
-                    { "width": "10%", "targets": [4, 5] }, // Set width for Interest and Status columns
-                    { "width": "10%", "targets": [6, 7] }, // Set width for Months and Due Date columns
+                    { "width": "15%", "targets": [0] }, // Set width for ID and User ID columns
+                    { "width": "15%", "targets": [1, 2] }, // Set width for Amount and Type columns
+                    { "width": "10%", "targets": [3, 4] }, // Set width for Interest and Status columns
+                    { "width": "10%", "targets": [ 5] }, // Set width for Months and Due Date columns
+                    { "width": "5%", "targets": [ 6] }, // Set width for Months and Due Date columns
                     { "width": "10%", "targets": [8, 9] }, // Set width for Interest Amount and Repayment columns
                     { "width": "10%", "targets": [10] },   // Set width for Created At column
                     { "width": "15%", "targets": [11] }    // Set width for Action column

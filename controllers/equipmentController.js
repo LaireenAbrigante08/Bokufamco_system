@@ -1,6 +1,110 @@
 const Equipment = require('../models/Equipment');  // Ensure your Equipment model is defined properly
-const Rental = require('../models/Rental');  // Assuming you have a Rental model for storing rental info
+//const Rental = require('../models/Rental');  // Assuming you have a Rental model for storing rental info
+const db = require('../config/db'); // DB connection
+/////////////////admin func//////////
 
+
+
+///////////////////////////////////////
+//////////////user func///////////////
+exports.getRentForm = async (req, res) => {
+    try {
+        const equipment = await Equipment.getEquipmentById(req.params.id);
+        if (equipment) {
+            res.render('rent', { 
+                equipment_id: equipment.id, 
+                name: equipment.name, 
+                price: equipment.price 
+            });
+        } else {
+            res.status(404).send('Equipment not found');
+        }
+    } catch (err) {
+        res.status(500).send('Error retrieving equipment details');
+    }
+};
+
+exports.submitRental = async (req, res) => {
+    try {
+        const { equipment_id, rental_start_date, rental_end_date, pickup_time, total_price } = req.body;
+
+        // Validate dates
+        const startDate = new Date(rental_start_date);
+        const endDate = new Date(rental_end_date);
+
+        if (!startDate || !endDate || endDate <= startDate) {
+            return res.status(400).json({ success: false, message: 'Invalid rental dates' });
+        }
+
+        // Validate equipment
+        const equipment = await Equipment.getEquipmentById(equipment_id);
+        if (!equipment) {
+            return res.status(404).json({ success: false, message: 'Equipment not found' });
+        }
+        
+        const rentalData = {
+            equipment_id,
+            user_id: req.session.user.id, // Assuming `req.user` is populated with authentication
+            rental_start_date,
+            rental_end_date,
+            pickup_time,
+            total_price
+        };
+
+        await Equipment.createRental(rentalData);
+        res.render('rentSuccess', {
+            message: 'Rent successfully created! It is pending approval.',
+            redirectUrl: '/' // This will be the link to return home or to the loans page
+        });
+    } catch (err) {
+        console.error('Error submitting rental:', err);
+        res.status(500).json({ success: false, message: 'Error submitting rental' });
+    }
+};
+exports.getRentalStatus = async (req, res) => {
+    try {
+
+        const userId = req.session.userId; // Get the userId from the session
+        const rentals = await Equipment.getRentalsByUserId(userId); // Get rentals by user ID
+
+        // Render the rental status page with the rental data
+        res.render('myrent', { rentals });
+    } catch (err) {
+        console.error('Error fetching rental status:', err);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+exports.cancelRental = async (req, res) => {
+    const rentalId = req.body.rental_id; // Assuming the rental ID is passed in the request body
+
+    try {
+        // Fetch the rental by ID
+        const rental = await Equipment.getRentalsByUserId(ReId);
+
+        if (!rental) {
+            return res.status(404).send('Rental not found');
+        }
+
+        // Only allow cancellation if the rental status is 'Pending'
+        if (rental.status !== 'Pending') {
+            return res.status(400).send('Rental cannot be canceled');
+        }
+
+        // Update rental status to 'Canceled'
+        await Equipment.updateRentalStatus(rentalId, 'Canceled');
+
+        // Redirect to rentals page after canceling the rental
+        res.redirect('/rentals');
+    } catch (error) {
+        res.status(500).send('Error canceling rental: ' + error.message);
+    }
+};
+
+
+
+//////////////////////////////////////////////
 // Get all equipment for display
 exports.getEquipment = async (req, res) => {
     try {

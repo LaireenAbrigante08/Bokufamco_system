@@ -18,8 +18,8 @@ const dashboardController = {
     const totalProductsQuery = 'SELECT COUNT(*) AS total_products FROM products';
     const inStockProductsQuery = 'SELECT name FROM products WHERE stock > 0';
     const outOfStockProductsQuery = 'SELECT name FROM products WHERE stock = 0';
+    const totalOrdersQuery = 'SELECT COUNT(*) AS total_orders FROM orders';
     const totalInventoryValueQuery = 'SELECT SUM(price * stock) AS total_inventory_value FROM products WHERE stock > 0';
-
     // New queries for the equipment table
     const totalEquipmentQuery = 'SELECT COUNT(*) AS total_equipment FROM equipment';
     const equipmentStatusQuery = `
@@ -99,6 +99,14 @@ const dashboardController = {
                   }
 
                   const totalProducts = productResult[0].total_products;
+
+                  db.query(totalOrdersQuery, (err, ordersResult) => {
+                    if (err) {
+                      console.error(err);
+                      return res.status(500).send('Error fetching total orders');
+                    }
+  
+                    const totalOrders = ordersResult[0]?.total_orders || 0;
 
                   // Fetching in-stock products
                   db.query(inStockProductsQuery, (err, inStockResult) => {
@@ -203,6 +211,7 @@ const dashboardController = {
                                       totalLoanAmount,
                                       totalRemainingBalance,
                                       totalProducts,
+                                      totalOrders,
                                       inStockProducts,
                                       outOfStockProducts,
                                       totalInventoryValue,
@@ -216,6 +225,7 @@ const dashboardController = {
                         });
                       });
                     });
+                  });
                   });
                 });
               });

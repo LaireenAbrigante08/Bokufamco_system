@@ -104,9 +104,9 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Picture</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Picture</th>
                 <th>Price</th>
                 <th>Stock Quantity</th>
                 <th>Status</th>
@@ -117,8 +117,6 @@
             <% equipmentList.forEach(equipment => { %>
                 <tr>
                     <td><%= equipment.id %></td>
-                    <td><%= equipment.name %></td>
-                    <td><%= equipment.description %></td>
                     <td>
                         <% if (equipment.picture) { %>
                             <img src="/images/product/<%= equipment.picture %>" alt="<%= equipment.name %>" style="width: 100px;">
@@ -126,6 +124,8 @@
                             <img src="/images/default.png" alt="Default Image" style="width: 100px;">
                         <% } %>
                     </td>
+                    <td><%= equipment.name %></td>
+                    <td><%= equipment.description %></td>
                     <td><%= equipment.price %></td>
                     <td><%= equipment.stock_quantity %></td>
                     <td><%= equipment.status %></td>

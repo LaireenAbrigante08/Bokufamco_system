@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Rentals</title>
+    <link rel="stylesheet" href="/css/equipment.css">
+</head>
+
+<body>
+    <header>
+        <h1>Equipment Rentals</h1>
+        <p>Your Trusted Partner for High-Quality Equipment Rentals</p>
+    </header>
+    <div class="container">
+        <section class="equipment">
+            <h2>Available Equipment</h2>
+            <div class="equipment-list">
+                <% equipment.forEach(item => { %> <!-- Loop through the equipment list -->
+                    <div class="equipment-item">
+                        <img src="/images/product/<%= item.picture %>" alt="<%= item.name %>" class="equipment-img">
+                        <div class="equipment-details">
+                            <h3><%= item.name %></h3>
+                            <p><strong>Description:</strong> <%= item.description %></p>
+
+                            <!-- Display the price -->
+                            <% if (item.price && !isNaN(item.price)) { %>
+                                <p><strong>Price:</strong> ₱<%= item.price.toLocaleString() %></p>
+                            <% } else { %>
+                                <p><strong>Price:</strong> Not Available</p>
+                            <% } %>
+
+                            <!-- Display stock quantity -->
+                            <p><strong>Available:</strong> <%= item.stock_quantity %> in stock</p>
+
+                            <!-- Rent button -->
+                            <% if (isAuthenticated) { %>
+                                <!-- Redirect to the rental form for the specific equipment -->
+                                <a href="/equipment/<%= item.id %>/rent" class="rent-btn">Rent Now</a>
+                            <% } else { %>
+                                <a href="/login" class="login-btn">Login to Rent</a>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

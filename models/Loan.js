@@ -1,174 +1,197 @@
 const db = require('../config/db'); // Assuming you have a db configuration file
+//console.log('Loan model:', Loan);
 
 class Loan {
-    ////////////////////////////////////////////////////////////
-    //for payments
-    static recordLoanPayment(loanId, paymentAmount) {
-        return new Promise((resolve, reject) => {
-            const sql = `INSERT INTO loan_payments (loan_id, payment_amount) VALUES (?, ?)`;
-            db.query(sql, [loanId, paymentAmount], (err, result) => {
+    
+// Record a loan payment (with verification flag)
+static async recordLoanPayment(loanId, paymentAmount) {
+    return new Promise((resolve, reject) => {
+        // Insert payment with is_verified flag set to false initially
+        const sqlInsert = `
+            INSERT INTO loan_payments (loan_id, payment_amount, payment_date, is_verified) 
+            VALUES (?, ?, NOW(), false)
+        `;
+        db.query(sqlInsert, [loanId, paymentAmount], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+}
+// Model for verifying payment
+static async verifyPayment(paymentId, loanId, paymentAmount) {
+    return new Promise((resolve, reject) => {
+        // Step 1: Mark payment as verified
+        const sqlVerify = `
+            UPDATE loan_payments 
+            SET is_verified = true 
+            WHERE id = ?
+        `;
+        db.query(sqlVerify, [paymentId], (err, result) => {
+            if (err) {
+                console.error("Error verifying payment:", err);
+                return reject(err);
+            }
+
+            // Step 2: Update loan balance
+            const sqlUpdateLoan = `
+                UPDATE loans
+                SET remaining_balance = remaining_balance - ?
+                WHERE id = ?
+            `;
+            db.query(sqlUpdateLoan, [paymentAmount, loanId], (err, loanUpdateResult) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
+                    console.error("Error updating loan balance:", err);
+                    return reject(err);
                 }
+
+                // Step 3: Update share capital
+                const shareCapitalIncrease = paymentAmount * 0.2;
+                console.log("Share Capital Increase:", shareCapitalIncrease);
+
+                const sqlUpdateCapital = `
+                    UPDATE members 
+                    SET share_capital = share_capital + ? 
+                    WHERE user_id = (SELECT user_id FROM loans WHERE id = ?);
+                `;
+                db.query(sqlUpdateCapital, [shareCapitalIncrease, loanId], (err, capitalUpdateResult) => {
+                    if (err) {
+                        console.error("Error updating share capital:", err);
+                        return reject(err);
+                    }
+                    resolve(capitalUpdateResult);
+                });
             });
         });
-    }
-    
-    // Method to get loan details by loan ID
+    });
+
+}
+
+    // Get loan details by loan ID
     static getLoanById(loanId) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM loans WHERE id = ?`;
             db.query(sql, [loanId], (err, result) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve(result[0]);
+                    return reject(err);
                 }
-            });
-        });
-    }
-    
-    // Method to update loan status
-    static updateLoanStatus(loanId, status) {
-        return new Promise((resolve, reject) => {
-            const sql = `UPDATE loans SET loan_status = ? WHERE id = ?`;
-            db.query(sql, [status, loanId], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-    }
-    ////////////////////////////////////////////////////////////////////////////
-    // Method to update the loan status
-    static updateLoanStatus(loanId, status) {
-        return new Promise((resolve, reject) => {
-            const sql = `UPDATE loans SET loan_status = ? WHERE id = ?`;
-            db.query(sql, [status, loanId], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
+                resolve(result[0]); // Return a single loan
             });
         });
     }
 
-    // Method to get all loans
+    // Get all loans
     static getAllLoans() {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM loans`;
             db.query(sql, (err, results) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
+                    return reject(err);
                 }
+                resolve(results);
             });
         });
     }
-////////////////////////////////////////////////////////////////////////////////////////////
-////view for user
-static getLoanById(loanId) {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM loans WHERE id = ?';
-        db.query(sql, [loanId], (err, results) => {
-            if (err) {
-                reject(err);
-            } else {
-                if (results.length > 0) {
-                    resolve(results[0]); // Return the first (and only) loan
-                } else {
-                    resolve(null); // No loan found with that id
-                }
-            }
-        });
-    });
-}
-    // Predefined loan types and interest rates based on loan amount and duration in months
-    static loanTypes = {
-        'Coconut Farming': {
-            interestRates: {
-                1: 0.2,  // 30% per month
-                2: 0.4, // 25% per month
-                3: 0.5   // 20% per month
-            }
-        },
-        'Personal': {
-            interestRates: {
-                1: 0.2,  // 20% per month
-                2: 0.15, // 15% per month
-                3: 0.1   // 10% per month
-            }
-        }
-    };
 
     // Fetch loans for a specific user
     static getUserLoans(userId) {
         return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM loans WHERE user_id = ?', [userId], (err, results) => {
+            const sql = `SELECT * FROM loans WHERE user_id = ?`;
+            db.query(sql, [userId], (err, results) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve(results);
+                    return reject(err);
                 }
+                resolve(results);
             });
         });
     }
 
-    // Create a new loan entry
+    // Create a new loan
     static async createLoan(userId, loanAmount, loanType, loanDuration, interestAmount, totalRepayment, dueDate) {
         return new Promise((resolve, reject) => {
-            // Validate loan type and duration
-            if (!Loan.loanTypes[loanType]) {
-                return reject(new Error(`Invalid loan type: ${loanType}`));
-            }
-
-            if (!Loan.loanTypes[loanType].interestRates[loanDuration]) {
-                return reject(new Error(`Invalid loan duration: ${loanDuration} for loan type: ${loanType}`));
-            }
-
             const sql = `
-                INSERT INTO loans (user_id, loan_amount, loan_type, interest_rate, loan_status, months_to_pay, due_date, interest_amount, total_repayment, created_at)
-                VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, NOW())
+                INSERT INTO loans (user_id, loan_amount, loan_type, interest_rate, loan_status, months_to_pay, due_date, interest_amount, total_repayment, remaining_balance, created_at)
+                VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, NOW())
             `;
-            const interestRate = Loan.loanTypes[loanType].interestRates[loanDuration]; // Get interest rate based on loan type and duration
-
-            console.log(`Creating loan for type: ${loanType}, duration: ${loanDuration}, interest rate: ${interestRate}`); // Debugging log
-
-            db.query(sql, [userId, loanAmount, loanType, interestRate, loanDuration, dueDate, interestAmount, totalRepayment], (err, result) => {
+            const interestRate = Loan.loanTypes[loanType]?.interestRates[loanDuration];
+            if (!interestRate) {
+                return reject(new Error('Invalid loan type or duration'));
+            }
+            db.query(sql, [userId, loanAmount, loanType, interestRate, loanDuration, dueDate, interestAmount, totalRepayment, totalRepayment], (err, result) => {
                 if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
+                    return reject(err);
                 }
+                resolve(result);
             });
         });
     }
 
-    // Function to calculate interest amount and total repayment dynamically
+    // Calculate repayment details
     static calculateRepayment(loanAmount, loanType, loanDuration) {
-        // Validate loan type and duration
-        if (!Loan.loanTypes[loanType]) {
-            throw new Error(`Invalid loan type: ${loanType}`);
+        const loanTypeDetails = Loan.loanTypes[loanType];
+        if (!loanTypeDetails || !loanTypeDetails.interestRates[loanDuration]) {
+            throw new Error('Invalid loan type or duration');
         }
-
-        if (!Loan.loanTypes[loanType].interestRates[loanDuration]) {
-            throw new Error(`Invalid loan duration: ${loanDuration} for loan type: ${loanType}`);
+    
+        // Ensure loanAmount is a number
+        loanAmount = parseFloat(loanAmount);
+        if (isNaN(loanAmount)) {
+            throw new Error('Invalid loan amount');
         }
-
-        const interestRate = Loan.loanTypes[loanType].interestRates[loanDuration];
-
-        console.log(`Calculating repayment for type: ${loanType}, duration: ${loanDuration}, interest rate: ${interestRate}`); // Debugging log
-
-        const interestAmount = (loanAmount * interestRate * loanDuration).toFixed(2);
-        const totalRepayment = (parseFloat(loanAmount) + parseFloat(interestAmount)).toFixed(2);
+    
+        const interestRate = loanTypeDetails.interestRates[loanDuration];
+        const interestAmount = parseFloat((loanAmount * interestRate * loanDuration).toFixed(2));
+        const totalRepayment = parseFloat((loanAmount + interestAmount).toFixed(2));
+    
         return { interestAmount, totalRepayment };
     }
+    
+    
+    static checkDuplicatePayment(loanId, paymentAmount) {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT * FROM loan_payments WHERE loan_id = ? AND payment_amount = ?';
+            db.query(sql, [loanId, paymentAmount], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                // Return true if a payment with the same amount exists
+                resolve(result.length > 0);
+            });
+        });}
+    // Update loan status
+    static updateLoanStatus(loanId, status) {
+        return new Promise((resolve, reject) => {
+            const sql = `UPDATE loans SET loan_status = ? WHERE id = ?`;
+            db.query(sql, [status, loanId], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
 }
+
+
+
+// Predefined loan types and interest rates
+Loan.loanTypes = {
+    'Coconut Farming': {
+        interestRates: {
+            1: 0.2,  // 20% per month
+            2: 0.4,  // 40% for 2 months
+            3: 0.5   // 50% for 3 months
+        }
+    },
+    'Personal': {
+        interestRates: {
+            1: 0.2,  // 20% per month
+            2: 0.15, // 15% per month
+            3: 0.1   // 10% per month
+        }
+    }
+};
+
 
 module.exports = Loan;

@@ -7,6 +7,10 @@ body {
     background-size: cover;
     color: #333;
 }
+ /* Enable smooth scrolling */
+ html {
+    scroll-behavior: smooth;
+}
 
 a {
     text-decoration: none;

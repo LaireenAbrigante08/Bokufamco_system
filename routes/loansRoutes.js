@@ -2,13 +2,12 @@ const express = require('express');
 const loanController = require('../controllers/loanController');
 const isAuthenticated = require('../Middleware/auth');
 
+
 const router = express.Router();
 
 // Route to view all loans
 router.get('/', isAuthenticated, loanController.getLoans); 
 
-// Route to show loan creation form
-router.get('/create', isAuthenticated, loanController.createLoanPage); 
 router.post('/create-loan', loanController.createLoan);
 // Route to handle loan creation
 router.post('/create', isAuthenticated, loanController.createLoan);

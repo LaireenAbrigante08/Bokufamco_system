@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const db = require('./config/db'); // Ensure your database connection is correctly set up in db.js
+const flash = require('connect-flash');
 
 // Importing Routes
 const authRoutes = require('./routes/authRoutes');
@@ -10,7 +11,7 @@ const farmSuppliesRoutes = require('./routes/farmSuppliesRoutes');
 const equipmentRoutes = require('./routes/equipmentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const memberRoutes = require('./routes/memberRoutes');
-const cartRoutes = require('./routes/cartRoutes');  // Import the cart routes
+const cartRoutes = require('./routes/cartRoutes');  
 const app = express();
 
 // Middleware setup
@@ -19,16 +20,26 @@ app.use(express.urlencoded({ extended: true })); // Parses incoming requests wit
 
 // Session management
 app.use(session({
-    secret: 'Laireenkdjnsvjwehukfhwl', // Replace 'Laireen' with a secure, random secret key
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }, // Set to true if using HTTPS
-}));
+    secret: 'your-secret-key',  // A secret key for signing the session ID cookie
+    resave: false,              // Don't save session if unmodified
+    saveUninitialized: true,    // Save session even if it's not modified
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7  // Set session expiration to 7 days (7 days * 24 hours * 60 minutes * 60 seconds)
+    }
+  }));
+
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
+
 
 // Serve static files (CSS, images, etc.) and set up the view engine
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('views', './views'); // Ensure views are stored in the `views` folder
 
 // Root route redirects to the landing page
 app.get('/', (req, res) => {
@@ -167,4 +178,4 @@ app.use('/', cartRoutes);  // Use the routes in the application
 
 
 // Start the server
-app.listen(3002, () => console.log('Server running on http://localhost:3002'));
+app.listen(3003, () => console.log('Server running on http://localhost:3003'));

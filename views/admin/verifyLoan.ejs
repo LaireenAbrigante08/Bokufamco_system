@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Verify Loan Details</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Add your custom styles here -->
+</head>
+<body>
+
+    <h1>Admin - Loan Verification</h1>
+    <div class="loan-details">
+        <h2>Loan ID: <%= loan.id %></h2>
+        <p><strong>Loan Amount:</strong> ₱<%= loan.loan_amount.toFixed(2) %></p>
+        <p><strong>Loan Type:</strong> <%= loan.loan_type %></p>
+        <p><strong>Loan Duration:</strong> <%= loan.months_to_pay %> months</p>
+        <p><strong>Interest Rate:</strong> <%= loan.interest_rate * 100 %>%</p>
+        <p><strong>Interest Amount:</strong> ₱<%= loan.interest_amount.toFixed(2) %></p>
+        <p><strong>Total Repayment:</strong> ₱<%= loan.total_repayment.toFixed(2) %></p>
+        <p><strong>Due Date:</strong> <%= loan.due_date %></p>
+    </div>
+
+    <!-- Buttons to verify or cancel the loan -->
+    <div class="actions">
+        <form action="/admin/loans/verify/<%= loan.id %>" method="POST">
+            <button type="submit" class="btn-verify">Verify Loan</button>
+        </form>
+        <form action="/admin/loans/cancel/<%= loan.id %>" method="POST">
+            <button type="submit" class="btn-cancel">Cancel Loan</button>
+        </form>
+    </div>
+
+    <!-- Optionally, add a link to return to the loan management page -->
+    <a href="/admin/loans">Back to Loan List</a>
+
+</body>
+</html>

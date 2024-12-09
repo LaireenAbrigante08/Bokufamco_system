@@ -4,75 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Manage Loans</title>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+    <!-- jQuery (necessary for DataTables) -->
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <!-- Custom Styles -->
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: left;
+            color: #000000;
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            font-weight: bold;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;  /* Make it invisible by default */
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .flash-message.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
+            color: #000; /* Black text for table content */
+            table-layout: fixed; /* Ensure the table does not stretch */
         }
+
         th, td {
             padding: 10px;
             text-align: left;
-            border: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden; /* Prevent overflow for content */
+            text-overflow: ellipsis; /* Add ellipsis for long text */
+            font-size: 10px; /* Resize table header and cell text */
         }
+
+        /* Apply dark color to table header and rows */
         th {
-            background-color: #f4f4f4;
+            background-color: #2c3e50; /* Dark header background */
+            color: white; /* White text for header */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light background for even rows */
+        }
+
+        tr:nth-child(odd) {
+            background-color: #e9e9e9; /* Light background for odd rows */
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        select {
+            padding: 5px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Manage Loans</h1>
 
-    <% if (loans && loans.length > 0) { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>User ID</th>
-                    <th>Loan Amount</th>
-                    <th>Loan Type</th>
-                    <th>Interest Rate</th>
-                    <th>Loan Status</th>
-                    <th>Months to Pay</th>
-                    <th>Due Date</th>
-                    <th>Interest Amount</th>
-                    <th>Total Repayment</th>
-                    <th>Created At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% loans.forEach(function(loan) { %>
+    <div class="container">
+        <h1>Manage Loans</h1>
+
+        <% if (loans && loans.length > 0) { %>
+            <table id="loansTable" class="display" cellspacing="0" width="100%">
+                <thead>
                     <tr>
-                        <td><%= loan.id %></td>
-                        <td><%= loan.user_id %></td>
-                        <td><%= loan.loan_amount %></td>
-                        <td><%= loan.loan_type %></td>
-                        <td><%= loan.interest_rate %>%</td>
-                        <td><%= loan.loan_status %></td>
-                        <td><%= loan.months_to_pay %></td>
-                        <td><%= new Date(loan.due_date).toLocaleDateString() %></td>
-                        <td><%= loan.interest_amount %></td>
-                        <td><%= loan.total_repayment %></td>
-                        <td><%= new Date(loan.created_at).toLocaleDateString() %></td>
-
-                        <td>
-                            <!-- Form for changing loan status -->
-                            <form action="/admin/loans/<%= loan.id %>/update-status" method="POST">
-                                <select name="status">
-                                    <option value="pending" <%= loan.loan_status === 'pending' ? 'selected' : '' %>>Pending</option>
-                                    <option value="approved" <%= loan.loan_status === 'approved' ? 'selected' : '' %>>Approved</option>
-                                    <option value="rejected" <%= loan.loan_status === 'rejected' ? 'selected' : '' %>>Rejected</option>
-                                    <option value="active" <%= loan.loan_status === 'active' ? 'selected' : '' %>>Active</option>
-                                </select>
-                                <button type="submit">Update</button>
-                            </form>
-                        </td>
+                        <th>ID</th>
+                        <th>User ID</th>
+                        <th>Loan Amount</th>
+                        <th>Loan Type</th>
+                        <th>Interest Rate</th>
+                        <th>Loan Status</th>
+                        <th>Months to Pay</th>
+                        <th>Due Date</th>
+                        <th>Interest Amount</th>
+                        <th>Total Repayment</th>
+                        <th>Created At</th>
+                        <th>Action</th>
                     </tr>
-                <% }); %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No loans available to manage.</p>
-    <% } %>
+                </thead>
+                <tbody>
+                    <% loans.forEach(function(loan) { %>
+                        <tr>
+                            <td><%= loan.id %></td>
+                            <td><%= loan.user_id %></td>
+                            <td><%= loan.loan_amount %></td>
+                            <td><%= loan.loan_type %></td>
+                            <td><%= loan.interest_rate %>%</td>
+                            <td><%= loan.loan_status %></td>
+                            <td><%= loan.months_to_pay %></td>
+                            <td><%= new Date(loan.due_date).toLocaleDateString() %></td>
+                            <td><%= loan.interest_amount %></td>
+                            <td><%= loan.total_repayment %></td>
+                            <td><%= new Date(loan.created_at).toLocaleDateString() %></td>
+
+                            <td>
+                                <!-- Form for changing loan status -->
+                                <form action="/admin/loans/<%= loan.id %>/update-status" method="POST">
+                                    <select name="status">
+                                        <option value="pending" <%= loan.loan_status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                        <option value="approved" <%= loan.loan_status === 'approved' ? 'selected' : '' %>>Approved</option>
+                                        <option value="rejected" <%= loan.loan_status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                                        <option value="active" <%= loan.loan_status === 'active' ? 'selected' : '' %>>Active</option>
+                                    </select>
+                                    <button type="submit">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No loans available to manage.</p>
+        <% } %>
+    </div>
+
+    <!-- Initialize DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#loansTable').DataTable({
+                "autoWidth": false, // Disable auto-width to control the width manually
+                "columnDefs": [
+                    { "width": "5%", "targets": [0, 1] }, // Set width for ID and User ID columns
+                    { "width": "15%", "targets": [2, 3] }, // Set width for Amount and Type columns
+                    { "width": "10%", "targets": [4, 5] }, // Set width for Interest and Status columns
+                    { "width": "10%", "targets": [6, 7] }, // Set width for Months and Due Date columns
+                    { "width": "10%", "targets": [8, 9] }, // Set width for Interest Amount and Repayment columns
+                    { "width": "10%", "targets": [10] },   // Set width for Created At column
+                    { "width": "15%", "targets": [11] }    // Set width for Action column
+                ]
+            });
+        });
+    </script>
+
 </body>
 </html>

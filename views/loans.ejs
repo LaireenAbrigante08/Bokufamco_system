@@ -10,22 +10,16 @@
 </head>
 <body class="bg-light">
     <header class="main-header">
-        <h1><a href="/home" style="text-decoration: none; color: inherit;">Your Loans</a></h1>
+        <h1><a href="/home" style="text-decoration: none; background-color: #0c5b6d;
+    color: white;  padding: 10px 20px; font-size: 1.8rem; margin: 0;">Your Loans</a></h1>
     </header>
 
-    <div class="container mt-5">
-         <!-- Download Loan Agreement Form -->
-         <a href="/form.pdf" download="Bocofamco_Loan_Form.pdf" class="btn btn-primary">
-            Download Loan Agreement Form
-        </a>
-        
-        <!-- Button to trigger modal -->
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#loanModal">
-            Apply for a New Loan
-        </button>
-    </div>
+    <!-- Button to trigger modal -->
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#loanModal">
+        Apply for a New Loan
+    </button>
 
-    <!-- Modal Structure -->
+    <!-- Modal Structure for Applying New Loan -->
     <div class="modal fade" id="loanModal" tabindex="-1" aria-labelledby="loanModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -43,10 +37,10 @@
 
     <div class="container mt-4">
         <section>
-            <h2>Loans</h2>
             <% if (loans && loans.length > 0) { %>
+                <div class="card-body">
                 <div class="loan-section">
-                    <h3>Active and Partially Paid Loans</h3>
+                    <h3>Active Loans</h3>
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
@@ -76,7 +70,26 @@
                                         <td><%= new Date(loan.due_date).toLocaleDateString() %></td>
                                         <td><%= loan.loan_status %></td>
                                         <td>
-                                            <a href="/loans/pay/<%= loan.id %>" class="btn btn-primary">Pay</a>
+                                            <!-- Button to trigger payment modal -->
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payLoanModal<%= loan.id %>">
+                                                Pay
+                                            </button>
+
+                                            <!-- Modal Structure for Loan Payment -->
+                                            <div class="modal fade" id="payLoanModal<%= loan.id %>" tabindex="-1" aria-labelledby="payLoanModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="payLoanModalLabel">Pay Loan</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- Include payment form for loan -->
+                                                            <%- include('payment', { loan: loan }) %><!-- This includes your existing paymentForm.ejs -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 <% } %>
@@ -118,9 +131,30 @@
                                             <td><%= loan.loan_status %></td>
                                             <td>
                                                 <% if (loan.loan_status === 'pending') { %>
-                                                    <form action="/loans/cancel/<%= loan.id %>" method="POST" onsubmit="return confirmCancellation()">
-                                                        <button type="submit" class="btn btn-danger">Cancel</button>
-                                                    </form>
+                                                    <!-- Button to trigger cancel confirmation modal -->
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelLoanModal<%= loan.id %>">
+                                                        Cancel
+                                                    </button>
+
+                                                    <!-- Modal for loan cancellation confirmation -->
+                                                    <div class="modal fade" id="cancelLoanModal<%= loan.id %>" tabindex="-1" aria-labelledby="cancelLoanModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelLoanModalLabel">Cancel Loan</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to cancel this loan? This action cannot be undone.
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <form action="/loans/cancel/<%= loan.id %>" method="POST">
+                                                                        <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 <% } %>
                                             </td>
                                         </tr>
@@ -134,13 +168,8 @@
                 <p class="no-loans-message">You have no loans.</p>
             <% } %>
         </section>
+        </div>
     </div>
-
-    <script>
-        function confirmCancellation() {
-            return confirm("Are you sure you want to cancel this loan? This action cannot be undone.");
-        }
-    </script>
 
     <!-- Bootstrap JS (Optional if needed) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

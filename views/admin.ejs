@@ -68,12 +68,13 @@
             <h2><%= userName %></h2>
         </div>
         <ul class="menu">
+            <li><a href="#" onclick="loadSection('/admin/dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
             <li><a href="#" onclick="loadSection('/admin/member')"><i class="fa-solid fa-users"></i> Member Information</a></li>
             <li><a href="#" onclick="loadSection('/admin/orders')"><i class="fa-solid fa-shopping-cart"></i> Purchase Orders</a></li>
             <li><a href="#" onclick="loadSection('/admin/equipment')"><i class="fa-solid fa-truck-ramp-box"></i> Equipment Rentals</a></li>
             <li><a href="#" onclick="loadSection('/admin/farm-supplies')"><i class="fa-solid fa-wheat-awn"></i> Farm Supplies</a></li>
             <li><a href="#" onclick="loadSection('/admin/loans')"><i class="fa-solid fa-landmark"></i> Loans</a></li>
-            <li><a href="#" onclick="loadSection('/admin/dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#" onclick="loadSection('/admin/payments')"><i class="fa-solid fa-money-bill"></i> Payments</a></li>
             <li class="logout"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
@@ -106,7 +107,7 @@
 
         // Load the default section on page load
         $(document).ready(function() {
-            loadSection('/admin/member'); // Loads "Member Information" by default
+            loadSection('/admin/dashboard'); // Loads "Member Information" by default
         });
     </script>
 </body>

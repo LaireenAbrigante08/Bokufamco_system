@@ -115,6 +115,8 @@ exports.getMemberProfile = async (req, res) => {
         console.error("Error fetching member data: ", err);
         res.status(500).send('Server Error');
     }
+
+    
 };
 
 

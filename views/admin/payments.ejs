@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments</title>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+    <!-- jQuery (necessary for DataTables) -->
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;  /* Set a max-width for the table container */
+            margin: 0 auto;  /* Center align the container */
+            padding: 20px;
+            background-color: #ffffff;  /* Set background to white to distinguish from the body */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow */
+            border-radius: 8px;  /* Rounded corners */
+        }
+
+        h1 {
+            text-align: left;
+            color: #000000;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            
+        }
+
+        th {background-color: #2c3e50; /* Dark header background */
+            color: white; /* White text for header */
+            
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+        <!-- Flash Messages -->
+        <% if (messages.success) { %>
+            <div class="flash-message success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+
+        <% if (messages.error) { %>
+            <div class="flash-message error">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        <div class="container">
+            <h1>Loan Payments</h1>
+
+        <!-- Loan Payments Table -->
+        <table id="paymentsTable" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Loan ID</th>
+                    <th>Payment Amount</th>
+                    <th>Verified</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% payments.forEach(payment => { %>
+                    <tr>
+                        <td><%= payment.id %></td>
+                        <td><%= payment.loan_id %></td>
+                        <td><%= payment.payment_amount %></td>
+                        <td><%= payment.is_verified ? 'Yes' : 'No' %></td>
+                        <td><%= payment.payment_date%></td>
+                        <td>
+                            <% if (!payment.is_verified) { %>
+                                <form action="/admin/payments/verify/<%= payment.id %>" method="POST">
+                                    <button type="submit">Verify</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Initialize DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#paymentsTable').DataTable();
+        });
+    </script>
+</body>
+</html>

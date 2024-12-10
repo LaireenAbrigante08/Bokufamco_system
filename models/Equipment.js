@@ -3,6 +3,10 @@ const db = require('../config/db'); // Ensure this path matches your project str
 class Equipment {
 /////admin///////
 
+static async markAsPaid(rentalId) {
+    const query = 'UPDATE rentals SET status = ? WHERE id = ?';
+    return db.execute(query, ['Paid', rentalId]);
+}
 
 
 

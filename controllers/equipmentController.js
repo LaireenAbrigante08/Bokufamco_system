@@ -3,7 +3,17 @@ const Equipment = require('../models/Equipment');  // Ensure your Equipment mode
 const db = require('../config/db'); // DB connection
 /////////////////admin func//////////
 
+exports.payRental = async (req, res) => {
+    const rentalId = req.params.id;
 
+    try {
+        await Rental.markAsPaid(rentalId); // Update the status in the database
+        res.redirect('/rentals'); // Redirect back to the rentals page
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        req.status(500).send('Error processing payment.');
+    }
+};
 
 ///////////////////////////////////////
 //////////////user func///////////////

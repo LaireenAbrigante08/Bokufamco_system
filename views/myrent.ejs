@@ -30,20 +30,29 @@
                                     <th>Pickup Time</th>
                                     <th>Total Price</th>
                                     <th>Status</th>
+                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <% rentals.forEach(function(rental) { %>
-                                    <% if (rental.status === 'Confirmed') { %> <!-- Corrected 'Confired' to 'Confirmed' -->
-                                        <tr>
+                                    <% if (rental.rental_status === 'Confirmed') { %>
                                             <td><%= rental.equipment_name %></td>
                                             <td><%= rental.rental_start_date %></td>
                                             <td><%= rental.rental_end_date %></td>
                                             <td><%= rental.pickup_time %></td>
                                             <td>₱<%= rental.total_price %></td>
                                             <td>
-                                                <span class="badge bg-success">Completed</span>
+                                                <span class="badge bg-success">Comfirmed</span>
                                             </td>
+                                            <td>
+                                                <!-- Payment Button -->
+                                                <form action="/rentals/pay/<%= rental.id %>" method="POST">
+                                                    <button type="submit" class="btn btn-primary">Pay Now</button>
+                                                </form>
+                                                
+                                            </td>
+
                                         </tr>
                                     <% } %>
                                 <% }) %>
@@ -71,7 +80,7 @@
                         </thead>
                         <tbody>
                             <% rentals.forEach(function(rental) { %>
-                                <% if (rental.status !== 'Completed') { %> <!-- Display only Pending or Canceled rentals -->
+                                <% if (rental.rental_status !== 'Pending','Returned','Canceled') { %> <!-- Display only Pending or Canceled rentals -->
                                     <tr>
                                         <td><%= rental.equipment_name %></td>
                                         <td><%= rental.rental_start_date %></td>
@@ -81,14 +90,11 @@
                                         <td>
                                             <% if (rental.rental_status === 'Pending') { %>
                                                 <span class="badge bg-warning">Pending</span>
-                                            <% } else if (rental.rental_status === 'Confirmed') { %>
-                                                <span class="badge bg-success">Confirmed</span>
                                             <% } else if (rental.rental_status === 'Returned') { %>
                                                 <span class="badge bg-primary">Returned</span>
                                             <% } else if (rental.rental_status === 'Canceled') { %>
                                                 <span class="badge bg-danger">Canceled</span>
-                                            <% } else { %>
-                                                <span class="badge bg-secondary">Unknown</span>
+
                                             <% } %>
                                         </td>                                        
                                         <td>

@@ -26,10 +26,8 @@ static createRental(rentalData) {
         );
     });
 }
-
 static getRentalsByUserId(userId) {
     return new Promise((resolve, reject) => {
-        // SQL query that joins the rentals and equipment tables based on equipment_id
         const sql = `
             SELECT rentals.*, equipment.name AS equipment_name
             FROM rentals
@@ -41,13 +39,17 @@ static getRentalsByUserId(userId) {
                 return reject(err);
             }
 
-            // Format the rental start and end dates
+            // Format and validate rental data
             const formattedResults = results.map(rental => {
-                const rentalStartDate = new Date(rental.rental_start_date);
-                const rentalEndDate = new Date(rental.rental_end_date);
+                rental.rental_start_date = new Date(rental.rental_start_date).toLocaleDateString('en-CA');
+                rental.rental_end_date = new Date(rental.rental_end_date).toLocaleDateString('en-CA');
+                rental.pickup_time = rental.pickup_time || 'N/A';
 
-                rental.rental_start_date = rentalStartDate.toLocaleDateString(); // Format to YYYY-MM-DD
-                rental.rental_end_date = rentalEndDate.toLocaleDateString(); // Format to YYYY-MM-DD
+                // Handle NULL or unexpected rental_status
+                const validStatuses = ['Pending', 'Confirmed', 'Returned', 'Canceled'];
+                rental.rental_status = validStatuses.includes(rental.rental_status)
+                    ? rental.rental_status
+                    : 'Unknown';
 
                 return rental;
             });
@@ -56,6 +58,7 @@ static getRentalsByUserId(userId) {
         });
     });
 }
+
 static updateRentalStatus(rentalsId, rental_status) {
     return new Promise((resolve, reject) => {
         const sql = `UPDATE rentals SET rental_status = ? WHERE id = ?`;

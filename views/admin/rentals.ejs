@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentals Management</title>
+    
+    <!-- Add DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    
+    <!-- Bootstrap for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Add jQuery and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-4">
+    <!-- Section for rentals management -->
+    <div class="rentals-management">
+        <h2 class="mb-4 text-center">Rentals Management</h2>
+        <table id="rentalsTable" class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Equipment Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Pickup Time</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% rentals.forEach(function(rental) { %>
+                    <tr>
+                        <td><%= rental.id %></td>
+                        <td><%= rental.equipment_name %></td>
+                        <td><%= rental.rental_start_date %></td>
+                        <td><%= rental.rental_end_date %></td>
+                        <td><%= rental.pickup_time %></td>
+                        <td>₱<%= rental.total_price %></td>
+                        <td>
+                            <% if (rental.rental_status === 'Pending') { %>
+                                <span class="badge badge-warning">Pending</span>
+                            <% } else if (rental.rental_status === 'Confirmed') { %>
+                                <span class="badge badge-success">Confirmed</span>
+                            <% } else if (rental.rental_status === 'Returned') { %>
+                                <span class="badge badge-primary">Returned</span>
+                            <% } else if (rental.rental_status === 'Canceled') { %>
+                                <span class="badge badge-danger">Canceled</span>
+                            <% } else { %>
+                                <span class="badge badge-secondary">Unknown</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if (rental.rental_status === 'Pending') { %>
+                                <form action="/admin/rentals/cancel/<%= rental.id %>" method="POST">
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                </form>
+                            <% } else if (rental.rental_status === 'Confirmed') { %>
+                                <form action="/admin/rentals/mark-returned/<%= rental.id %>" method="POST">
+                                    <button type="submit" class="btn btn-primary btn-sm">Mark as Returned</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Initialize DataTable -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#rentalsTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true
+        }); // Initialize DataTable with pagination, searching, etc.
+    });
+</script>
+
+<!-- Optional: Add Bootstrap JS if needed for modals or tooltips -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

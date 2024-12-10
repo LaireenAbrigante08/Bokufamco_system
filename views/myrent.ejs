@@ -79,14 +79,18 @@
                                         <td><%= rental.pickup_time %></td>
                                         <td>₱<%= rental.total_price %></td>
                                         <td>
-                                            <% if (rental.status === 'Pending') { %>
+                                            <% if (rental.rental_status === 'Pending') { %>
                                                 <span class="badge bg-warning">Pending</span>
-                                            <% } else if (rental.status === 'Canceled') { %> <!-- Corrected to match database status -->
+                                            <% } else if (rental.rental_status === 'Confirmed') { %>
+                                                <span class="badge bg-success">Confirmed</span>
+                                            <% } else if (rental.rental_status === 'Returned') { %>
+                                                <span class="badge bg-primary">Returned</span>
+                                            <% } else if (rental.rental_status === 'Canceled') { %>
                                                 <span class="badge bg-danger">Canceled</span>
                                             <% } else { %>
                                                 <span class="badge bg-secondary">Unknown</span>
                                             <% } %>
-                                        </td>
+                                        </td>                                        
                                         <td>
                                             <% if (rental.status === 'Pending') { %>
                                                 <form action="/rentals/cancel/<%= rental.id %>" method="POST">

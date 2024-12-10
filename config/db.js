@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     host: 'localhost',  // Ensure this is correct
     user: 'root',       // Ensure this is correct
     password: '',       // Your MySQL password
-    database: 'coops' // Your database name
+    database: 'coops2' // Your database name
 });
 
 // Test the connection

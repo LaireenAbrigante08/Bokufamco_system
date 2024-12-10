@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/home.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <style>
         /* General styles for the body */
@@ -15,6 +14,8 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f5;
         }
+
+        /* Sidebar styles */
         .sidebar {
             width: 250px;
             background-color: #2c3e50;
@@ -23,23 +24,35 @@
             height: 100%;
             overflow-y: auto;
             padding-top: 20px;
+            transition: all 0.3s ease;
         }
+
+        .sidebar.closed {
+            width: 0;
+            padding-top: 0;
+            overflow: hidden;
+        }
+
         .user-profile {
             padding: 20px;
             text-align: center;
         }
+
         .user-profile img {
             width: 80px;
             border-radius: 50%;
             border: 2px solid #ecf0f1;
         }
+
         .menu {
             list-style: none;
             padding: 0;
         }
+
         .menu li {
             margin: 0;
         }
+
         .menu a {
             display: block;
             padding: 15px;
@@ -47,21 +60,72 @@
             color: #ecf0f1;
             transition: background-color 0.3s, color 0.3s;
         }
+
         .menu a:hover {
             background-color: #34495e;
             color: #ffffff;
         }
+
         .logout {
             margin-top: auto;
         }
+
         .content {
             margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Hamburger button */
+        .hamburger {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            color: #2c3e50;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.open i {
+            transform: rotate(45deg); /* Rotate the icon when the sidebar is open */
+        }
+
+        .hamburger.open {
+            transform: rotate(90deg); /* Rotate the button itself */
+        }
+
+        /* Media queries for mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                padding-top: 0;
+                overflow: hidden;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .sidebar.open {
+                width: 250px;
+            }
+
+            .content.open {
+                margin-left: 250px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="user-profile">
             <img src="images/AdminBOCOFAMCO.jpg" alt="User Avatar" class="avatar">
@@ -80,11 +144,18 @@
         </ul>
     </div>
 
+    <!-- Hamburger button for mobile -->
+    <div class="hamburger" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Main Content -->
     <div class="content" id="main-content">
         <!-- Content for each section will be loaded here -->
     </div>
 
     <script>
+        // Load content for each section
         function loadSection(url) {
             $.ajax({
                 url: url,
@@ -100,11 +171,22 @@
             });
         }
 
+        // Logout function
         function logout() {
             const confirmation = confirm("Are you sure you want to log out?");
             if (confirmation) {
                 window.location.href = "/logout";
             }
+        }
+
+        // Toggle sidebar on small screens
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            const content = document.querySelector('.content');
+            sidebar.classList.toggle('open');
+            content.classList.toggle('open');
+            hamburger.classList.toggle('open'); // Add the open class to animate hamburger icon
         }
 
         $(document).ready(function() {

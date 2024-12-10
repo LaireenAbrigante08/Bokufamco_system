@@ -19,6 +19,11 @@ const dashboardController = {
     const inStockProductsQuery = 'SELECT name FROM products WHERE stock > 0';
     const outOfStockProductsQuery = 'SELECT name FROM products WHERE stock = 0';
     const totalOrdersQuery = 'SELECT COUNT(*) AS total_orders FROM orders';
+    const orderStatusQuery = `
+      SELECT status, COUNT(*) AS status_count
+      FROM orders
+      GROUP BY status
+    `;
     const totalInventoryValueQuery = 'SELECT SUM(price * stock) AS total_inventory_value FROM products WHERE stock > 0';
     // New queries for the equipment table
     const totalEquipmentQuery = 'SELECT COUNT(*) AS total_equipment FROM equipment';
@@ -107,6 +112,17 @@ const dashboardController = {
                     }
   
                     const totalOrders = ordersResult[0]?.total_orders || 0;
+
+                    db.query(orderStatusQuery, (err, orderStatusResult) => {
+                      if (err) {
+                        console.error(err);
+                        return res.status(500).send('Error fetching order statuses');
+                      }
+        
+                      const orderStatuses = orderStatusResult.reduce((acc, row) => {
+                        acc[row.status] = row.status_count;
+                        return acc;
+                      }, {});
 
                   // Fetching in-stock products
                   db.query(inStockProductsQuery, (err, inStockResult) => {
@@ -212,6 +228,7 @@ const dashboardController = {
                                       totalRemainingBalance,
                                       totalProducts,
                                       totalOrders,
+                                      orderStatuses,
                                       inStockProducts,
                                       outOfStockProducts,
                                       totalInventoryValue,
@@ -225,6 +242,7 @@ const dashboardController = {
                         });
                       });
                     });
+                  });
                   });
                   });
                 });

@@ -77,7 +77,14 @@
       <p>Total Members: <%= totalMembers %></p>
       <p>Total Share Capital: <%= totalShareCapital %></p>
     </div>
-
+  <div class ="section">
+  <h2>Order Statuses:</h2>
+<p>
+<% Object.keys(orderStatuses).forEach(status => { %>
+  <li><%= status %>: <%= orderStatuses[status] %></li>
+<% }); %>
+</p>
+</div>
     <!-- Loans Section -->
     <div class="section">
       <h2>Loans</h2>
@@ -106,7 +113,7 @@
         <% }); %>
       </ul>
       <p>Total Inventory Value: <%= totalInventoryValue %></p>
-    </div>
+
 
     <!-- Equipment Section -->
     <div class="section">
